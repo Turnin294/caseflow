@@ -9,21 +9,21 @@
 **新增第 6 道 PreToolUse hook `check-commit-no-ai-signature`——`git commit` 落盘前机械拦截「AI 工具署名」，把 git-commit-standards 的"禁止 AI 署名"从 SKILL 层规则升级为不可绕过的机械红线。**
 
 ### Added
-- `hooks/check-commit-no-ai-signature.js`：PreToolUse（Bash）。扫描 `git commit` 提交信息（`-m` 内联 / heredoc / `-F` 文件），命中 `Co-Authored-By:` 指向 AI、`noreply@anthropic.com`、机器人 emoji、`Generated with/by <AI>` 等署名即 `exit 2` 阻断。**与改动大小、是否走 skill 无关**——专防小改不走 git-commit-standards skill 时、宿主/IDE 默认指令擅自追加签名。默认 `block`，`TEAM_STANDARDS_AI_SIGNATURE_HOOK=warn` 仅提示、`=off` 关闭。正文里普通提及 "claude" 不误伤（仅匹配 trailer 形态 / 机器邮箱 / emoji）。
+- `hooks/check-commit-no-ai-signature.js`：PreToolUse（Bash）。扫描 `git commit` 提交信息（`-m` 内联 / heredoc / `-F` 文件），命中 `Co-Authored-By:` 指向 AI、`noreply@anthropic.com`、机器人 emoji、`Generated with/by <AI>` 等署名即 `exit 2` 阻断。**与改动大小、是否走 skill 无关**——专防小改不走 git-commit-standards skill 时、宿主/IDE 默认指令擅自追加签名。默认 `block`，`CASEFLOW_AI_SIGNATURE_HOOK=warn` 仅提示、`=off` 关闭。正文里普通提及 "claude" 不误伤（仅匹配 trailer 形态 / 机器邮箱 / emoji）。
 - `hooks/hooks.json`：注册到 `Bash` 组（现 Bash 2 道 + Write 4 道）。
 
 ### Changed
 - `git-commit-standards`：「何时进入本 skill」补一条——禁止 AI 署名现由 `check-commit-no-ai-signature.js` 机械兜底，不再仅靠 skill 自觉。
 
 ### Motivation
-- 实战暴露：宿主默认指令要求每条 commit 追加 `Co-Authored-By: Claude`，小改动不触发 git-commit-standards 完整流程时该签名被默认带上，违反 team-standards「Author 只填真实提交者」红线。规则早有（§Author/§Red Flags），但只是 SKILL 层自觉、缺机械强制。故加 hook 在 commit 层兜底。
+- 实战暴露：宿主默认指令要求每条 commit 追加 `Co-Authored-By: Claude`，小改动不触发 git-commit-standards 完整流程时该签名被默认带上，违反 caseflow「Author 只填真实提交者」红线。规则早有（§Author/§Red Flags），但只是 SKILL 层自觉、缺机械强制。故加 hook 在 commit 层兜底。
 
 ## [1.36.0] - 2026-06-17
 
 **新增第 5 道 PreToolUse hook `check-sql-ddl-readiness`——写/改任何带 SQL 的文件前，强制本会话已读 `knowledge-graph/ddl-baseline.md`；语言无关、不豁免小改，补 `check-backend-kg-readiness` 只覆盖 Dart 路径的洞。**
 
 ### Added
-- `hooks/check-sql-ddl-readiness.js`：PreToolUse（Write/Edit/MultiEdit）。按「文件是否承载 SQL」判定（iBatis/MyBatis SqlMap XML、`.sql`、`*Dao`/`*Mapper`/`*Repository`、含裸 SQL 或 ORM raw query 的源码），命中且本会话未 Read 过 `ddl-baseline.md` 即 stderr 提示。默认 `warn`，`TEAM_STANDARDS_SQL_DDL_HOOK=block` 升级硬阻断、`=off` 关闭。**不豁免小改**——1 行字段名改动也拦。
+- `hooks/check-sql-ddl-readiness.js`：PreToolUse（Write/Edit/MultiEdit）。按「文件是否承载 SQL」判定（iBatis/MyBatis SqlMap XML、`.sql`、`*Dao`/`*Mapper`/`*Repository`、含裸 SQL 或 ORM raw query 的源码），命中且本会话未 Read 过 `ddl-baseline.md` 即 stderr 提示。默认 `warn`，`CASEFLOW_SQL_DDL_HOOK=block` 升级硬阻断、`=off` 关闭。**不豁免小改**——1 行字段名改动也拦。
 - `hooks/hooks.json`：注册新 hook 到 `Write|Edit|MultiEdit` 组。
 
 ### Changed
@@ -37,7 +37,7 @@
 **注释红线机械兜底 `check-comment-density` 默认从 `warn` 反转为 `block`——客观红线（工单号/日期/变更标记/分节线/版本流水）命中即 exit 2 硬阻断，护栏在插件里统一做死，安装者无需各自配 settings。**
 
 ### Changed
-- `hooks/check-comment-density.js`：默认模式 `warn` → `block`。命中客观红线即 `exit 2` 阻断 Write/Edit/MultiEdit；`long-block`（连续注释块超阈值）保留为**启发式软规则只提示不阻断**，避免误伤公开 API 的长 dartdoc。降级路径 `TEAM_STANDARDS_COMMENT_HOOK=warn`（仅提示）/ `=off`（关闭）。
+- `hooks/check-comment-density.js`：默认模式 `warn` → `block`。命中客观红线即 `exit 2` 阻断 Write/Edit/MultiEdit；`long-block`（连续注释块超阈值）保留为**启发式软规则只提示不阻断**，避免误伤公开 API 的长 dartdoc。降级路径 `CASEFLOW_COMMENT_HOOK=warn`（仅提示）/ `=off`（关闭）。
 - 同步文档：`coding-standards-common` §5.4 机械兜底注、`hooks/hooks.json` `_comment`、CLAUDE.md / AGENTS.md / README.md 辅助资源表。
 
 ### Motivation
@@ -62,15 +62,15 @@
 **支持 Codex 插件市场:仓库重构为「marketplace 根 + 子目录单插件」布局,同一仓库双端(Claude Code + Codex)可装可更新。**
 
 ### Changed
-- **目录重构**:插件载荷(`skills/`、`hooks/`、`.claude-plugin/plugin.json`、`.codex-plugin/plugin.json`)收进 `plugins/team-standards/` 子目录;仓库根保留 marketplace 清单与 CI/docs。原「根即插件」(`source: "./"`)只有 Claude 认,Codex `plugin add` 会整目录拷贝、要求插件自包含于子目录。
-- `.claude-plugin/marketplace.json`:`source` 由 `"./"` 改为 `"./plugins/team-standards"`。
-- **新增 `.agents/plugins/marketplace.json`**:Codex 市场清单,枚举 `team-standards` 插件指向同一子目录。
-- CI 脚本基准路径同步:`check-version-sync` / `check-cross-refs` / `audit-skills` 指向 `plugins/team-standards/`(`sync-agents` 不变,CLAUDE.md/AGENTS.md 留根)。
+- **目录重构**:插件载荷(`skills/`、`hooks/`、`.claude-plugin/plugin.json`、`.codex-plugin/plugin.json`)收进 `plugins/caseflow/` 子目录;仓库根保留 marketplace 清单与 CI/docs。原「根即插件」(`source: "./"`)只有 Claude 认,Codex `plugin add` 会整目录拷贝、要求插件自包含于子目录。
+- `.claude-plugin/marketplace.json`:`source` 由 `"./"` 改为 `"./plugins/caseflow"`。
+- **新增 `.agents/plugins/marketplace.json`**:Codex 市场清单,枚举 `caseflow` 插件指向同一子目录。
+- CI 脚本基准路径同步:`check-version-sync` / `check-cross-refs` / `audit-skills` 指向 `plugins/caseflow/`(`sync-agents` 不变,CLAUDE.md/AGENTS.md 留根)。
 
 ### Motivation
 - Codex(`@openai/codex-sdk` / `codex plugin marketplace`)与 Claude Code 的插件市场模型不同:Codex 要求每个插件位于市场下的独立子目录且自包含。为让同一 GitHub 仓库同时供两端 `marketplace update/upgrade` + `install/add`,采用通用的「monorepo marketplace + 子目录插件」标准布局。
-- **对 Claude 端用户**:下次 `claude plugin marketplace update team-standards` + `install` 会从新子目录路径重装,透明无感。
-- **Codex 端**:`codex plugin marketplace add owner/repo` + `plugin add team-standards@team-standards` 即可安装,`marketplace upgrade` + `plugin add` 更新。
+- **对 Claude 端用户**:下次 `claude plugin marketplace update caseflow` + `install` 会从新子目录路径重装,透明无感。
+- **Codex 端**:`codex plugin marketplace add owner/repo` + `plugin add caseflow@caseflow` 即可安装,`marketplace upgrade` + `plugin add` 更新。
 
 ## [1.30.3] - 2026-05-31
 
@@ -78,11 +78,11 @@
 
 ### Changed
 - `hooks/check-design-doc.js` 项目根识别策略调整：**优先全程向上找 `.git`**（git 仓库根），命中即返回；未找到时再回退到第一个构建文件标记（pom.xml / package.json / pubspec.yaml 等）。修复深层子模块的 pom.xml / package.json 被当作项目根的问题——以前在 `kai-toolbox/tools/tool-treesize/src/.../Foo.java` 上 Edit 会被识别为项目 `tool-treesize`，去找 `ai-docs/tool-treesize/design`，永远拦截；现在正确识别为仓根 `kai-toolbox`，去找 `ai-docs/kai-toolbox/design`。
-- 新增 `.team-standards-project.json` 项目级覆盖文件：根目录放置 `{"aiDocsProject": "<name>"}` 可覆盖 ai-docs 子目录名，解决「git 仓名 ≠ ai-docs 子目录名」（如仓库叫 my-tools 但文档集中放在 ai-docs/kai-toolbox/ 下）。损坏 JSON 不崩溃，安静退回 `path.basename(projectRoot)`。
-- `hooks/tests/check-design-doc.test.js` 新增 5 例：Maven 多模块、monorepo 前端子包、`.team-standards-project.json` 覆盖、无 `.git` 时回退构建文件标记的向后兼容、损坏 JSON 不崩溃。总用例 10 → 15，全 PASS。
+- 新增 `.caseflow-project.json` 项目级覆盖文件：根目录放置 `{"aiDocsProject": "<name>"}` 可覆盖 ai-docs 子目录名，解决「git 仓名 ≠ ai-docs 子目录名」（如仓库叫 my-tools 但文档集中放在 ai-docs/kai-toolbox/ 下）。损坏 JSON 不崩溃，安静退回 `path.basename(projectRoot)`。
+- `hooks/tests/check-design-doc.test.js` 新增 5 例：Maven 多模块、monorepo 前端子包、`.caseflow-project.json` 覆盖、无 `.git` 时回退构建文件标记的向后兼容、损坏 JSON 不崩溃。总用例 10 → 15，全 PASS。
 
 ### Motivation
-- 实战暴露：Maven 多模块 + 文档集中放 `~/Documents/ai-docs/<repo-name>/design/` 的项目（典型布局：kai-toolbox 仓内多个 Java 子工具 + 一个前端包），每次写源码都被 hook 误拦——因为旧实现按构建文件标记找根，子模块的 `pom.xml` 总比根的 `.git` 先命中，把 `tool-treesize` 当成项目名找文档，必然落空。`.git` 优先 + 显式 `.team-standards-project.json` 覆盖两手解决：99% 情况自动适配（git 仓根即项目根），剩余 1% 通过覆盖文件显式声明。
+- 实战暴露：Maven 多模块 + 文档集中放 `~/Documents/ai-docs/<repo-name>/design/` 的项目（典型布局：kai-toolbox 仓内多个 Java 子工具 + 一个前端包），每次写源码都被 hook 误拦——因为旧实现按构建文件标记找根，子模块的 `pom.xml` 总比根的 `.git` 先命中，把 `tool-treesize` 当成项目名找文档，必然落空。`.git` 优先 + 显式 `.caseflow-project.json` 覆盖两手解决：99% 情况自动适配（git 仓根即项目根），剩余 1% 通过覆盖文件显式声明。
 
 ## [1.30.0] - 2026-05-29
 
@@ -103,7 +103,7 @@
 **新增第五道 PreToolUse hook `check-comment-density.js`：为 `coding-standards-common` §5.4 注释红线提供机械兜底。**
 
 ### Added
-- `hooks/check-comment-density.js` — 源码 Write/Edit/MultiEdit 前扫本次**新增内容**的注释，命中 §5.4 红线即 stderr 提示（默认 warn）。抓客观无歧义项：变更标记（`[BUGFIX]` / `[DEPRECATED]` / `[ADDED]`...）、注释里的日期、工单·PR·Issue 号、带个人或日期的 TODO、带元信息的分节线、版本流水措辞，外加连续注释块超阈值（`TEAM_STANDARDS_COMMENT_MAX_BLOCK` 默认 6）的软提醒。去字符串字面量判定注释避免 `http://` / 字符串里 `[FIXED]` 误判；ISO/RFC/UTF 等技术标准前缀排除避免误判工单号。`TEAM_STANDARDS_COMMENT_HOOK=block` 升级硬阻断、=off 关闭。
+- `hooks/check-comment-density.js` — 源码 Write/Edit/MultiEdit 前扫本次**新增内容**的注释，命中 §5.4 红线即 stderr 提示（默认 warn）。抓客观无歧义项：变更标记（`[BUGFIX]` / `[DEPRECATED]` / `[ADDED]`...）、注释里的日期、工单·PR·Issue 号、带个人或日期的 TODO、带元信息的分节线、版本流水措辞，外加连续注释块超阈值（`CASEFLOW_COMMENT_MAX_BLOCK` 默认 6）的软提醒。去字符串字面量判定注释避免 `http://` / 字符串里 `[FIXED]` 误判；ISO/RFC/UTF 等技术标准前缀排除避免误判工单号。`CASEFLOW_COMMENT_HOOK=block` 升级硬阻断、=off 关闭。
 - `hooks/tests/check-comment-density.test.js` — 23 例端到端覆盖（各红线命中 + 干净放行 + 误报边界 + warn/block/off + Write/Edit/MultiEdit + Python `#` 注释）。
 
 ### Changed
@@ -157,8 +157,8 @@
 - `CLAUDE.md` 辅助资源表新增 `check-backend-kg-readiness.js` 条目
 
 ### Configuration
-- `TEAM_STANDARDS_BACKEND_KG_HOOK`：`warn`（默认，exit 0 + stderr 提示）/ `block`（exit 2 硬阻断）/ `off`（完全跳过）
-- `TEAM_STANDARDS_KG_TRIVIAL_FILES`（默认 1）/ `TEAM_STANDARDS_KG_TRIVIAL_LINES`（默认 20）—— 小改豁免阈值
+- `CASEFLOW_BACKEND_KG_HOOK`：`warn`（默认，exit 0 + stderr 提示）/ `block`（exit 2 硬阻断）/ `off`（完全跳过）
+- `CASEFLOW_KG_TRIVIAL_FILES`（默认 1）/ `CASEFLOW_KG_TRIVIAL_LINES`（默认 20）—— 小改豁免阈值
 
 ### Motivation
 - AI 在跨会话编码中反复出现"直接 grep + Read 源码就动手改，跳过项目知识图谱"的偷懒模式，导致重复发明状态判定 / 金额聚合 / SQL 查询逻辑、踩已沉淀过的坑（典型案例：korepos-refund 退款金额双计 tip bug 修复，对应 commit `ff39eccb2`，事后回顾发现 memory 含 tip 矩阵在会话起始就已加载但未主动应用）
@@ -167,10 +167,10 @@
 
 ## [1.27.1] - 2026-05-13
 
-**修复 `/reset-kpos-local` 中 korepos.db 路径写死开发者用户名 `zhangkai` 的问题。**
+**修复 `/reset-kpos-local` 中 korepos.db 路径写死开发者用户名 `turnin` 的问题。**
 
 ### Changed
-- `commands/reset-kpos-local.md`：第 2 个文件路径 `D:\Users\zhangkai\Documents\korepos.db` → `D:\Users\$env:USERNAME\Documents\korepos.db`，由 PowerShell 在执行时展开为当前 Windows 登录用户名，其他成员安装后无需改动即可生效
+- `commands/reset-kpos-local.md`：第 2 个文件路径 `D:\Users\turnin\Documents\korepos.db` → `D:\Users\$env:USERNAME\Documents\korepos.db`，由 PowerShell 在执行时展开为当前 Windows 登录用户名，其他成员安装后无需改动即可生效
 - 路径表下方注释改为明确说明：盘符 `D:` 是团队约定（Documents 统一放 D 盘），**不要**替换为 `$env:USERPROFILE` 或 `MyDocuments`，那些会解析到 C 盘
 
 ## [1.27.0] - 2026-05-13
@@ -178,11 +178,11 @@
 **新增 `/reset-kpos-local` slash command + 配套语义触发 skill，用于一键删除 kpos 本地缓存与本地数据库。**
 
 ### Added
-- `commands/reset-kpos-local.md` — 首个 plugin 自带 slash command。删除 `$env:APPDATA\com.example\kpos\shared_preferences.json` 与 `D:\Users\zhangkai\Documents\korepos.db` 两个本地状态文件。显式调用 = 已确认，不再询问；使用 PowerShell `Remove-Item -Force` 实现，逐文件独立成功/失败计数
+- `commands/reset-kpos-local.md` — 首个 plugin 自带 slash command。删除 `$env:APPDATA\com.example\kpos\shared_preferences.json` 与 `D:\Users\turnin\Documents\korepos.db` 两个本地状态文件。显式调用 = 已确认，不再询问；使用 PowerShell `Remove-Item -Force` 实现，逐文件独立成功/失败计数
 - `skills/reset-kpos-local-state/SKILL.md` — 配套语义触发 skill。识别"重置 kpos 本地 / 清空 shared_preferences / 删 korepos.db"等狭义短语后**路由到** `/reset-kpos-local`，不自己 `Remove-Item`，所有边界与回报由 slash command 唯一负责
 
 ### Notes
-- 第 2 个文件路径 `D:\Users\zhangkai\Documents\korepos.db` 仍是当前开发者本机硬编码——其他成员若 Documents 目录在 C 盘，需要后续扩展为可配置或环境变量化
+- 第 2 个文件路径 `D:\Users\turnin\Documents\korepos.db` 仍是当前开发者本机硬编码——其他成员若 Documents 目录在 C 盘，需要后续扩展为可配置或环境变量化
 - 故意**不**用 hook 实现：destructive 操作靠正则/事件匹配自动开火属反模式，必须靠 AI 语义层 + 显式入口
 
 ## [1.25.0] - 2026-05-12

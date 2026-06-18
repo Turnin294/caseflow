@@ -1,0 +1,18 @@
+{
+  "name": "caseflow",
+  "description": "团队开发规范插件：Java 编码规范（阿里黄山版）+ 功能设计文档强制约束",
+  "version": "1.37.0",
+  "author": {
+    "name": "turnin",
+    "email": ""
+  },
+  "homepage": "https://gitee.com/wyoooni/caseflow",
+  "repository": "https://gitee.com/wyoooni/caseflow.git",
+  "license": "MIT",
+  "keywords": [
+    "java",
+    "coding-standards",
+    "design-doc",
+    "caseflow"
+  ]
+}

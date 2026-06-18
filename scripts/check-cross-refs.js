@@ -19,7 +19,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const SKILLS_DIR = path.join(ROOT, 'plugins', 'team-standards', 'skills');
+const SKILLS_DIR = path.join(ROOT, 'plugins', 'caseflow', 'skills');
 const VERBOSE = process.argv.includes('--verbose');
 
 function listSkills() {
@@ -59,7 +59,7 @@ function scanFile(file, allSkills, headingsBySkill) {
     // 只关心看起来像 skill 名的引用(含连字符且不像文件路径)
     if (!ref.includes('-')) continue;
     if (ref.includes('/') || ref.includes('.')) continue;
-    if (ref === 'team-standards') continue;
+    if (ref === 'caseflow') continue;
     // 一些技术词不要误判
     const knownNonSkills = new Set([
       'application/json', 'lib/features', 'lower-camel-case',
@@ -68,7 +68,7 @@ function scanFile(file, allSkills, headingsBySkill) {
     if (knownNonSkills.has(ref)) continue;
     // 非 skill 但常见的 `xxx-yyy` token 白名单(目录名、产品名、技术词等)
     const NON_SKILL_TOKENS = new Set([
-      'work-log', 'kpay-team-standards', 'kpay-pos-topology',
+      'work-log', 'kpay-caseflow', 'kpay-pos-topology',
       'kpay-pos-business-app-bff', 'kpay-pos-order-manage',
       'kpay-pos-report', 'kpay-possystem-commodity',
       'pos-store-operation-manage', 'price-calc-sdk', 'pos-config-ts',

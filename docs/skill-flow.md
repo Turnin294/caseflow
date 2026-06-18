@@ -1,6 +1,6 @@
 # Skill 链路全景图
 
-> 本文档梳理 team-standards 各 skill 的触发时机、调用关系及两条主链路,用于解决"该调哪个 skill、顺序是什么"的疑惑。
+> 本文档梳理 caseflow 各 skill 的触发时机、调用关系及两条主链路,用于解决"该调哪个 skill、顺序是什么"的疑惑。
 >
 > **变更历史**:由 git log 承担,本文不再在头部累加变更摘要,也不保留文件式快照(v21.1 删除快照、v21.2 删除头部 changelog 段)。需要查某次改动的背景,执行 `git log --follow docs/skill-flow.md` 找 commit,提交说明里写为什么改;需要某历史版本的全文,`git show <sha>:docs/skill-flow.md`。
 
@@ -10,7 +10,7 @@
 
 - **看触发时机** → [Skill 总览](#skill-总览)
 - **看完整链路** → [Skill 调用关系图](#skill-调用关系图) / [功能开发完整链路](#功能开发完整链路) / [Bug 修复完整链路](#bug-修复完整链路)
-- **看维护规则** → [team-standards 维护链路](#team-standards-维护链路) / [文档-索引-coding 子循环详解](#文档-索引-coding-子循环详解)
+- **看维护规则** → [caseflow 维护链路](#caseflow-维护链路) / [文档-索引-coding 子循环详解](#文档-索引-coding-子循环详解)
 - **查常见问题** → [常见困惑速查](#常见困惑速查)
 
 ---
@@ -19,30 +19,30 @@
 
 | Skill 名称 | 来源 | 触发时机 |
 |---|---|---|
-| `solution-review-required` | team-standards | 用户提出具体想法/方案并要求实施，或要求按某个回复、目录策略、架构路径、现有代码直接改时，先审视目标、现有代码质量、风险和更优方案 |
-| `design-doc-required` | team-standards | 写任何实现代码前，或被要求提供修复方案/实施方案时（新功能和 bug 修复均适用）；**任何源码 Edit/Write 请求（含「根据文档改代码」「帮我改一下」等）也必须先触发**；文档定位为方案/接口开发的简明编码依据，重点确认核心逻辑、编码落点和风险点；图表遵循最小图原则；Git 管理下默认维护稳定/current 文档，历史由 commit body 承担 |
-| `doc-index-required` | team-standards | **(辅助)** 创建任何 Markdown 文档前先确定输出路径；AI 生成 Markdown 默认写用户 Documents 下的 `ai-docs/{project}/{type}/{topic}/{filename}`（无 `{agent}/`、无 `{YYYY-MM-DD}/`、文件名不带日期）；**v1.20 起用户目录知识库与项目 `docs/` 索引体系等同**，写文档前必须 Phase-A 读 INDEX 查重，写完必须 Phase-B 登记；`work-log/`（日期型）和 `knowledge-graph/`（自有 `00_index.md`）走自管模式 |
-| `backend-knowledge-graph-required` | team-standards | 后端接口/服务开发前读取后端图谱，重点回顾表逻辑索引、原子能力索引和 SQL 查询索引；会话中提到业务、表、字段来源、SQL/DAO/Mapper 查询逻辑时自动沉淀 SQL 指纹；生成/更新全景 ER、SQL 查询卡、表逻辑和原子能力；编码后同步 DAO/SQL、表关系、订单/退款/支付状态判定、金额聚合、原子能力复用 |
-| `bug-doc-required` | team-standards | 编写 bug 分析文档时；完成后必须继续调用 design-doc-required 写修复实施方案 |
-| `pre-implementation-code-orientation` | team-standards | 文档写完后、开始实施代码前（含「帮我修改代码」「改代码」等直接编码请求） |
-| `architecture-ddd-lite-fullstack` | team-standards | 编写或审查 Java / React / Vue / Flutter 业务代码前；在实施前代码定位后，先判断 Feature、分层、单向依赖、原子能力与结构质量（清晰、易维护、低耦合、高内聚）；含 **函数级业务场景分流**（阶梯 1 私有方法 / 阶梯 2 升级 service，判定锚点是「业务定位」而非「代码相似度」） |
-| `coding-standards-common` | team-standards | 编写/修改任何源码语言（Java / TS / JS / Dart / Python / Kotlin / Go 等）前；通用 7 条铁律 + 注释三档（+ 字段可选档）+ 注释放置原则（注释只落在类/字段/方法声明上，函数体内除 §5.3 六类核心块外不写，靠拆函数+命名表达）+ §7.6 复用项目公共能力优先（编码前查 coding-profile 的 common-capabilities.md，禁造轮子/禁原生替代公共封装）；先于具体语言 skill 触发 |
-| `java-coding-standards` | team-standards | 编写或修改任何 Java 代码时（自动应用，通用条款 delegate 到 coding-standards-common） |
-| `dart-coding-standards` | team-standards | 编写或修改任何 Dart / Flutter 代码时（自动应用，dartdoc `///` 独占条款，通用条款 delegate 到 coding-standards-common；korepos backend 接口再叠加 kpay-daily-plugin 的 korepos-backend-service） |
-| `llm-agent-coding-standards` | team-standards | 编写/修改接 LLM 或做 agent 的代码时（import langchain4j/spring-ai/openai/anthropic；定义 @Tool/AiService；拼 prompt；解析 LLM 输出）；在 coding-standards-common + 语言 skill 之上叠加 LLM 集成独占条款（确定性优先/输出当不可信/枚举输出/约定 SSOT/工具描述契约/循环兜底/上下文注入） |
-| `git-commit-standards` | team-standards | 大改 git commit 之前（>2 文件 / >30 行 / 含新增/重命名/删除文件）；**v1.18.1 起 hook 按改动大小放行**：`hooks/check-git-commit-skill.js` 看 staged diff，≤2 文件 ∧ ≤30 行 ∧ 仅 `M` 修改时直接放行（让模型自行写 commit message），其它情况未调用本 skill 时直接 exit 2 阻断；阈值可用 `TEAM_STANDARDS_TRIVIAL_FILES` / `TEAM_STANDARDS_TRIVIAL_LINES` 调整；git push 不门禁；仅在当前仓库就是 team-standards 插件源码仓库且插件自身变更完成后自动 stage、commit、push |
-| `dev-log` | team-standards | 对 team-standards 做决策型变更后：新增/删除 Skill、触发时机或核心行为变化、规则方向反转、跨 Skill 链路变化、重大团队原则沉淀；普通小改只写 commit body |
-| `markdown-writing-standards` | team-standards | 生成或修改包含 Mermaid 图表的 Markdown 内容；完成 Markdown 文件的结构性写入/重组后做目录复核（自动应用，与 java-coding-standards 同级） |
-| `business-logic-orientation` | team-standards | 重构/复写/迁移前需要理解现有业务逻辑时（产出梳理文档 + AI 速查索引） |
-| `init-project-docs` | team-standards | 要求初始化/生成知识图谱/分析项目文档时（4 阶段渐进式构建，独立分析类 skill） |
-| `generate-project-profile` | team-standards | 要求生成项目画像时（独立分析类 skill，生成 AI Agent 消费的 10 维度 Markdown） |
-| `coding-violation-log` | team-standards | 用户纠正 AI 编码错误时登记违规；编码前回顾已登记记录防重犯（嵌入编码链路，java-coding-standards 之前） |
-| `project-docs-update` | team-standards | 项目代码结构变更后同步知识图谱文档（检测差异 + 自动/确认更新） |
-| `arch-lint` | team-standards | Flutter 架构违规检测（5 条分层规则，全量/轻量两种模式） |
-| `comment-cleanup` | team-standards | 用户主动要求时对**存量**文件/类/模块成批清理违反注释红线的注释（`vN 新增` 版本标记 / `[BUGFIX]` 等变更日志 / 历史叙事 prose / 私有方法契约史 / 废话 / 死代码），多语言；红线规则单一来源引用 `coding-standards-common` §5.4 + §5.4.1，本 skill 只管范围圈定 / 分类决策 / 安全边界 / 提交纪律；**清理 ≠ 字面匹配删除**，Read 后判断、啰嗦的改写成一句话、函数体内非核心块注释默认清。与 §5.5 顺手清理、`check-comment-density.js` hook 写入拦截互补 |
-| `bugfix-coding-style` | team-standards | bug 修复 / 任何源码改动期的应用层指引（v1.28.8 起注释红线单一来源化）：**注释禁令统一收口到 `coding-standards-common` §5.4 + §5.4.1，本 skill 不再独立定义红线表**。只承担 bug 修复期独有内容：v1.17 方向反转的历史背景、推荐写法 dart 代码示例、摆放位置示例、适用范围矩阵、遇到存量 `[DEPRECATED]` / `[ADDED]` 注释顺手清理的边界、红色警告对照表 |
-| `glossary-required` | team-standards | 业务术语会话级强制登记;PRD / 设计 / 对话出现未登记的业务领域名词时自动候选追加;用户与 AI 同义词错位时主动对齐到规范术语;候选池 `{USER_DOCUMENTS}/ai-docs/{project}/glossary/_candidates.md`、正式版 `docs/knowledge-graph/glossary.md`;与 init-project-docs 的批量初始化术语表分工互补 |
-| `reverse-index-required` | team-standards | 反向影响索引强制维护(4 类:状态/字段/事件/API);冷启动 `hooks/scan-reverse-index.js` 扫描 Java/Dart/TS 枚举 + SQL 字面量产出 states 初版;增量维护规则:变更枚举 / 字段 / 事件 / API 同回合必须回写反向索引;与 backend-knowledge-graph-required 互补(正向 vs 反向)、与 cross-project-locator 边界明确(单服务内 vs 跨项目调用方) |
+| `solution-review-required` | caseflow | 用户提出具体想法/方案并要求实施，或要求按某个回复、目录策略、架构路径、现有代码直接改时，先审视目标、现有代码质量、风险和更优方案 |
+| `design-doc-required` | caseflow | 写任何实现代码前，或被要求提供修复方案/实施方案时（新功能和 bug 修复均适用）；**任何源码 Edit/Write 请求（含「根据文档改代码」「帮我改一下」等）也必须先触发**；文档定位为方案/接口开发的简明编码依据，重点确认核心逻辑、编码落点和风险点；图表遵循最小图原则；Git 管理下默认维护稳定/current 文档，历史由 commit body 承担 |
+| `doc-index-required` | caseflow | **(辅助)** 创建任何 Markdown 文档前先确定输出路径；AI 生成 Markdown 默认写用户 Documents 下的 `ai-docs/{project}/{type}/{topic}/{filename}`（无 `{agent}/`、无 `{YYYY-MM-DD}/`、文件名不带日期）；**v1.20 起用户目录知识库与项目 `docs/` 索引体系等同**，写文档前必须 Phase-A 读 INDEX 查重，写完必须 Phase-B 登记；`work-log/`（日期型）和 `knowledge-graph/`（自有 `00_index.md`）走自管模式 |
+| `backend-knowledge-graph-required` | caseflow | 后端接口/服务开发前读取后端图谱，重点回顾表逻辑索引、原子能力索引和 SQL 查询索引；会话中提到业务、表、字段来源、SQL/DAO/Mapper 查询逻辑时自动沉淀 SQL 指纹；生成/更新全景 ER、SQL 查询卡、表逻辑和原子能力；编码后同步 DAO/SQL、表关系、订单/退款/支付状态判定、金额聚合、原子能力复用 |
+| `bug-doc-required` | caseflow | 编写 bug 分析文档时；完成后必须继续调用 design-doc-required 写修复实施方案 |
+| `pre-implementation-code-orientation` | caseflow | 文档写完后、开始实施代码前（含「帮我修改代码」「改代码」等直接编码请求） |
+| `architecture-ddd-lite-fullstack` | caseflow | 编写或审查 Java / React / Vue / Flutter 业务代码前；在实施前代码定位后，先判断 Feature、分层、单向依赖、原子能力与结构质量（清晰、易维护、低耦合、高内聚）；含 **函数级业务场景分流**（阶梯 1 私有方法 / 阶梯 2 升级 service，判定锚点是「业务定位」而非「代码相似度」） |
+| `coding-standards-common` | caseflow | 编写/修改任何源码语言（Java / TS / JS / Dart / Python / Kotlin / Go 等）前；通用 7 条铁律 + 注释三档（+ 字段可选档）+ 注释放置原则（注释只落在类/字段/方法声明上，函数体内除 §5.3 六类核心块外不写，靠拆函数+命名表达）+ §7.6 复用项目公共能力优先（编码前查 coding-profile 的 common-capabilities.md，禁造轮子/禁原生替代公共封装）；先于具体语言 skill 触发 |
+| `java-coding-standards` | caseflow | 编写或修改任何 Java 代码时（自动应用，通用条款 delegate 到 coding-standards-common） |
+| `dart-coding-standards` | caseflow | 编写或修改任何 Dart / Flutter 代码时（自动应用，dartdoc `///` 独占条款，通用条款 delegate 到 coding-standards-common；korepos backend 接口再叠加 kpay-daily-plugin 的 korepos-backend-service） |
+| `llm-agent-coding-standards` | caseflow | 编写/修改接 LLM 或做 agent 的代码时（import langchain4j/spring-ai/openai/anthropic；定义 @Tool/AiService；拼 prompt；解析 LLM 输出）；在 coding-standards-common + 语言 skill 之上叠加 LLM 集成独占条款（确定性优先/输出当不可信/枚举输出/约定 SSOT/工具描述契约/循环兜底/上下文注入） |
+| `git-commit-standards` | caseflow | 大改 git commit 之前（>2 文件 / >30 行 / 含新增/重命名/删除文件）；**v1.18.1 起 hook 按改动大小放行**：`hooks/check-git-commit-skill.js` 看 staged diff，≤2 文件 ∧ ≤30 行 ∧ 仅 `M` 修改时直接放行（让模型自行写 commit message），其它情况未调用本 skill 时直接 exit 2 阻断；阈值可用 `CASEFLOW_TRIVIAL_FILES` / `CASEFLOW_TRIVIAL_LINES` 调整；git push 不门禁；仅在当前仓库就是 caseflow 插件源码仓库且插件自身变更完成后自动 stage、commit、push |
+| `dev-log` | caseflow | 对 caseflow 做决策型变更后：新增/删除 Skill、触发时机或核心行为变化、规则方向反转、跨 Skill 链路变化、重大团队原则沉淀；普通小改只写 commit body |
+| `markdown-writing-standards` | caseflow | 生成或修改包含 Mermaid 图表的 Markdown 内容；完成 Markdown 文件的结构性写入/重组后做目录复核（自动应用，与 java-coding-standards 同级） |
+| `business-logic-orientation` | caseflow | 重构/复写/迁移前需要理解现有业务逻辑时（产出梳理文档 + AI 速查索引） |
+| `init-project-docs` | caseflow | 要求初始化/生成知识图谱/分析项目文档时（4 阶段渐进式构建，独立分析类 skill） |
+| `generate-project-profile` | caseflow | 要求生成项目画像时（独立分析类 skill，生成 AI Agent 消费的 10 维度 Markdown） |
+| `coding-violation-log` | caseflow | 用户纠正 AI 编码错误时登记违规；编码前回顾已登记记录防重犯（嵌入编码链路，java-coding-standards 之前） |
+| `project-docs-update` | caseflow | 项目代码结构变更后同步知识图谱文档（检测差异 + 自动/确认更新） |
+| `arch-lint` | caseflow | Flutter 架构违规检测（5 条分层规则，全量/轻量两种模式） |
+| `comment-cleanup` | caseflow | 用户主动要求时对**存量**文件/类/模块成批清理违反注释红线的注释（`vN 新增` 版本标记 / `[BUGFIX]` 等变更日志 / 历史叙事 prose / 私有方法契约史 / 废话 / 死代码），多语言；红线规则单一来源引用 `coding-standards-common` §5.4 + §5.4.1，本 skill 只管范围圈定 / 分类决策 / 安全边界 / 提交纪律；**清理 ≠ 字面匹配删除**，Read 后判断、啰嗦的改写成一句话、函数体内非核心块注释默认清。与 §5.5 顺手清理、`check-comment-density.js` hook 写入拦截互补 |
+| `bugfix-coding-style` | caseflow | bug 修复 / 任何源码改动期的应用层指引（v1.28.8 起注释红线单一来源化）：**注释禁令统一收口到 `coding-standards-common` §5.4 + §5.4.1，本 skill 不再独立定义红线表**。只承担 bug 修复期独有内容：v1.17 方向反转的历史背景、推荐写法 dart 代码示例、摆放位置示例、适用范围矩阵、遇到存量 `[DEPRECATED]` / `[ADDED]` 注释顺手清理的边界、红色警告对照表 |
+| `glossary-required` | caseflow | 业务术语会话级强制登记;PRD / 设计 / 对话出现未登记的业务领域名词时自动候选追加;用户与 AI 同义词错位时主动对齐到规范术语;候选池 `{USER_DOCUMENTS}/ai-docs/{project}/glossary/_candidates.md`、正式版 `docs/knowledge-graph/glossary.md`;与 init-project-docs 的批量初始化术语表分工互补 |
+| `reverse-index-required` | caseflow | 反向影响索引强制维护(4 类:状态/字段/事件/API);冷启动 `hooks/scan-reverse-index.js` 扫描 Java/Dart/TS 枚举 + SQL 字面量产出 states 初版;增量维护规则:变更枚举 / 字段 / 事件 / API 同回合必须回写反向索引;与 backend-knowledge-graph-required 互补(正向 vs 反向)、与 cross-project-locator 边界明确(单服务内 vs 跨项目调用方) |
 
 ---
 
@@ -178,15 +178,15 @@ flowchart TD
 
 ---
 
-## team-standards 维护链路
+## caseflow 维护链路
 
-> 仅在**修改 team-standards 插件本身**时触发（修改 skill、模板、配置等）。与业务开发链路无关。
+> 仅在**修改 caseflow 插件本身**时触发（修改 skill、模板、配置等）。与业务开发链路无关。
 
 ```mermaid
 flowchart TD
-    M0{"当前 git 仓库是\nteam-standards 插件源码仓库?"}
+    M0{"当前 git 仓库是\ncaseflow 插件源码仓库?"}
     M0 -- "否" --> MX["业务项目普通流程\n不自动提交推送\n不改插件版本号"]
-    M0 -- "是" --> M1(["对 team-standards 插件自身做了变更\nskill / 模板 / 配置 / 规则"])
+    M0 -- "是" --> M1(["对 caseflow 插件自身做了变更\nskill / 模板 / 配置 / 规则"])
     M1 --> M2{"是否决策型变更?\n新增 Skill / 触发链路变化\n规则方向反转 / 重大原则"}
     M2 -- "是" --> M2A["dev-log\n在 docs/dev-log/YYYY-MM-DD.md\n记录长期背景与决策原因"]
     M2 -- "否" --> M2B["不写 dev-log\n由 git commit body 记录原因"]
@@ -201,9 +201,9 @@ flowchart TD
     M7 --> M8
 ```
 
-> **触发判断：** 只有当前 git 仓库就是 `team-standards` / `kpay-team-standards` 插件源码仓库，且在本次会话中创建、修改、删除了 `skills/` 下任意文件，或调整了 `CLAUDE.md`、`AGENTS.md`、插件元数据、README、skill-flow 等插件自身规则，才进入本维护链路。
+> **触发判断：** 只有当前 git 仓库就是 `caseflow` / `kpay-caseflow` 插件源码仓库，且在本次会话中创建、修改、删除了 `skills/` 下任意文件，或调整了 `CLAUDE.md`、`AGENTS.md`、插件元数据、README、skill-flow 等插件自身规则，才进入本维护链路。
 >
-> **自动提交判断：** 只要 team-standards 插件源码仓库变更完成且 `git status --short` 非空，必须立即按 `git-commit-standards` 自动提交并 push，避免多轮变更累计到一个大提交。业务项目即使安装本 plugin，也不自动 commit/push、不自动改版本号。用户明确要求暂不提交或暂不 push 时除外。
+> **自动提交判断：** 只要 caseflow 插件源码仓库变更完成且 `git status --short` 非空，必须立即按 `git-commit-standards` 自动提交并 push，避免多轮变更累计到一个大提交。业务项目即使安装本 plugin，也不自动 commit/push、不自动改版本号。用户明确要求暂不提交或暂不 push 时除外。
 
 ---
 
@@ -252,7 +252,7 @@ flowchart LR
 | `docs/bug/{模块名}/{bug名称}/{bug名称}.md` | 用户明确要求"上传终版 / 写到 docs/" 时 | 人 + AI 分析阶段 | 可补充；归档结构与用户目录一致，按模块分组 + 触发 doc-index-required |
 | `docs/design/{名称}修复/{名称}修复-current.md` | bug 分析完成后 | AI 实施阶段 | 随修复方案演进直接更新，历史由 git commit 负责 |
 | `docs/{subdir}/INDEX.md` | 首个文档创建时 | doc-index-required 读取 | 随文档新增自动追加 |
-| `docs/dev-log/YYYY-MM-DD.md` | team-standards 决策型变更时 | 人（追溯重大规则为什么存在） | 当天可追加，禁止修改历史日期文件；普通小改不写 |
+| `docs/dev-log/YYYY-MM-DD.md` | caseflow 决策型变更时 | 人（追溯重大规则为什么存在） | 当天可追加，禁止修改历史日期文件；普通小改不写 |
 
 ---
 
@@ -279,9 +279,9 @@ flowchart LR
 | coding.md 和 current.md 有什么区别? | current.md 是当前代码的正式设计描述；coding.md 是完整模版的当前编码摘要，给 AI 实施时节省 token。二者都随当前实现同步更新，不承担变更流水职责。 |
 | Bug 修复需要调 design-doc-required 吗? | **必须**。只要 bug 需要改代码，就必须有设计文档。bug 文档负责分析，设计文档负责实施方案，两者职责不同不可省略。bug 修复可用简化版模板（仅 8 节）。 |
 | bug 文档的修复方案节写什么? | 仅写方向摘要（每级一句话），加设计文档路径指引。详细实施细节写进设计文档。 |
-| dev-log 什么时候调? | 只在 team-standards 发生决策型变更时调用：新增/删除 Skill、触发时机或核心行为变化、规则方向反转、跨 Skill 链路变化、重大团队原则沉淀。普通小改、措辞同步、版本号递增不写 dev-log。 |
+| dev-log 什么时候调? | 只在 caseflow 发生决策型变更时调用：新增/删除 Skill、触发时机或核心行为变化、规则方向反转、跨 Skill 链路变化、重大团队原则沉淀。普通小改、措辞同步、版本号递增不写 dev-log。 |
 | dev-log 和 git-commit-standards 有什么区别? | git-commit-standards 是默认变更日志，commit body 要写清楚本次为什么改；dev-log 只记录“这个规则为什么存在”的长期背景。普通变更只需 commit body，重大规则决策才两者都写。 |
-| team-standards 改完后会自动 commit 和 push 吗? | 只在当前 git 仓库就是 team-standards 插件源码仓库时会。业务项目安装本 plugin 后不会自动提交、推送或改版本号。 |
+| caseflow 改完后会自动 commit 和 push 吗? | 只在当前 git 仓库就是 caseflow 插件源码仓库时会。业务项目安装本 plugin 后不会自动提交、推送或改版本号。 |
 | 为什么每次 push 还可能要授权? | 自动 push 是 skill 的行为规则；是否弹授权由 Codex/宿主运行环境的命令审批策略控制。若环境没有持久化允许 `git push`，skill 不能绕过授权，只能在获准后继续执行。 |
 | init-project-docs 什么时候调? | 仅在明确要求"初始化项目文档"或"分析项目能力"时调用，是独立的分析类 skill，不属于功能开发或 bug 修复链路。 |
 | markdown-writing-standards 和 design-doc-required 的 Mermaid 章节什么关系? | design-doc-required 规定「什么场景适合画什么图」，并遵循最小图原则：能一张图讲清就只画一张；markdown-writing-standards 规定「图怎么画不出错」（语法规则、自检清单）。前者定义 what，后者定义 how。 |

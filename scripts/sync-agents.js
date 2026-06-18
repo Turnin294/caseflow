@@ -4,7 +4,7 @@
  *
  * 把 CLAUDE.md 同步到 AGENTS.md。CLAUDE.md 是 canonical source,AGENTS.md 派生。
  * 替换规则：
- *   - 标题 "team-standards 插件开发规范" 保持
+ *   - 标题 "caseflow 插件开发规范" 保持
  *   - 正文中 "Claude" → "Codex"(限于触发表前导句等少数语境，不替换 "Claude Code" 之类专有名词)
  *   - 顶部加入 auto-generated 标记
  *
@@ -34,7 +34,7 @@ function transform(claudeContent) {
   //    只替换"Claude 在"、"Claude 必须"、"Claude Code 中"等明确指代 agent 的处,
   //    不动 "Claude Code"(产品名)出现在安装步骤等地方
   let out = claudeContent
-    .replace(/^# team-standards 插件开发规范$/m, '# team-standards 插件开发规范（Codex 入口）')
+    .replace(/^# caseflow 插件开发规范$/m, '# caseflow 插件开发规范（Codex 入口）')
     .replace(/\*\*Skill 必须主动触发，不等用户显式调用。\*\* Claude 在以下场景/g,
              '**Skill 必须主动触发，不等用户显式调用。** Codex 在以下场景')
     .replace(/Claude 在以下场景必须自动识别/g, 'Codex 在以下场景必须自动识别')

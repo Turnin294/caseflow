@@ -22,8 +22,8 @@
 | 改 Flutter 代码 | Flutter / .dart / 退款 UI / pos | (后端) korepos-backend-service(已迁至 kpay-daily-plugin) 或 (前端) `architecture-ddd-lite-fullstack` | `arch-lint`(编码后) + `coding-standards-common` | — |
 | 写源码 Edit/Write | .java / .dart / .ts / .py / .kt 任一 | `design-doc-required`(若未触发) → `pre-implementation-code-orientation` → `architecture-ddd-lite-fullstack` | `coding-standards-common`(任何源码必经) + 语言专属 | `bug-doc-required`(无 bug 报告) |
 | 提交 commit | git commit / 提交 / push | `git-commit-standards`(大改 hook 强制) | `daily-work-log`(会话末) | — |
-| 业务项目源码改动后 | (任何源码 Edit/Write 完毕) | `daily-work-log`(批处理 / 会话末) | `dev-log`(仅 team-standards 自身) | — |
-| 修改 team-standards 自身 skill / hook / 规则 | skills/ 下编辑 / 改 SKILL.md / 改触发链路 | `dev-log`(决策型变更) | `git-commit-standards`(自动 push) | `daily-work-log`(它管业务项目) |
+| 业务项目源码改动后 | (任何源码 Edit/Write 完毕) | `daily-work-log`(批处理 / 会话末) | `dev-log`(仅 caseflow 自身) | — |
+| 修改 caseflow 自身 skill / hook / 规则 | skills/ 下编辑 / 改 SKILL.md / 改触发链路 | `dev-log`(决策型变更) | `git-commit-standards`(自动 push) | `daily-work-log`(它管业务项目) |
 | 用户纠正 AI 编码错误 (分层违规 / 命名错 / 依赖方向错) | "这样写不对" / "不能引用这个层" / "改一下依赖方向" | `coding-violation-log`(登记模式, 异步) | — | — |
 | 开始编码前 (项目有 coding-violations.md) | (任何源码 Edit/Write 前) | `coding-violation-log`(回顾模式, 静默扫描) | `coding-standards-common` | — |
 
@@ -55,7 +55,7 @@
 | 通用编程概念 (线程 / 缓存 / 事务 / 子进程) | `backend-knowledge-graph-required`(技术难点) | 不进 glossary |
 | 初始化项目文档 / 生成知识图谱 / 4 阶段 | `init-project-docs` | 一次性入口 |
 | 项目画像 / project profile / 10 维度 | `generate-project-profile` | 独立扫描 |
-| team-standards 自身变更决策 / 新增 / 删除 skill / 链路反转 | `dev-log` | 仅 team-standards 仓库 |
+| caseflow 自身变更决策 / 新增 / 删除 skill / 链路反转 | `dev-log` | 仅 caseflow 仓库 |
 
 ## 互斥与同回合不重叠规则
 
@@ -64,7 +64,7 @@
 | `glossary-required` vs `backend-knowledge-graph-required` | 业务领域名词 (订单/退款) → glossary; 通用编程概念 (线程/缓存) → backend-knowledge-graph 的「技术难点」节; 不交叉 |
 | `glossary-required` vs `cross-project-locator/shared-glossary.md` | 单项目术语 → glossary; 跨项目同名异叫法对照 → cross-project; 不交叉 |
 | `backend-knowledge-graph-required`(正向) vs `reverse-index-required`(反向) | 正向: 这个枚举有什么值 / 这张表有什么字段; 反向: 这个枚举值在哪里被判断 / 这个字段在哪里被读写; 两者文件不同, 同回合可同时触发但不重复维护同一条事实 |
-| `daily-work-log` vs `dev-log` | daily-work-log 作用于业务项目; dev-log 作用于 team-standards 插件源码仓库; 不重叠 |
+| `daily-work-log` vs `dev-log` | daily-work-log 作用于业务项目; dev-log 作用于 caseflow 插件源码仓库; 不重叠 |
 | `business-logic-orientation` vs `pre-implementation-code-orientation` | orientation 是重构前**梳理现状** (产出独立文档); pre-implementation 是基于**已写好的 design 文档**定位代码; 不混用 |
 | `coding-standards-common` vs `java-coding-standards` | common 先 (跨语言 7 条铁律); Java 后 (独占条款); 两者叠加不替代 |
 | `bugfix-coding-style` vs `coding-standards-common` | bugfix 关注注释 / 历史痕迹清理; common 关注命名 / 函数原子 / 注释三档; 两者叠加 |

@@ -1,14 +1,14 @@
 {
-  "name": "team-standards",
+  "name": "caseflow",
   "interface": {
-    "displayName": "Team Standards"
+    "displayName": "CaseFlow"
   },
   "plugins": [
     {
-      "name": "team-standards",
+      "name": "caseflow",
       "source": {
         "source": "local",
-        "path": "./plugins/team-standards"
+        "path": "./plugins/caseflow"
       },
       "category": "Productivity"
     }

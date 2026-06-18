@@ -1,7 +1,7 @@
 # doc-index-required Skill 设计文档
 
 - 日期：2026-04-01
-- 作者：张凯
+- 作者：turnin
 - 状态：已审批
 
 ---

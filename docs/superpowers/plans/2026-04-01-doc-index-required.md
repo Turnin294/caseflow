@@ -179,7 +179,7 @@ git commit -m "feat(skill): 新增 doc-index-required skill
 分析内容边界，避免重复与混乱；写完后半自动更新索引。
 不适用于索引文件本身的更新，防止递归触发。
 
-Author: 张凯"
+Author: turnin"
 ```
 
 ---
@@ -210,7 +210,7 @@ git commit -m "docs(claude): 更新 Skill 索引，追加 doc-index-required
 新增 doc-index-required 条目，补充覆盖范围与关键词列，
 保持 CLAUDE.md 索引与实际 skill 文件同步。
 
-Author: 张凯"
+Author: turnin"
 ```
 
 ---
@@ -249,5 +249,5 @@ git commit -m "docs(readme): 新增 doc-index-required skill 说明
 在插件功能描述和 Skills 表中补充 doc-index-required，
 说明触发时机与作用，保持 README 与实际 skill 同步。
 
-Author: 张凯"
+Author: turnin"
 ```

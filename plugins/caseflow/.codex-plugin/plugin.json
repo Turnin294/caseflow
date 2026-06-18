@@ -1,0 +1,42 @@
+{
+  "name": "caseflow",
+  "version": "1.37.0",
+  "description": "Team development standards plugin with Java coding rules, design-doc requirements, and workflow guidance.",
+  "author": {
+    "name": "turnin",
+    "email": "",
+    "url": "https://gitee.com/wyoooni"
+  },
+  "homepage": "https://gitee.com/wyoooni/caseflow",
+  "repository": "https://gitee.com/wyoooni/caseflow.git",
+  "license": "MIT",
+  "keywords": [
+    "java",
+    "coding-standards",
+    "design-doc",
+    "caseflow",
+    "developer-workflow"
+  ],
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
+  "interface": {
+    "displayName": "CaseFlow",
+    "shortDescription": "Shared engineering standards and documentation workflows.",
+    "longDescription": "A reusable standards plugin for engineering teams. It provides Java coding standards, design-document requirements, commit guidance, bug-analysis workflows, project-document initialization, and business-logic orientation before refactoring.",
+    "developerName": "turnin",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://gitee.com/wyoooni/caseflow",
+    "privacyPolicyURL": "https://gitee.com/wyoooni/caseflow",
+    "termsOfServiceURL": "https://gitee.com/wyoooni/caseflow",
+    "defaultPrompt": [
+      "Draft a design doc before implementing this feature.",
+      "Review this Java code using the team standards plugin.",
+      "Map the current business logic before refactoring this module."
+    ],
+    "brandColor": "#2563EB"
+  }
+}

@@ -1,4 +1,4 @@
-# team-standards
+# caseflow
 
 > **30-second TL;DR**: A Claude Code plugin that turns AI-assisted development from "luck-based" into "process-driven" — 24 skills + 3 hooks enforce the complete pipeline: requirement analysis → design doc → code orientation → architecture gate → coding standards → commit standards → knowledge sediment. Make AI think before editing, and leave traceable artifacts after.
 
@@ -49,13 +49,13 @@ In Claude Code, run these three steps:
 **Step 1: Register the marketplace** (pointing at the Gitee repository)
 
 ```
-/plugin marketplace add https://gitee.com/wyoooni/team-standards.git
+/plugin marketplace add https://gitee.com/wyoooni/caseflow.git
 ```
 
 **Step 2: Install the plugin**
 
 ```
-/plugin install team-standards@team-standards
+/plugin install caseflow@caseflow
 ```
 
 Choose user-scope (recommended) at install time.

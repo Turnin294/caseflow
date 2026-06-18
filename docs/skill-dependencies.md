@@ -76,9 +76,9 @@ arch-lint                        ← Flutter 代码异步触发
 
 | Skill | 前置 | 后置 | 互补 |
 |-------|------|------|------|
-| `git-commit-standards` | 改动落地 | `daily-work-log` (业务项目)或 `dev-log`(team-standards) | hook 按大小放行 |
+| `git-commit-standards` | 改动落地 | `daily-work-log` (业务项目)或 `dev-log`(caseflow) | hook 按大小放行 |
 | `daily-work-log` | 业务项目源码改动 | — | 与 `dev-log` 互斥(不同主体) |
-| `dev-log` | team-standards 决策型变更 | — | 与 `daily-work-log` 互斥 |
+| `dev-log` | caseflow 决策型变更 | — | 与 `daily-work-log` 互斥 |
 
 ### ⑤ 知识图谱
 
@@ -109,13 +109,13 @@ arch-lint                        ← Flutter 代码异步触发
 
 | Skill | 前置 | 后置 | 互补 |
 |-------|------|------|------|
-| `dev-log` | team-standards 决策型变更 | — | — |
+| `dev-log` | caseflow 决策型变更 | — | — |
 
 ## 互斥关系一览
 
 | Skill A | Skill B | 互斥原因 |
 |---------|---------|---------|
-| `daily-work-log` | `dev-log` | 主体不同——业务项目 vs team-standards plugin 本身 |
+| `daily-work-log` | `dev-log` | 主体不同——业务项目 vs caseflow plugin 本身 |
 | `cross-project-locator` | `backend-knowledge-graph-required` | 单服务图谱归 backend-kg,跨项目拓扑归 cross-project-locator;同回合只该走其中之一 |
 | `business-logic-orientation` | `pre-implementation-code-orientation` | orientation 是重构前的现状梳理(独立文档),pre-implementation 是基于已写好的 design 文档定位代码;同回合只走其一 |
 | `XxxService` 命名 / `XxxUseCase` / `XxxCommandHandler` (项目级命名 taxonomy) | (无) | 同一项目只选一种,不混用——参见 `architecture-ddd-lite-fullstack`「服务命名 taxonomy」节 |
@@ -130,7 +130,7 @@ arch-lint                        ← Flutter 代码异步触发
 | AI 改完代码没回写枚举 / 字段反向索引 | `reverse-index-required`(回写模式) |
 | AI 改完后端代码没沉淀 DAO/SQL/状态判定 | `backend-knowledge-graph-required`(回写候选池或正式图谱) |
 | 业务项目源码改动后未记工作日志 | `daily-work-log`(会话结束前必须回补) |
-| team-standards 决策型变更后无 dev-log 条目 | `dev-log`(会话结束前) |
+| caseflow 决策型变更后无 dev-log 条目 | `dev-log`(会话结束前) |
 | Java 代码改完只走了 coding-standards-common 没走 java-coding-standards | 漏掉语言专属叠加 |
 
 ## 档位对依赖关系的覆盖规则（v1.26+）

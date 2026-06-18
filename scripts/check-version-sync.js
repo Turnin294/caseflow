@@ -22,8 +22,8 @@ const VERBOSE = process.argv.includes('--verbose');
 
 const targets = [
   {
-    name: 'plugins/team-standards/.claude-plugin/plugin.json',
-    file: path.join(ROOT, 'plugins', 'team-standards', '.claude-plugin', 'plugin.json'),
+    name: 'plugins/caseflow/.claude-plugin/plugin.json',
+    file: path.join(ROOT, 'plugins', 'caseflow', '.claude-plugin', 'plugin.json'),
     extract: (json) => json.version,
   },
   {
@@ -32,8 +32,8 @@ const targets = [
     extract: (json) => json.plugins && json.plugins[0] && json.plugins[0].version,
   },
   {
-    name: 'plugins/team-standards/.codex-plugin/plugin.json',
-    file: path.join(ROOT, 'plugins', 'team-standards', '.codex-plugin', 'plugin.json'),
+    name: 'plugins/caseflow/.codex-plugin/plugin.json',
+    file: path.join(ROOT, 'plugins', 'caseflow', '.codex-plugin', 'plugin.json'),
     extract: (json) => json.version,
   },
 ];

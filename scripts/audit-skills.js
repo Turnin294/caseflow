@@ -24,7 +24,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const SKILLS_DIR = path.join(ROOT, 'plugins', 'team-standards', 'skills');
+const SKILLS_DIR = path.join(ROOT, 'plugins', 'caseflow', 'skills');
 const DEV_LOG_DIR = path.join(ROOT, 'docs', 'dev-log');
 
 // 阈值(可调)
@@ -82,7 +82,7 @@ function countReferences(skillName, allSkills) {
 function getLastCommitDate(skillName) {
   try {
     const out = execSync(
-      `git -C "${ROOT}" log -1 --format=%ad --date=short -- plugins/team-standards/skills/${skillName}/SKILL.md`,
+      `git -C "${ROOT}" log -1 --format=%ad --date=short -- plugins/caseflow/skills/${skillName}/SKILL.md`,
       { encoding: 'utf8' }
     ).trim();
     return out || null;
