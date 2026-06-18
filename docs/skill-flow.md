@@ -28,7 +28,7 @@
 | `architecture-ddd-lite-fullstack` | caseflow | 编写或审查 Java / React / Vue / Flutter 业务代码前；在实施前代码定位后，先判断 Feature、分层、单向依赖、原子能力与结构质量（清晰、易维护、低耦合、高内聚）；含 **函数级业务场景分流**（阶梯 1 私有方法 / 阶梯 2 升级 service，判定锚点是「业务定位」而非「代码相似度」） |
 | `coding-standards-common` | caseflow | 编写/修改任何源码语言（Java / TS / JS / Dart / Python / Kotlin / Go 等）前；通用 7 条铁律 + 注释三档（+ 字段可选档）+ 注释放置原则（注释只落在类/字段/方法声明上，函数体内除 §5.3 六类核心块外不写，靠拆函数+命名表达）+ §7.6 复用项目公共能力优先（编码前查 coding-profile 的 common-capabilities.md，禁造轮子/禁原生替代公共封装）；先于具体语言 skill 触发 |
 | `java-coding-standards` | caseflow | 编写或修改任何 Java 代码时（自动应用，通用条款 delegate 到 coding-standards-common） |
-| `dart-coding-standards` | caseflow | 编写或修改任何 Dart / Flutter 代码时（自动应用，dartdoc `///` 独占条款，通用条款 delegate 到 coding-standards-common；korepos backend 接口再叠加 kpay-daily-plugin 的 korepos-backend-service） |
+
 | `llm-agent-coding-standards` | caseflow | 编写/修改接 LLM 或做 agent 的代码时（import langchain4j/spring-ai/openai/anthropic；定义 @Tool/AiService；拼 prompt；解析 LLM 输出）；在 coding-standards-common + 语言 skill 之上叠加 LLM 集成独占条款（确定性优先/输出当不可信/枚举输出/约定 SSOT/工具描述契约/循环兜底/上下文注入） |
 | `git-commit-standards` | caseflow | 大改 git commit 之前（>2 文件 / >30 行 / 含新增/重命名/删除文件）；**v1.18.1 起 hook 按改动大小放行**：`hooks/check-git-commit-skill.js` 看 staged diff，≤2 文件 ∧ ≤30 行 ∧ 仅 `M` 修改时直接放行（让模型自行写 commit message），其它情况未调用本 skill 时直接 exit 2 阻断；阈值可用 `CASEFLOW_TRIVIAL_FILES` / `CASEFLOW_TRIVIAL_LINES` 调整；git push 不门禁；仅在当前仓库就是 caseflow 插件源码仓库且插件自身变更完成后自动 stage、commit、push |
 | `dev-log` | caseflow | 对 caseflow 做决策型变更后：新增/删除 Skill、触发时机或核心行为变化、规则方向反转、跨 Skill 链路变化、重大团队原则沉淀；普通小改只写 commit body |
@@ -38,7 +38,7 @@
 | `generate-project-profile` | caseflow | 要求生成项目画像时（独立分析类 skill，生成 AI Agent 消费的 10 维度 Markdown） |
 | `coding-violation-log` | caseflow | 用户纠正 AI 编码错误时登记违规；编码前回顾已登记记录防重犯（嵌入编码链路，java-coding-standards 之前） |
 | `project-docs-update` | caseflow | 项目代码结构变更后同步知识图谱文档（检测差异 + 自动/确认更新） |
-| `arch-lint` | caseflow | Flutter 架构违规检测（5 条分层规则，全量/轻量两种模式） |
+
 | `comment-cleanup` | caseflow | 用户主动要求时对**存量**文件/类/模块成批清理违反注释红线的注释（`vN 新增` 版本标记 / `[BUGFIX]` 等变更日志 / 历史叙事 prose / 私有方法契约史 / 废话 / 死代码），多语言；红线规则单一来源引用 `coding-standards-common` §5.4 + §5.4.1，本 skill 只管范围圈定 / 分类决策 / 安全边界 / 提交纪律；**清理 ≠ 字面匹配删除**，Read 后判断、啰嗦的改写成一句话、函数体内非核心块注释默认清。与 §5.5 顺手清理、`check-comment-density.js` hook 写入拦截互补 |
 | `bugfix-coding-style` | caseflow | bug 修复 / 任何源码改动期的应用层指引（v1.28.8 起注释红线单一来源化）：**注释禁令统一收口到 `coding-standards-common` §5.4 + §5.4.1，本 skill 不再独立定义红线表**。只承担 bug 修复期独有内容：v1.17 方向反转的历史背景、推荐写法 dart 代码示例、摆放位置示例、适用范围矩阵、遇到存量 `[DEPRECATED]` / `[ADDED]` 注释顺手清理的边界、红色警告对照表 |
 | `glossary-required` | caseflow | 业务术语会话级强制登记;PRD / 设计 / 对话出现未登记的业务领域名词时自动候选追加;用户与 AI 同义词错位时主动对齐到规范术语;候选池 `{USER_DOCUMENTS}/ai-docs/{project}/glossary/_candidates.md`、正式版 `docs/knowledge-graph/glossary.md`;与 init-project-docs 的批量初始化术语表分工互补 |
@@ -84,7 +84,7 @@ flowchart TD
     E5(["初始化项目文档"])
     IPD["init-project-docs\n渐进式构建知识图谱\n4 阶段"]
     PDU["project-docs-update\n检测差异 同步文档"]
-    ALINT["arch-lint\nFlutter 架构违规检测"]
+
 
     %% 上下文预热
     CTX["Step 0: 知识图谱预热\n读 00_project_overview\n按路由表加载必读文档"]
@@ -116,7 +116,7 @@ flowchart TD
     GCS -. "含新模块/接口时提醒" .-> PDU
 
     %% Flutter 架构检查
-    JCS -. "Flutter 代码改动后" .-> ALINT
+
 
     %% 反向索引同回合回写(v21+)
     JCS -. "改完枚举/字段/事件/API 同回合回写" .-> RIDX
@@ -295,9 +295,9 @@ flowchart LR
 | architecture-ddd-lite-fullstack 什么时候调? | 设计文档和代码定位完成后、第一行业务源码改动前。它是默认架构门禁：先判断 Feature、Presentation/Application/Domain/Repository/Infrastructure 分层、调用方向、原子能力和结构质量（清晰、易维护、低耦合、高内聚），再写代码。 |
 | 什么时候必须把 if-else 分支拆成独立 service，什么时候在函数内拆私有方法就够了？(v1.26.3) | 判定锚点是「业务定位」而非「代码相似度」。共享同一状态机/校验/补偿/团队 → 函数内拆私有方法即可（**阶梯 1**：`_handleTypeA()` / `_handleTypeB()` 私有方法，主方法只分流派发）；分支差异本质是不同业务定位（独立状态机/独立 PRD 模块/独立团队，命中 ≥3 个判定信号） → 升级到 service 级（**阶梯 2**：建 `AService` / `BService1`，共享逻辑沉到原子能力层）。1-100 期成熟项目扩展期最易违反——AI 看到 `OrderService.handle()` 已存在就习惯性加 `else if (type == B)`，结果两种业务定位逻辑黏死。详见 `architecture-ddd-lite-fullstack` 「函数级业务场景分流」节、`coding-standards-common §2.5`、`anti-pattern-case-library C4`。 |
 | architecture-ddd-lite-fullstack 和 java-coding-standards 的区别? | architecture-ddd-lite-fullstack 管**代码放哪一层、依赖方向、业务能力怎么复用、结构是否清晰易维护且低耦合高内聚**；java-coding-standards 管 **Java 代码质量**（命名、格式、异常、集合、日志等）。先分层和结构设计，再写具体语言代码。 |
-| coding-standards-common 和 java-coding-standards 的区别? | coding-standards-common 是**跨语言通用底**（命名表意、函数原子 80 行、层次分明、零魔法值、注释三档、异常不静默、DRY rule of 3），适用一切源码语言；java-coding-standards 是 **Java 独占条款**（Javadoc 语法、Integer 比较、SimpleDateFormat、SLF4J、HashMap 容量、@Override、关系库 SQL 规范等）。触发顺序：common 先（任何源码语言都要走） → 具体语言 skill 后（叠加独占条款）。新写 TS/Python/Kotlin/Go 时只走 common，新写 Java 走 common + java，新写 Dart 走 common + dart（korepos backend 接口再叠加 kpay-daily-plugin 的 korepos-backend-service）。 |
+| coding-standards-common 和 java-coding-standards 的区别? | coding-standards-common 是**跨语言通用底**（命名表意、函数原子 80 行、层次分明、零魔法值、注释三档、异常不静默、DRY rule of 3），适用一切源码语言；java-coding-standards 是 **Java 独占条款**（Javadoc 语法、Integer 比较、SimpleDateFormat、SLF4J、HashMap 容量、@Override、关系库 SQL 规范等）。触发顺序：common 先（任何源码语言都要走） → 具体语言 skill 后（叠加独占条款）。新写 TS/Python/Kotlin/Go 时只走 common，新写 Java 走 common + java。 |
 | 注释到底要写多少? | 三档铁律：类 1-3 行（业务职责 + 所属层 + 关键协作）、方法 1-2 行 + 参数/返回/异常项（业务意图，不是重复方法名）、核心代码块 1 行（业务规则 / 技术决策 / 魔法数字 / 容错降级 / TODO）。**禁止**：注释掉的旧代码、变更历史/日期/PR 号、段落式设计史、重复函数名的废话、无原因 TODO。简要原则：写不下就说明你想塞实现细节，那部分应该进 design doc 而不是源码。 |
-| arch-lint 和 java-coding-standards 的区别? | arch-lint 检测 **Flutter 架构分层**违规（presentation 层写 SQL 等跨层问题），java-coding-standards 检测 **Java 代码**质量（命名/格式/异常处理等）。一个管分层，一个管编码。 |
+
 | Phase 3-4 的自动模式和确认模式怎么选? | 自动模式：AI 尽力推断后生成，标注"需人工校验"，适合快速产出初稿。确认模式：逐份展示等用户确认，适合对准确度要求高的场景。 |
 | Step 0 知识图谱预热是什么? | 在 design-doc-required / bug-doc-required 执行前，先读 `00_project_overview.md` 获取全局索引，再按 AI 上下文路由表加载当前任务类型对应的 2-3 份文档。避免全量扫码，按需获取上下文。 |
 | 什么时候走「轻量修订」而不是新建快照? | 设计文档已存在 + 改动通过 design-doc-required 第四·五步硬清单（不新增接口/字段/类、不改方法签名、单文件 ≤30 行净变更、性质属修正/对齐/删冗余/修 bug）。Git 管理下必要时更新 current 文档，变更说明写 commit body；任一项 ❌ 进入需求变更处理。 |

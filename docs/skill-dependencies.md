@@ -59,7 +59,6 @@ coding-standards-common          ← 强制门禁(无例外)
             ↓
 markdown-writing-standards       ← 仅含 Mermaid 时
             ↓
-arch-lint                        ← Flutter 代码异步触发
 ```
 
 | Skill | 前置 | 后置 | 互补 / 叠加 |
@@ -68,7 +67,6 @@ arch-lint                        ← Flutter 代码异步触发
 | `coding-standards-common` | `architecture-ddd-lite-fullstack` | `{language}-coding-standards` | `bugfix-coding-style`(bug 修复时叠加) |
 | `java-coding-standards` | `coding-standards-common` | — | 通用部分 delegate 到 common,不替代 |
 | `bugfix-coding-style` | 仅 bug 修复 / 删冗余场景 | `coding-standards-common` 继续 | 注释方向与 `coding-standards-common` 注释三档对齐 |
-| `arch-lint` | Flutter 代码改动 | `coding-violation-log`(若 lint 命中违规) | — |
 | `coding-violation-log`(回顾) | 项目存在 coding-violations.md | (无,纯读) | — |
 | `markdown-writing-standards` | 写 Mermaid 或结构性 markdown 改动 | — | — |
 
@@ -94,7 +92,6 @@ arch-lint                        ← Flutter 代码异步触发
 | Skill | 前置 | 后置 | 互补 |
 |-------|------|------|------|
 | `coding-violation-log`(登记) | 用户纠错时 | 后续会话编码前回顾 | — |
-| `arch-lint` | Flutter 代码改动后 | — | — |
 | `markdown-writing-standards` | Markdown 含 Mermaid 或结构性改动 | — | — |
 | `project-docs-update` | 项目结构变更(新增 Controller/Service/表/API) | — | — |
 

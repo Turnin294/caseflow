@@ -77,7 +77,7 @@ Brief overview:
 - **③ Architecture & coding gates** — `architecture-ddd-lite-fullstack` / `coding-standards-common` / `java-coding-standards` / `bugfix-coding-style` (korepos backend rules korepos-backend-service migrated to kpay-daily-plugin)
 - **④ Commit & log** — `git-commit-standards` / `daily-work-log`
 - **⑤ Knowledge graph** — `backend-knowledge-graph-required` / `reverse-index-required` / `glossary-required` / `cross-project-locator`
-- **⑥ Quality loop** — `coding-violation-log` / `arch-lint` / `markdown-writing-standards` / `project-docs-update`
+- **⑥ Quality loop** — `coding-violation-log` / `markdown-writing-standards` / `project-docs-update`
 - **⑦ Project initialization** — `init-project-docs` / `generate-project-profile`
 - **⑧ Plugin self-maintenance** — `dev-log`
 

@@ -20,7 +20,7 @@
 | **开始编写或修改任何源码前（任何语言：Java / TS / JS / Dart / Python / Kotlin / Go 等）** | `coding-standards-common`（通用 7 条铁律 + 注释三档；先于具体语言 skill） |
 | **大改 git commit 之前**（>2 文件 或 >30 行 或 含新增/重命名/删除文件）；小改（≤2 文件 ∧ ≤30 行 ∧ 仅 `M` 修改）直接写 commit message 即可，hook 自动放行；git push 不门禁 | `git-commit-standards` |
 | 编写或审查 Java 代码 | `java-coding-standards` |
-| 编写或审查 Dart / Flutter 代码 | `dart-coding-standards`（korepos / korepos-refund 的 backend 接口代码再叠加 kpay-daily-plugin 插件的 korepos-backend-service skill） |
+
 | **编写或修改接 LLM / 做 agent 的代码**（import langchain4j / spring-ai / openai / anthropic 等 SDK；定义 `@Tool` / AiService；拼 prompt；解析 LLM 输出） | `llm-agent-coding-standards`（叠加在 `coding-standards-common` 之上：确定性优先 / LLM 输出当不可信 / 枚举输出 / 约定 SSOT / 工具描述契约 / 循环兜底） |
 | 生成或修改包含 Mermaid 图表的 Markdown 内容；或完成 Markdown 文件的结构性写入/重组（新增/删除/重命名 ##、### 章节，或章节移动/合并） | `markdown-writing-standards` |
 | 重构/复写/迁移前需要理解现有业务逻辑 | `business-logic-orientation` |
@@ -29,7 +29,7 @@
 | **开始编写代码前（若项目存在 coding-violations.md）** | `coding-violation-log`（回顾模式） |
 | **bug 修复 / 对齐云端 / 删冗余 / 任何源码改动** | `bugfix-coding-style`（源码只描述当前逻辑；禁变更日志注释；函数头不堆历史/设计摘要；复杂逻辑在对应代码块写短 WHY） |
 | 项目代码结构变更后需要同步文档 | `project-docs-update` |
-| Flutter 代码架构违规检查 | `arch-lint` |
+
 | **用户主动要求清理存量注释**（「清理这个文件/类的注释」「删掉 vN 新增等版本变更注释」「注释太多帮我精简」「clean up comments」） | `comment-cleanup`（红线规则源仍是 `coding-standards-common` §5.4，本 skill 只执行存量批量清理） |
 | **跨项目定位 / 排查 / 调用链追踪（涉及 ≥2 个 kpay POS 生态工程）** | `cross-project-locator`（查询模式） |
 | **即将写同时提到 ≥2 个 kpay POS 工程名的 markdown（对照 / 流程 / 数据流）** | `cross-project-locator`（登记模式） |
@@ -56,10 +56,10 @@
 |---|---|---|
 | **① 方案 / 需求分析（动手前最先触发）** | `solution-review-required` / `design-doc-required` / `bug-doc-required` / `business-logic-orientation` | 把"用户想做什么"和"实际怎么做"分离；产出设计文档 / bug 文档 / 现状梳理文档 |
 | **② 实施前定位（文档写完、动手前）** | `pre-implementation-code-orientation` / `doc-index-required` | 精准 Read 关键代码坐标；文档输出路径 / Phase-A 查重 |
-| **③ 架构与编码门禁（实施时）** | `architecture-ddd-lite-fullstack` / `coding-standards-common` / `java-coding-standards` / `dart-coding-standards` / `llm-agent-coding-standards` / `bugfix-coding-style` | 分层 + 每分支一 focused service / 命名 + 函数原子 + 注释三档 / Java 独占条款 / Dart·dartdoc 独占条款 / **LLM·Agent 集成独占条款** / bug 修复注释规范（korepos backend 接口强约束已迁至 kpay-daily-plugin 的 korepos-backend-service skill） |
+| **③ 架构与编码门禁（实施时）** | `architecture-ddd-lite-fullstack` / `coding-standards-common` / `java-coding-standards` / `llm-agent-coding-standards` / `bugfix-coding-style` | 分层 + 每分支一 focused service / 命名 + 函数原子 + 注释三档 / Java 独占条款 / **LLM·Agent 集成独占条款** / bug 修复注释规范 |
 | **④ 提交与日志（收尾时）** | `git-commit-standards` / `daily-work-log` | 规范 commit；业务项目源码改动后按 bug/功能分类沉淀工作日志 |
 | **⑤ 知识图谱（沉淀时）** | `backend-knowledge-graph-required` / `reverse-index-required` / `glossary-required` / `cross-project-locator` | 正向单服务图谱（表 / SQL / 状态机 / 原子能力 / 技术难点）/ 反向影响索引（枚举 / 字段 / 事件 / API）/ 业务术语登记 / 跨项目拓扑 |
-| **⑥ 质量回路（持续）** | `coding-violation-log` / `arch-lint` / `comment-cleanup` / `markdown-writing-standards` / `project-docs-update` | 编码违规登记防重犯 / Flutter 架构 lint / 存量注释批量清理（对齐 §5.4）/ Mermaid 语法 + 目录复核 / 项目结构变更后同步文档 |
+| **⑥ 质量回路（持续）** | `coding-violation-log` / `comment-cleanup` / `markdown-writing-standards` / `project-docs-update` | 编码违规登记防重犯 / 存量注释批量清理（对齐 §5.4）/ Mermaid 语法 + 目录复核 / 项目结构变更后同步文档 |
 | **⑦ 项目初始化（一次性）** | `init-project-docs` / `generate-project-profile` | 4 阶段渐进式构建知识图谱 / 生成 AI Agent 消费的 10 维度项目画像 |
 | **⑧ plugin 自身维护** | `dev-log` | 仅 caseflow 决策型变更记录长期背景 |
 
@@ -82,7 +82,7 @@
 | [docs/templates/saga-pattern.md](docs/templates/saga-pattern.md) | Saga / Outbox / Domain Event 三栈实施模板 | 触发跨分支编排 / 跨聚合场景时,在原则层(architecture-ddd-lite-fullstack)之外参考具体代码模板 |
 | [docs/skill-dependencies.md](docs/skill-dependencies.md) | Skill 间依赖关系图(前置/后置/互补/互斥) | 不确定多个 skill 触发顺序时;遇到"X 不调用 Y 能不能进行"问题时 |
 | [CHANGELOG.md](CHANGELOG.md) | 关键版本变化 + Notable rule reversals | 维护人评估规则演化路径时 |
-| [docs/dev-log/](docs/dev-log/) | 决策型变更的长期背景 | 遇到"这条规则为什么这样写"时(commit body 是"本次为什么改",dev-log 是"这条规则为什么存在") |
+
 
 ---
 
@@ -150,7 +150,7 @@
             ↓
 [第 11 步] coding-standards-common          ← 任何源码 Edit/Write 必经(无例外)
             ↓
-[第 12 步] java-coding-standards / dart-coding-standards ← 按语言叠加（korepos backend 接口的 korepos-backend-service 已迁至 kpay-daily-plugin）
+[第 12 步] java-coding-standards             ← 按语言叠加
             ↓
 [第 12.5 步] llm-agent-coding-standards     ← 仅接 LLM / 做 agent 的代码（叠加在 common + 语言 skill 之上）
             ↓
@@ -158,17 +158,15 @@
             ↓
 [第 14 步] cross-project-locator            ← 仅 ≥2 个 kpay POS 工程命中时
             ↓
-[第 15 步] arch-lint                        ← 仅 Flutter 代码变更后(异步触发)
+[第 15 步] git-commit-standards             ← commit 前(hook 兜底大改强制走)
             ↓
-[第 16 步] git-commit-standards             ← commit 前(hook 兜底大改强制走)
+[第 16 步] daily-work-log                   ← 业务项目源码改动后(会话结束前回补)
             ↓
-[第 17 步] daily-work-log                   ← 业务项目源码改动后(会话结束前回补)
+[第 17 步] reverse-index-required (回写)   ← 改完枚举/字段/事件/API 同回合
             ↓
-[第 18 步] reverse-index-required (回写)   ← 改完枚举/字段/事件/API 同回合
+[第 18 步] coding-violation-log (登记模式) ← 用户纠错时(异步)
             ↓
-[第 19 步] coding-violation-log (登记模式) ← 用户纠错时(异步)
-            ↓
-[第 20 步] dev-log + project-docs-update    ← 仅决策型变更 / 结构变更时
+[第 19 步] dev-log + project-docs-update    ← 仅决策型变更 / 结构变更时
 ```
 
 ### 冲突解决规则
@@ -181,7 +179,6 @@
 | `bug-doc-required` vs `design-doc-required` | bug 修复链路两者都必走;bug 文档负责分析根因,design 文档负责实施方案 |
 | `business-logic-orientation` vs `pre-implementation-code-orientation` | orientation 是重构前的现状梳理(产出独立文档),pre-implementation 是基于已写好的 design 文档定位代码 |
 | `coding-standards-common` vs `java-coding-standards` | common 先(跨语言 7 条铁律),Java 后(独占条款);两者叠加不替代 |
-| `coding-standards-common` vs `dart-coding-standards` | common 先(跨语言),Dart 后(dartdoc 独占);两者叠加不替代 |
 | `coding-standards-common` / 语言 skill vs `llm-agent-coding-standards` | common + 语言 skill 先,LLM skill 最后叠加(集成独占:确定性优先 / 输出当不可信 / 枚举输出 / 约定 SSOT / 工具描述契约 / 循环兜底);仅"接 LLM"代码才触发,叠加不替代 |
 | `bugfix-coding-style` vs `coding-standards-common` | **v1.28.8 起注释红线单一来源化到 common §5.4 + §5.4.1**;bugfix-coding-style 不再独立定义注释禁令,只承担 bug 修复期独有的应用层指引(v1.17 方向反转的历史背景 / 推荐写法 dart 示例 / 摆放位置 / 适用范围 / 旧 `[DEPRECATED]` / `[ADDED]` 标记顺手清理边界 / 红色警告);两者叠加不重复 |
 | `git-commit-standards` 触发后又来一次小改 commit | hook 按改动大小判定:小改放行不再过 skill;大改才强制走 |
@@ -203,9 +200,8 @@
 | `design-doc-required` | `skills/design-doc-required/` | 编写代码前强制要求设计文档（新功能和 bug 修复均适用）；文档定位为方案/接口开发的简明编码依据，重点确认核心逻辑、关键规则、编码落点和风险点，避免复写项目全集资料；**三档模版分级**：（1）极简跳过（合法例外）—满足极简改动硬清单（≤2 文件 ∧ ≤30 行 ∧ 透传补漏/局部修正/dead code 清理等）时完全跳过文档，git commit body 承担变更说明；（2）轻量 `lightweight-template.md`—单接口自身流程/库表读写流程；（3）完整 `template.md`—超出轻量范围的方案/接口设计；图表遵循最小图原则，能一张图讲清就只画一张；**v1.20 起默认输出路径** `{USER_DOCUMENTS}/ai-docs/{project}/design/{需求名称}/{需求名称}-current.md`（无 `{agent}/`、无 `{YYYY-MM-DD}/`、文件名不带日期，由 `doc-index-required` Phase-A/B 管控）；Git 管理下项目正式文档默认维护稳定/current 文档，历史由 commit body 承担，版本快照仅用于重大基线、非 Git 文档或用户明确要求；完整模版自动生成 coding-summary，轻量/极简无需 coding.md | 设计文档、需求、方案、实现前、新功能、修复方案、实施方案、bug修复、极简跳过、透传补漏、轻量模版、接口级、简明扼要、核心逻辑、风险点、最小图、场景选图、current文档、Git历史、commit body 即变更说明、ai-docs、Phase-A、Phase-B |
 | `architecture-ddd-lite-fullstack` | `skills/architecture-ddd-lite-fullstack/` | 编码前默认架构规则：DDD-lite 分层、Feature 模块化、单向依赖、原子能力沉淀；**与语言无关，三栈一致适用**——Java（Spring Boot/Spring Cloud）、Python（FastAPI/Django/Flask）、Dart（Serverpod/Shelf/koreposBackendService），以及 React/Vue/Flutter 前端；强制代码结构清晰、易维护、低耦合、高内聚，禁止 UI / Controller / Endpoint 直接写业务逻辑或访问 DB / HTTP；**新代码落点决策**（扩展现有功能时新代码必须放到新结构暴露 public 方法，旧文件只 +1 行调用，禁止在巨型方法 / 旧骨架文件里就地追加 N 行新逻辑）；**Service 业务动作扩展铁律——每个业务分支一个 focused service，任何新方法都不进 god service**：扩展既有 service 时不允许往多分支 god service（如 `OrderService` 同时承载 `refund`/`cancel`/`reject`）追加**任何** public 业务方法——新业务分支（`reverseCheckout`）→ 新建该分支的 focused service；同分支变种（`partialRefund`）→ 进该分支的 focused service（若分支仍散落在 god service 则新建并把既有方法+变种**一并迁过去**）；god service 最多保留 1 行 delegate 入口且禁止写任何业务逻辑；**跨分支编排**（同一回合调用 ≥2 个 focused service 时必须落到独立 `XxxOrchestrator` / `XxxSaga`，不进任一 focused service 内部，Controller 也不直接连续调用，O1-O4 触发条件：原子事务边界 / 顺序依赖 / 失败补偿 / 复合动作）；**横切关注点豁免**（日志/审计/权限/事务/metrics/缓存/限流走 AOP/拦截器/注解统一注入，focused service 内部不重复实现；`AuditAspect` / `LoggingInterceptor` 等横切实现类不算 god service）；**服务命名 taxonomy**（同一项目内 `XxxService` / `XxxUseCase` / `XxxCommandHandler` 三种叫法只选一种贯彻；Orchestrator / Saga 与 focused service 命名解耦；禁止 `XxxApplicationService` / `XxxManager` / `XxxHelper` 等模糊命名）；**聚合边界与事务一致性**（一个 `@Transactional` 只修改一个聚合根；跨聚合走 Domain Event / Saga；用 5 问判定 Refund 是 Order 聚合内动作还是独立聚合，模糊默认独立聚合）；**函数级业务场景分流——分支差异即拆分**（v1.26.3 新增；service 级铁律在函数粒度的下钻）：函数内按业务类型 if-else / switch 分流 ≥2 分支时,**先判定分支差异本质再决定拆分阶梯**——阶梯 1 同业务定位(共享同状态机 / 校验 / 补偿 / 团队)拆函数内私有方法 `_handleTypeA()` / `_handleTypeB()`,主方法只派发;阶梯 2 不同业务定位(独立状态机 / 独立 PRD 模块 / 独立团队)升级到 service 级,按 Service 业务动作扩展铁律拆 `AService` / `BService1`,共享逻辑沉到原子能力层;**判定锚点是「业务定位」而非「代码相似度」**——长得像但业务定位不同就要拆;1-100 期成熟项目扩展期最易违反 | DDD-lite、分层架构、Feature、原子能力、UseCase、Application、Domain、Repository、Infrastructure、结构清晰、易维护、低耦合、高内聚、前端、Flutter、Spring、新代码落点、strangler pattern、旧代码堆叠禁令、Service 业务动作扩展、新业务分支必拆、同分支变种必迁、反结账场景、partialRefund 场景、惯性追加禁令、focused sub-service、god service 零业务方法、函数级业务场景分流、阶梯 1 私有方法、阶梯 2 升级 service、业务定位判定、if-else 堆叠禁令、1-100 期反惯性、1 行 delegate 入口、跨分支编排、Orchestrator、Saga、横切关注点豁免、AOP、拦截器、服务命名 taxonomy、CommandHandler、聚合边界、事务一致性、Domain Event、聚合 5 问 |
 | `git-commit-standards` | `skills/git-commit-standards/` | commit 类型前缀；中文 body；基于 diff 分析；Author 署名；caseflow 自动 push 仍受宿主命令授权策略约束；**v1.18.1 起 hook 按改动大小判定**：`hooks/check-git-commit-skill.js` 看 staged diff，≤2 文件 ∧ ≤30 行 ∧ 仅 `M` 修改时放行（让模型自行写一句 commit message），其它情况未调用本 skill 时直接 exit 2 阻断；阈值可用 `CASEFLOW_TRIVIAL_FILES` / `CASEFLOW_TRIVIAL_LINES` 调整；git push 不门禁 | 提交、commit、git、分支、push、授权、hook、按改动大小放行 |
-| `coding-standards-common` | `skills/coding-standards-common/` | **跨语言通用编码铁律 7 条 + 注释三档**：命名表意 / 函数原子（80 行硬阈值 + ≤4 参数 + ≤3 嵌套）/ 层次分明（单向依赖 + UI 禁直 SQL/HTTP）/ 零魔法值（DB 字段值与协议码强制枚举）/ **注释三档 + 字段可选档**（类 1-3 行 + 方法 1-2 行 + 核心块 1 行 + 字段一行可选，禁变更日志 / 禁注释代码 / TODO 必带原因负责人）+ **注释放置原则总纲**（注释只落在类/字段/方法声明上；函数体内除 §5.3 六类核心块外不写注释，靠拆函数+命名表达；每档一句话讲清，多余删）+ **§5.2.1 职责边界注释**（仅限原子能力方法 / 领域服务公开类的「职责·不负责」契约清单，每条≤1 行、≤8 条，普通 DTO/Widget/工具类不用）+ **TODO 格式 `TODO(负责人): 原因`**（负责人+原因必填、禁日期）+ **§5.0 注释语言 = 当前会话沟通语言（沟通语言一票否决）**（用户用中文沟通即写中文注释，用户用英文即写英文；**无存量文件豁免**——不沿袭原文件语言，短期内单文件中英混杂可接受、待后续重构统一；唯一能覆盖默认的合法路径是用户在本会话明确要求特定语言）/ 异常不静默 / DRY rule of 3 / **§7.6 复用项目公共能力优先**（编码前先查该项目 coding-profile 的 common-capabilities.md，禁造轮子 / 禁用原生实现替代已有公共封装）。任何源码 Edit/Write 前先满足本 skill 再走语言专属（java-coding-standards / dart-coding-standards 等；korepos backend 接口的 korepos-backend-service 已迁至 kpay-daily-plugin） | 通用编码、跨语言、命名、函数原子、80 行、嵌套、层次分明、单向依赖、零魔法值、注释三档、字段级注释、注释放置原则、函数体保持干净、声明位置注释、类注释职责边界、类头字段去重、扩展指南禁令、方法头复述代码禁令、注释密度信号、职责边界注释、原子能力契约注释、TODO 格式负责人原因、注释语言、沟通语言、中文注释、英文注释、异常、DRY、rule of 3、业务场景分流拆分、§2.5、§5.0.0 写注释 3 秒自检、§5.4 注释禁令单一来源、§5.4.1 字面反例对照表、私有方法 dartdoc 禁堆契约史、行内 WHY 硬阈值 1 行、section divider 禁令、内嵌 SQL 禁 -- 注释、SQL 口径迁外层宿主注释、旁路场景影响面归 design doc、复用公共能力优先、编码前查能力清单、common-capabilities、禁造轮子、禁原生替代公共封装、§7.6 |
+| `coding-standards-common` | `skills/coding-standards-common/` | **跨语言通用编码铁律 7 条 + 注释三档**：命名表意 / 函数原子（80 行硬阈值 + ≤4 参数 + ≤3 嵌套）/ 层次分明（单向依赖 + UI 禁直 SQL/HTTP）/ 零魔法值（DB 字段值与协议码强制枚举）/ **注释三档 + 字段可选档**（类 1-3 行 + 方法 1-2 行 + 核心块 1 行 + 字段一行可选，禁变更日志 / 禁注释代码 / TODO 必带原因负责人）+ **注释放置原则总纲**（注释只落在类/字段/方法声明上；函数体内除 §5.3 六类核心块外不写注释，靠拆函数+命名表达；每档一句话讲清，多余删）+ **§5.2.1 职责边界注释**（仅限原子能力方法 / 领域服务公开类的「职责·不负责」契约清单，每条≤1 行、≤8 条，普通 DTO/Widget/工具类不用）+ **TODO 格式 `TODO(负责人): 原因`**（负责人+原因必填、禁日期）+ **§5.0 注释语言 = 当前会话沟通语言（沟通语言一票否决）**（用户用中文沟通即写中文注释，用户用英文即写英文；**无存量文件豁免**——不沿袭原文件语言，短期内单文件中英混杂可接受、待后续重构统一；唯一能覆盖默认的合法路径是用户在本会话明确要求特定语言）/ 异常不静默 / DRY rule of 3 / **§7.6 复用项目公共能力优先**（编码前先查该项目 coding-profile 的 common-capabilities.md，禁造轮子 / 禁用原生实现替代已有公共封装）。任何源码 Edit/Write 前先满足本 skill 再走语言专属（java-coding-standards 等；korepos backend 接口的 korepos-backend-service 已迁至 kpay-daily-plugin） | 通用编码、跨语言、命名、函数原子、80 行、嵌套、层次分明、单向依赖、零魔法值、注释三档、字段级注释、注释放置原则、函数体保持干净、声明位置注释、类注释职责边界、类头字段去重、扩展指南禁令、方法头复述代码禁令、注释密度信号、职责边界注释、原子能力契约注释、TODO 格式负责人原因、注释语言、沟通语言、中文注释、英文注释、异常、DRY、rule of 3、业务场景分流拆分、§2.5、§5.0.0 写注释 3 秒自检、§5.4 注释禁令单一来源、§5.4.1 字面反例对照表、私有方法 dartdoc 禁堆契约史、行内 WHY 硬阈值 1 行、section divider 禁令、内嵌 SQL 禁 -- 注释、SQL 口径迁外层宿主注释、旁路场景影响面归 design doc、复用公共能力优先、编码前查能力清单、common-capabilities、禁造轮子、禁原生替代公共封装、§7.6 |
 | `java-coding-standards` | `skills/java-coding-standards/` | **阿里黄山版 Java 独占条款**（通用 7 条见 coding-standards-common）：Java 命名补充（POJO 布尔禁 is 前缀 / 接口方法禁 public）、Java 代码格式（大括号 / 120 字符）、Javadoc 语法、OOP（Integer == / BigDecimal / StringBuilder / @Override）、集合（Arrays.asList / Iterator / HashMap 容量 / entrySet）、并发（线程池 / SimpleDateFormat / ThreadLocal remove）、SLF4J 日志、关系库 SQL 规范、Java 安全（PreparedStatement） | Java、Javadoc、Integer 比较、BigDecimal、StringBuilder、HashMap 容量、SLF4J、SimpleDateFormat、ThreadLocal、@Override、阿里黄山版 |
-| `dart-coding-standards` | `skills/dart-coding-standards/` | **Effective Dart 独占条款**（通用 7 条 + 注释三档见 coding-standards-common）：文档注释用 dartdoc `///`（不用 `//`）、首句独立摘要、引用标识符用 `[]`、注解之上；不用 Javadoc 的 `@param`/`@return`/`@throws`（用散文 + `[参数名]`）；私有成员 dartdoc 从简禁堆契约史；Flutter Widget 注释讲展示什么/何时变化；TODO `TODO(负责人): 原因` 禁日期；金额禁 `double`。任何 Dart 源码 Edit/Write 先满足 coding-standards-common 再走本 skill；korepos backend 接口再叠加 kpay-daily-plugin 插件的 korepos-backend-service skill | Dart、Flutter、dartdoc、`///` 文档注释、首句摘要、`[]` 引用、Widget 注释、私有 dartdoc 从简、不用 @param、金额禁 double、Effective Dart |
 | `llm-agent-coding-standards` | `skills/llm-agent-coding-standards/` | **LLM / Agent 集成编码独占条款**（通用 7 条见 coding-standards-common）：确定性优先（能代码算/查/校验的不给 LLM）/ LLM 输出当不可信入参（解析后校验+归一化+失败降级，绝不丢数据）/ 模糊→结构化用受控枚举（枚举输出不穷举输入，禁 contains 追无限说法）/ 约定单一来源（枚举含义/状态映射只存一处，prompt 与工具注解不复读）/ 工具描述是运行时契约（@Tool·参数 description 是模型选工具依据、load-bearing，工具集小而精）/ Agent 循环必须兜底（maxToolCallingRoundTrips 防死循环、工具异常可读、每步可观测）/ 上下文由代码注入（带时区当前时间等）。任何接 LLM/做 agent 的源码 Edit/Write 先满足 coding-standards-common 再走本 skill | LLM、Agent、langchain4j、spring-ai、function calling、@Tool、AiService、确定性优先、deterministic-first、LLM 输出不可信、结构化输出校验、受控枚举、枚举输出、约定 SSOT、工具描述契约、tool description、maxToolCallingRoundTrips、循环兜底、上下文注入 |
 | `doc-index-required` | `skills/doc-index-required/` | AI 生成 Markdown 默认写入用户 Documents 下的 `ai-docs/{project}/{type}/{topic}/{filename}`（无 `{agent}/`、无 `{YYYY-MM-DD}/`、文件名不带日期）；**v1.20 起用户目录知识库与项目 `docs/` 索引体系等同**，写文档前必须 Phase-A 读 INDEX 查重，写完必须 Phase-B 登记；`work-log/`（日期型日志）和 `knowledge-graph/`（自有 `00_index.md`）走自管模式；终版由用户自行上传或明确指定 `docs/` 路径后写入项目目录 | 文档、docs、写文档、索引、输出路径、用户目录、Documents、ai-docs、知识库、Phase-A、Phase-B、终版文档 |
 | `backend-knowledge-graph-required` | `skills/backend-knowledge-graph-required/` | 后端单服务知识图谱 + **项目级技术难点图谱**（v1.21 扩展）+ **DDL 基线**（v1.28.2 升级）：(1) 业务图谱按项目沉淀领域能力、原子能力、流程、表、全景 ER、SQL 查询逻辑、表关系、枚举、状态判定、API、外部依赖与代码坐标；(2) 技术难点图谱沉淀子进程编排、并发模型、性能瓶颈、资源争夺、外部依赖、JVM 进程生命周期、缓存键策略、超时回收等非业务技术陷阱；(3) **`ddl-baseline.md` 是涉及 DB 操作项目的硬必需** —— 从真实 DB 引擎 sqlite_master / pg_dump / mysqldump 实时 dump 的完整 CREATE TABLE / INDEX，作为 SQL 编写权威源；编码前必读对应表段，禁止凭记忆写字段名；schema 迁移后必须重新 dump；即将 Write/Edit 后端表关系/ER/SQL 文档必须先经本 skill；会话中提到业务、表、字段来源、SQL、DAO/Mapper 查询逻辑时必须自动归档 SQL 指纹到 `_sql_candidates.md`，整理时合并到 `09_sql_query_index.md` / `sql-queries/` / `02_data_model_map.md`；**长对话识别**——同一技术主题用户反复疑问 ≥3 轮 / 出现回归性措辞 / 修复后 ≥2 轮验证追问，自动追加 `分类: 技术难点` 候选记录，无需用户显式提醒；后端接口开发前回顾 ddl-baseline、表逻辑索引、原子能力索引和 SQL 查询索引，优先复用已有表逻辑、SQL 和原子能力；编码后将 DAO/SQL、订单/退款/支付状态判定、金额聚合、表状态变更同步到正式图谱或用户目录候选池 | 后端、接口开发、知识图谱、单服务、DDL 基线、ddl-baseline、CREATE TABLE、sqlite_master、pg_dump、mysqldump、字段名速查、全景ER、ER图、SQL归档、查询逻辑、SQL指纹、SQL索引、表逻辑、表关系、订单状态、部分退、退款判定、原子能力、DAO、Mapper、SQL、枚举、状态流转、候选沉淀、API、Service、技术难点、长对话识别、子进程、并发、性能、资源争夺、外部依赖、回归性措辞、反复疑问、验证追问 |
@@ -217,7 +213,6 @@
 | `coding-violation-log` | `skills/coding-violation-log/` | 用户纠正编码错误时自动登记到 `docs/coding-violations.md`；编码前自动回顾已登记的违规记录，防止重犯 | 编码违规、纠正、分层违规、依赖方向、命名错误、规范错误、coding violation |
 | `bugfix-coding-style` | `skills/bugfix-coding-style/` | **v1.28.8 起注释红线单一来源化**：禁令统一收口到 `coding-standards-common` §5.4 + §5.4.1（跨语言、跨场景通用，bug 修复 / 联调 / 删冗余 / 重构 / 新功能全适用；common 触发顺序早于本 skill 不会漏读；新增反例只改 common 一处避免双地漂移）。本 skill 不再独立定义红线表，只承担 bug 修复期独有的应用层指引：**v1.17 方向反转的历史背景**（为什么禁源码内变更历史 / `[BUGFIX]` / `[DEPRECATED]` / `[ADDED]` 等标记）、**推荐写法 dart 代码示例**、**摆放位置示例**、**适用范围矩阵**、**遇到存量 `[DEPRECATED]` / `[ADDED]` 注释顺手清理的边界**、**红色警告对照表**。复杂逻辑代码块附近的 1-2 行 WHY 注释要求仍归 common §5.3 | bug修复、对齐云端、删冗余、补缺漏、bugfix style、v1.17 方向反转历史、推荐写法 dart 示例、摆放位置、适用范围矩阵、存量 [DEPRECATED]/[ADDED] 顺手清理、红色警告、规则源指向 common §5.4 |
 | `project-docs-update` | `skills/project-docs-update/` | 知识图谱持续维护：检测代码结构变更（新增 Controller/Service/模块/数据表/API）与 docs/ 文档的差异，生成差异报告并执行更新；支持自动/确认模式 | 更新项目文档、同步知识图谱、文档过时、update project docs、sync knowledge graph |
-| `arch-lint` | `skills/arch-lint/` | Flutter 架构违规检测：5 条规则（presentation 层禁 SQL/HTTP、domain 层禁技术框架、金额禁 double、DAO 不可被 presentation 直接调用）；全量检查 + 轻量自动检查两种模式 | 架构检查、arch lint、检测违规、分层违规、Flutter 架构 |
 | `comment-cleanup` | `skills/comment-cleanup/` | 存量注释批量清理：用户主动要求对已写好的文件/类/模块成批清理违反注释红线的存量注释（`vN 新增` 版本标记 / `[BUGFIX]` 等变更日志标记 / 历史叙事 prose / 私有方法契约史 / 废话 / 死代码注释），多语言（按扩展名识别 `//` `/* */` `///` `#` `--` `<!-- -->`）；红线规则**单一来源引用 `coding-standards-common` §5.4 + §5.4.1**，本 skill 不重定义，只承担范围圈定 / 分类决策（删·改写·保留·待定）/ 安全边界（只动注释不动逻辑、待定项必问、不扩范围）/ 提交纪律（单独 commit、不夹带逻辑、message 不罗列）；**清理 ≠ 字面匹配删除**——必须 Read 每条注释后判断，啰嗦但有效的改写成「一句话讲清」，函数体内除 §5.3 六类核心块外的行内注释默认清掉（§5 放置原则总纲），目标是注释只落在类/字段/方法声明上且每条最短；与 §5.5「改到哪清到哪」顺手清理、`check-comment-density.js` hook 写入新内容拦截互补——本 skill 是用户主动发起的存量批量对齐 | 清理注释、精简注释、删历史注释、删版本变更注释、vN 新增注释、注释太多、clean up comments、存量注释、批量清理、多语言注释、单一来源 §5.4、读后优化非字面删除、保留项也要精炼一句话、函数体注释默认删、内嵌 SQL 串内 -- 注释、放置原则 |
 | `markdown-writing-standards` | `skills/markdown-writing-standards/` | Markdown 编写规范：Mermaid 图表语法（致命错误清单、各图类型骨架、自检清单）、表格、代码块、标题结构、目录结构复核（TOC Review — 分类混杂/重复/层级断层/交叉引用失效/快速导航判断） | Mermaid、mermaid、图表、流程图、时序图、mindmap、状态图、markdown、表格规范、目录结构、TOC、章节重构、目录复核 |
 | `business-logic-orientation` | `skills/business-logic-orientation/` | 重构/复写/迁移前业务逻辑现状梳理：按场景维度产出 3 图（时序图/流程图/泳道图）+ 知识图谱 + 核心代码索引 + AI 速查索引；后端附加表操作矩阵和状态扭转明细；**v1.20 起默认输出路径** `{USER_DOCUMENTS}/ai-docs/{project}/orientation/{模块名}/{模块名}-现状梳理.md`（不带日期，始终更新最新现状），由 `doc-index-required` Phase-A/B 管控 | 现状梳理、业务逻辑、重构前分析、知识图谱、逻辑梳理、场景分析、调用链分析、AI索引、orientation |
@@ -263,7 +258,7 @@
 | `skills/init-project-docs/templates/09_refactor_plan.md` | init-project-docs | 重构路线图模板 |
 | `skills/init-project-docs/templates/10_change_log.md` | init-project-docs | 变更记录 ADR 模板 |
 | `skills/init-project-docs/templates/module_template.md` | init-project-docs | 模块深度文档模板（10 节） |
-| `skills/init-project-docs/templates/flutter_skill.md` | init-project-docs | Flutter 技能卡模板 |
+
 | `skills/init-project-docs/templates/vue_skill.md` | init-project-docs | Vue 技能卡模板 |
 | `skills/init-project-docs/templates/springcloud_skill.md` | init-project-docs | Spring Cloud 技能卡模板 |
 | `skills/markdown-writing-standards/mermaid-syntax-ref.md` | markdown-writing-standards | Mermaid 各图类型语法速查手册 |
@@ -339,7 +334,7 @@ description: 触发时机描述   # 明确说明何时 MUST 调用
 - v21.1 删除 `docs/skill-flow-{YYYYMMDD}-v{N}.md` 快照
 - v21.2 删除 skill-flow.md 头部 blockquote 中累加的「变更摘要 vN」段
 
-每次改动的"为什么"写到 git commit body;长期决策背景写到 `docs/dev-log/`(由 dev-log skill 控制门槛)。同一原则 v18.2 已应用于设计文档(current.md + git log)。需要查某历史版本:`git log --follow docs/skill-flow.md` 找 commit → `git show <sha>:docs/skill-flow.md`。
+每次改动的"为什么"写到 git commit body。同一原则 v18.2 已应用于设计文档(current.md + git log)。需要查某历史版本:`git log --follow docs/skill-flow.md` 找 commit → `git show <sha>:docs/skill-flow.md`。
 
 不更新 skill-flow.md 视为操作未完成。
 

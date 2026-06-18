@@ -79,6 +79,6 @@ description: Use when writing or modifying code that integrates an LLM or builds
 | 通用 / 语言 skill | 本 skill(LLM/Agent 叠加) |
 |---|---|
 | `coding-standards-common`:7 条铁律(§7 知识 SSOT、§6 异常不静默是本 skill §4 / §2 的母原则) | 在其之上加 LLM 集成独占条款 |
-| `java-coding-standards` / `dart-coding-standards`:语言独占条款 | 与语言专属正交,叠加不替代 |
+| `java-coding-standards`:语言独占条款 | 与语言专属正交,叠加不替代 |
 
 **触发顺序**:任何"接 LLM"的源码 Edit/Write → 先 `coding-standards-common` → 再 `{language}-coding-standards` → 最后本 skill。

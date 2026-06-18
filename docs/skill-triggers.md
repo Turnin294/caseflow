@@ -19,7 +19,6 @@
 | 用户提出具体方案/参考代码并要求实施 | 按这个思路实施 / 参考现有代码改 / 按这个回复改 | `solution-review-required`(必先于 design-doc) | `design-doc-required`(确认后) | — |
 | 写新接口前涉及表读写 / 状态判定 / 金额聚合 | 加接口 / 写 service / 写 DAO | korepos-backend-service(若 korepos,已迁至 kpay-daily-plugin) 或 `architecture-ddd-lite-fullstack`(通用) | `backend-knowledge-graph-required`(读图谱) + `coding-standards-common` | — |
 | 函数内按业务类型 if-else / switch 堆叠 ≥2 分支 | if-else 堆叠业务类型 / switch orderType / 不同订单类型同函数处理 / 函数内分流 / A 订单 B 订单同方法 | `architecture-ddd-lite-fullstack`(函数级业务场景分流节,判定阶梯 1/2) | `coding-standards-common §2.5`(通用兜底提醒) | — |
-| 改 Flutter 代码 | Flutter / .dart / 退款 UI / pos | (后端) korepos-backend-service(已迁至 kpay-daily-plugin) 或 (前端) `architecture-ddd-lite-fullstack` | `arch-lint`(编码后) + `coding-standards-common` | — |
 | 写源码 Edit/Write | .java / .dart / .ts / .py / .kt 任一 | `design-doc-required`(若未触发) → `pre-implementation-code-orientation` → `architecture-ddd-lite-fullstack` | `coding-standards-common`(任何源码必经) + 语言专属 | `bug-doc-required`(无 bug 报告) |
 | 提交 commit | git commit / 提交 / push | `git-commit-standards`(大改 hook 强制) | `daily-work-log`(会话末) | — |
 | 业务项目源码改动后 | (任何源码 Edit/Write 完毕) | `daily-work-log`(批处理 / 会话末) | `dev-log`(仅 caseflow 自身) | — |
@@ -48,7 +47,6 @@
 | 业务术语 / 订单 / 退款 / 分摊 / 同义词 / glossary | `glossary-required` | 仅业务领域词 |
 | 跨项目 / 跨工程 / 调用链 / 链路 / end-to-end / kpay-pos-topology | `cross-project-locator` | ≥2 工程才触发 |
 | 编码违规 / 分层违规 / 用户纠错 / 防重犯 | `coding-violation-log` | 异步登记 + 编码前回顾 |
-| Flutter 架构检查 / arch lint / 5 类规则 | `arch-lint` | Flutter 改完异步 |
 | Mermaid / 图表 / 流程图 / 时序图 / 目录复核 / TOC | `markdown-writing-standards` | 任何 .md 改完结构性扫一遍 |
 | 现状梳理 / orientation / 重构前分析 / 业务逻辑梳理 | `business-logic-orientation` | 重构/迁移前 |
 | 跨项目同名异叫法 (项目 A 叫订单, 项目 B 叫 Order) | `cross-project-locator/shared-glossary.md` | 不进单项目 glossary |
@@ -98,7 +96,6 @@
                 ⑬ 语言专属 (java / korepos)
                 ⑭ markdown-writing-standards (含 mermaid)
                 ⑮ cross-project-locator (跨项目)
-                ⑯ arch-lint (Flutter 异步)
                 ⑰ git-commit-standards (commit 前)
                 ⑱ daily-work-log (会话末)
                 ⑲ reverse-index-required (回写模式)

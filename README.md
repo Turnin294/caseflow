@@ -239,14 +239,13 @@ v1.26 起 **`check-design-doc.js` hook 默认启用**（[hooks/hooks.json](hooks
 - `architecture-ddd-lite-fullstack` — DDD-lite 分层 + Feature 模块 + 每分支一 focused service + **函数级业务场景分流（分支差异即拆分）** + 跨分支编排 + 横切关注点豁免 + 命名 taxonomy + 聚合边界（**Java / Python / Dart 三栈一致适用**）
 - `coding-standards-common` — 跨语言通用 7 条铁律 + 注释三档（沟通语言一票否决）
 - `java-coding-standards` — Java 独占条款（Javadoc / Integer 比较 / SLF4J / HashMap 容量等）
-- `dart-coding-standards` — Dart 独占条款（dartdoc `///` / 首句摘要 / `[]` 引用 / 不用 @param / 金额禁 double）
 - `llm-agent-coding-standards` — LLM / Agent 集成独占条款（确定性优先 / LLM 输出当不可信入参 / 模糊→结构化用受控枚举 / 约定 SSOT / 工具描述是运行时契约 / Agent 循环兜底 / 上下文代码注入）；叠加在 `coding-standards-common` 之上
 - `bugfix-coding-style` — 源码只描述当前逻辑，禁变更日志注释 / 函数头复盘
 - _（korepos backend 接口强约束 `korepos-backend-service` 已迁至 **kpay-daily-plugin** 插件，连同 `reset-kpos-local-state` 与 wire DTO 注解 hook 一并搬走）_
 
 > **想调整注释规范改哪里**（注释规则跨语言统一，不按语言各写一套）：
 > - **唯一规则源 = `skills/coding-standards-common/SKILL.md §5`** —— §5.1-5.3 三档 + §5.1.5 字段档 + §5.2.1 职责边界注释 + §5.4/§5.4.1 红线与反例 + 放置原则 + §5.0 注释语言。**对 Java / Dart / TS / Python / Kotlin / Go 一视同仁**，调注释规范只改这一处。
-> - **语言专属只补 doc 注释语法**：`java-coding-standards`（Javadoc）、`dart-coding-standards`（dartdoc，所有 Dart 适用）。korepos backend DTO 细则随 `korepos-backend-service` 迁至 kpay-daily-plugin。非 Java/Dart 语言无需单独条款，直接套 §5 + 自身 doc 语法（TSDoc / docstring）。
+> - **语言专属只补 doc 注释语法**：`java-coding-standards`（Javadoc）。非 Java 语言无需单独条款，直接套 §5 + 自身 doc 语法（TSDoc / docstring）。
 > - **机械兜底阈值**（连续注释块行数等）改 `hooks/check-comment-density.js`；**存量批量清理流程**在 `comment-cleanup`（只引用 §5，不重定义）。
 
 ### ④ 提交与日志
@@ -261,7 +260,6 @@ v1.26 起 **`check-design-doc.js` hook 默认启用**（[hooks/hooks.json](hooks
 
 ### ⑥ 质量回路
 - `coding-violation-log` — 编码违规登记 + 编码前回顾防重犯
-- `arch-lint` — Flutter 架构违规检测（5 类）
 - `comment-cleanup` — 存量注释批量清理（用户主动发起，多语言，红线规则单一引用 `coding-standards-common` §5.4）
 - `markdown-writing-standards` — Mermaid 语法 + 表格 + 目录复核
 - `project-docs-update` — 项目结构变更后同步知识图谱文档

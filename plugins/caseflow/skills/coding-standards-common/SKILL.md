@@ -5,7 +5,7 @@ description: Use when writing, reviewing, or modifying source code in any langua
 
 # 通用编码规范(跨语言)
 
-> 适用于一切源码语言。语言专属规则(如 `java-coding-standards` 的阿里黄山版独占条款、`dart-coding-standards` 的 Effective Dart·dartdoc 独占条款、`korepos-backend-service` 的 Flutter backend 规则)在此基础上叠加,不重复。
+> 适用于一切源码语言。语言专属规则(如 `java-coding-standards` 的阿里黄山版独占条款)在此基础上叠加,不重复。
 >
 > 触发链路:`coding-standards-common`(通用) → `{language}-coding-standards`(语言专属)。任何源码 Edit/Write 前先满足本 skill 的 7 条铁律,再走语言专属。
 
@@ -293,8 +293,7 @@ Future<void> registerRefundSuccess(RefundOrder order) async {}
 | 命名表意 / 函数原子 / 层次分明 / 零魔法值 / 注释三档 / 异常不静默 / 删冗余 | **java-coding-standards**: 包装类比较、SimpleDateFormat、SLF4J 占位符、HashMap 容量、BigDecimal 比较、JDK8+ DateTimeFormatter、SQL 列名规范、索引规则等 Java / 数据库独占条款 |
 | 同上 | **korepos-backend-service**: backend 目录结构、BackendInfra 边界、一接口一 service、Service 禁裸 SQL、跨 feature 业务原子能力、长方法拆 step、DB 字段值枚举绑定等 Flutter backend 独占条款 |
 | 同上 | **bugfix-coding-style**: 禁源码内变更日志 / 函数头不堆复盘 / 复杂逻辑就近 WHY(本 skill §5.4 与之完全对齐) |
-| 同上 | **arch-lint**: Flutter 5 类架构违规自动检测 |
-
+| 同上 | **bugfix-coding-style**: 禁源码内变更日志 / 函数头不堆复盘 / 复杂逻辑就近 WHY(本 skill §5.4 与之完全对齐) |
 **触发顺序**:任何源码 Edit/Write 前,先满足本 skill 的 7 条铁律 → 再走语言/框架专属 skill 的独占条款 → 最后由 `coding-violation-log` 在用户纠错时登记差异。
 
 ---

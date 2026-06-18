@@ -30,7 +30,7 @@
 - `backend-knowledge-graph-required`：BLOCKING 触发清单的「写 SQL 前缺 DDL 基线」一行，信号扩到 **iBatis/MyBatis SqlMap XML、Java/Kotlin `*Dao`/`*Mapper`/`*Repository`、`.sql`、Oracle**（原仅 Dart/Prisma/JPA 系）；新增一行「即将写/改任何带 SQL 的文件，无论改动大小 → 改前必先 Read `ddl-baseline.md` 核对字段、再看场景卡确认取数口径」。「hook 集成」节补 `check-sql-ddl-readiness.js` 说明。
 
 ### Motivation
-- 实战暴露：Yoooni（Java + Struts + iBatis + Oracle）改打版进度 SQL 时，把「染厂收胚时间」误取 `tdate`，绕了多轮才修回知识库早已记载的 `transfer.checkdate`。根因有二：① 既有 `check-backend-kg-readiness` 路径白名单是 Dart 专用，对 iBatis XML / `.sql` 完全不触发；② 它豁免 ≤20 行小改，而字段口径错误恰是 1 行改动。故新增语言无关、不豁免小改的 SQL→DDL 前置校验，并为涉 DB 项目落地 `ddl-baseline.md` 作为字段级权威源。
+- 实战暴露：Java 项目改 SQL 时，把字段口径误取错值，绕了多轮才修回知识库早已记载的正确字段。根因有二：① 既有 hook 路径白名单是 Dart 专用，对 iBatis XML / `.sql` 完全不触发；② 它豁免 ≤20 行小改，而字段口径错误恰是 1 行改动。故新增语言无关、不豁免小改的 SQL→DDL 前置校验，并为涉 DB 项目落地 `ddl-baseline.md` 作为字段级权威源。
 
 ## [1.35.0] - 2026-06-15
 
