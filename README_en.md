@@ -46,10 +46,10 @@ PRs welcome for full English translation of SKILL.md bodies if your team needs i
 
 In Claude Code, run these three steps:
 
-**Step 1: Register the marketplace** (pointing at the Gitee repository)
+**Step 1: Register the marketplace** (pointing at the Github repository)
 
 ```
-/plugin marketplace add https://gitee.com/wyoooni/caseflow.git
+/plugin marketplace add https://github.com/Turnin294/caseflow.git
 ```
 
 **Step 2: Install the plugin**

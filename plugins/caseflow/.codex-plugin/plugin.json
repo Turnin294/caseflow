@@ -5,10 +5,10 @@
   "author": {
     "name": "turnin",
     "email": "",
-    "url": "https://gitee.com/wyoooni"
+    "url": "https://github.com/Turnin294"
   },
-  "homepage": "https://gitee.com/wyoooni/caseflow",
-  "repository": "https://gitee.com/wyoooni/caseflow.git",
+  "homepage": "https://github.com/Turnin294/caseflow",
+  "repository": "https://github.com/Turnin294/caseflow.git",
   "license": "MIT",
   "keywords": [
     "java",
@@ -29,9 +29,9 @@
       "Interactive",
       "Write"
     ],
-    "websiteURL": "https://gitee.com/wyoooni/caseflow",
-    "privacyPolicyURL": "https://gitee.com/wyoooni/caseflow",
-    "termsOfServiceURL": "https://gitee.com/wyoooni/caseflow",
+    "websiteURL": "https://github.com/Turnin294/caseflow",
+    "privacyPolicyURL": "https://github.com/Turnin294/caseflow",
+    "termsOfServiceURL": "https://github.com/Turnin294/caseflow",
     "defaultPrompt": [
       "Draft a design doc before implementing this feature.",
       "Review this Java code using the team standards plugin.",

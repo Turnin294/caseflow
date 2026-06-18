@@ -159,10 +159,10 @@ CI(GitHub Actions)在 push / PR 时自动跑(v1.26.2 起 5 个 job):
 
 在 Claude Code 中依次执行以下三步：
 
-**第一步：注册 marketplace（指向 Gitee 仓库）**
+**第一步：注册 marketplace（指向 Github 仓库）**
 
 ```
-/plugin marketplace add https://gitee.com/wyoooni/caseflow.git
+/plugin marketplace add https://github.com/Turnin294/caseflow.git
 ```
 
 > 此命令会将 Gitee 仓库克隆到本地插件缓存目录，无需手动 `git clone`。
@@ -188,7 +188,7 @@ CI(GitHub Actions)在 push / PR 时自动跑(v1.26.2 起 5 个 job):
 如果已手动克隆仓库到本地，也可以用本地路径注册：
 
 ```bash
-git clone https://gitee.com/wyoooni/caseflow.git
+git clone https://github.com/Turnin294/caseflow.git
 ```
 
 ```
