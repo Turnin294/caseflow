@@ -1,0 +1,16 @@
+{
+  "name": "team-standards",
+  "interface": {
+    "displayName": "Team Standards"
+  },
+  "plugins": [
+    {
+      "name": "team-standards",
+      "source": {
+        "source": "local",
+        "path": "./plugins/team-standards"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

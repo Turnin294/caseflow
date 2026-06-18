@@ -1,0 +1,70 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  hooks-test:
+    name: hooks tests (Node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: ['18', '20', '22']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: run hook tests
+        working-directory: plugins/team-standards/hooks
+        run: npm test
+
+  agents-sync-check:
+    name: AGENTS.md in sync with CLAUDE.md
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: verify AGENTS.md = transform(CLAUDE.md)
+        run: node scripts/sync-agents.js --check
+
+  cross-refs-check:
+    name: Cross-skill references resolve
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: validate cross-skill / cross-section references
+        run: node scripts/check-cross-refs.js
+
+  version-sync-check:
+    name: Plugin manifest versions in sync
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: verify .claude-plugin / .codex-plugin / marketplace versions
+        run: node scripts/check-version-sync.js --verbose
+
+  audit-skills-check:
+    name: SKILL.md health (size / description / refs)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: audit skills (fail on warnings)
+        run: node scripts/audit-skills.js --warnings --ci

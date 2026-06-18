@@ -1,0 +1,20 @@
+{
+  "name": "team-standards",
+  "description": "团队开发规范插件市场",
+  "owner": {
+    "name": "张凯",
+    "email": ""
+  },
+  "plugins": [
+    {
+      "name": "team-standards",
+      "description": "Claude Code 团队开发规范插件：Java 编码规范（阿里黄山版）+ 功能设计文档强制约束 + Git 提交规范",
+      "version": "1.37.0",
+      "source": "./plugins/team-standards",
+      "author": {
+        "name": "张凯",
+        "email": ""
+      }
+    }
+  ]
+}
