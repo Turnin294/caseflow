@@ -366,6 +366,47 @@ Infrastructure Mapper / Client / MQ Adapter
 
 ---
 
+## 金融技术部聚合层分层结构（金融场景优先，覆盖上方通用 DDD-lite）
+
+> 金融技术部 Java 后端**优先采用本结构**，覆盖上方通用 DDD-lite 调用链。命名/契约细则见 [[finance-coding-standards]]。
+
+**contract 层**（对外契约）：
+
+```text
+contract
+  common      // 对外暴露的枚举、常量
+  facade      // 门面入口
+    http      // 对外 http 接口
+    rpc       // 对外 scf 接口
+    third     // 外部第三方使用（如异步回调）
+  request     // 入参对象
+  response    // 响应结果
+```
+
+**service 层**（业务实现）：
+
+```text
+service
+  common      // service 内部使用的枚举、常量、自定义异常
+  config      // apollo 等相关配置
+  facade      // http / rpc / third 实现
+  mq          // mq 相关
+  helper      // 封装中台 / 其他业务线 rpc 接口
+  service     // 主业务逻辑层（逻辑简单也可直接在 facade 层完成）
+  repository  // 数据库相关
+  task        // 定时任务
+  utils       // 常用工具
+```
+
+强制规则：
+
+1. 跨业务线 / 中台 RPC 调用统一封装到 `helper`，不散落在 service 主逻辑里。
+2. `repository` 是数据库访问的唯一出口，service 不直接写 SQL。
+3. contract 只放契约对象（request / response / 对外枚举），禁止出现 MyBatis-Plus 注解（`@TableName` / `@TableField` 仅限 service 层 DO）。
+4. focused service 铁律在金融分层下依然成立：`service/` 下按业务能力拆分，不堆 god service。
+
+---
+
 ## Python 后端约束
 
 适用于 FastAPI / Django(含 DRF) / Flask。

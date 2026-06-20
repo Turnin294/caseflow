@@ -1,6 +1,6 @@
 # caseflow
 
-> **30 秒 TL;DR**:Claude Code 插件,把"AI 协作开发"从"凭运气"变成"按流程"——26 个 skill + 5 个 hook 强制执行从需求分析 → 设计文档 → 代码定位 → 架构门禁 → 编码规范 → 提交规范 → 知识沉淀的完整链路。让 AI 改代码前先想清楚,改完后留下可追溯的痕迹。
+> **30 秒 TL;DR**:Claude Code 插件,把"AI 协作开发"从"凭运气"变成"按流程"——25 个 skill + 5 个 hook 强制执行从需求分析 → 设计文档 → 代码定位 → 架构门禁 → 编码规范 → 提交规范 → 知识沉淀的完整链路。让 AI 改代码前先想清楚,改完后留下可追溯的痕迹。
 
 **它解决什么问题:**
 - AI 一上来就改代码,绕过设计 / 不查既有 / 不沉淀 → 强制 `design-doc-required` + `pre-implementation-code-orientation` 门禁
@@ -239,6 +239,7 @@ v1.26 起 **`check-design-doc.js` hook 默认启用**（[hooks/hooks.json](hooks
 - `architecture-ddd-lite-fullstack` — DDD-lite 分层 + Feature 模块 + 每分支一 focused service + **函数级业务场景分流（分支差异即拆分）** + 跨分支编排 + 横切关注点豁免 + 命名 taxonomy + 聚合边界（**Java / Python / Dart 三栈一致适用**）
 - `coding-standards-common` — 跨语言通用 7 条铁律 + 注释三档（沟通语言一票否决）
 - `java-coding-standards` — Java 独占条款（Javadoc / Integer 比较 / SLF4J / HashMap 容量等）
+- `finance-coding-standards` — 金融技术部 Java 后端独占条款（部门优先，叠加在 common + java 之上）：接口契约（禁 Map / FinanceBizBaseReq / ZZOpenScfBaseResult / FinanceBizAsserts）/ 禁 ≥2 层 if-else 嵌套 / 日志分级 / SCF 实现类不加 Impl / 主从数据源 / 金额用分 + 枚举英文字符串。优先级链路：金融 → 转转研发中心通用 → caseflow 自有
 - `llm-agent-coding-standards` — LLM / Agent 集成独占条款（确定性优先 / LLM 输出当不可信入参 / 模糊→结构化用受控枚举 / 约定 SSOT / 工具描述是运行时契约 / Agent 循环兜底 / 上下文代码注入）；叠加在 `coding-standards-common` 之上
 - `bugfix-coding-style` — 源码只描述当前逻辑，禁变更日志注释 / 函数头复盘
 - _（korepos backend 接口强约束 `korepos-backend-service` 已迁至 **kpay-daily-plugin** 插件，连同 `reset-kpos-local-state` 与 wire DTO 注解 hook 一并搬走）_

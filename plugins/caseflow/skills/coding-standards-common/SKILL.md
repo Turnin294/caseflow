@@ -5,7 +5,7 @@ description: Use when writing, reviewing, or modifying source code in any langua
 
 # 通用编码规范(跨语言)
 
-> 适用于一切源码语言。语言专属规则(如 `java-coding-standards` 的阿里黄山版独占条款)在此基础上叠加,不重复。
+> 适用于一切源码语言。语言专属规则(如 `java-coding-standards` 的阿里黄山版独占条款)在此基础上叠加,不重复。金融技术部 Java 后端再叠加 `finance-coding-standards`(部门独占,优先级最高)。
 >
 > 触发链路:`coding-standards-common`(通用) → `{language}-coding-standards`(语言专属)。任何源码 Edit/Write 前先满足本 skill 的 7 条铁律,再走语言专属。
 

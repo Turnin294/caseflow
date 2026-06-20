@@ -1,8 +1,23 @@
 # Changelog
 
-> 仅记录每个 plugin 发布版本的**关键变化**(新 skill / 规则方向反转 / 触发链路调整 / 重大基础设施)。逐次 commit 的细节用 `git log` 看,长期决策背景在 [docs/dev-log/](docs/dev-log/) 里。
+> 仅记录每个 plugin 发布版本的**关键变化**(新 skill / 规则方向反转 / 触发链路调整 / 重大基础设施)。逐次 commit 的细节用 `git log` 看。
 >
 > 版本号约定:`MAJOR.MINOR.PATCH`(SemVer)——`MINOR` 用于新 skill / 触发链路扩展 / 基础设施(hook、CI、sync 脚本),`PATCH` 用于规则微调与版本号同步。
+
+## [1.38.0] - 2026-06-18
+
+**新增 `finance-coding-standards` skill（金融技术部 Java 后端独占条款，部门优先）；移除 `dart-coding-standards` 与 `arch-lint`（Flutter 相关，本团队不涉及）。skill 计数 26 → 25。**
+
+### Added
+- `skills/finance-coding-standards/SKILL.md`：金融技术部 Java 后端编码独占条款，叠加在 `coding-standards-common` + `java-coding-standards` 之上，**冲突时金融优先**（优先级链路：金融 → 转转研发中心通用 → caseflow 自有）。覆盖接口契约（入参出参禁 Map / 继承 FinanceBizBaseReq / ZZOpenScfBaseResult 禁 null / FinanceBizAsserts 断言）、控制流（禁 ≥2 层 if-else 嵌套）、日志分级、命名（Enum/Util/Consumer/Producer，SCF 实现类不加 Impl）、NPE 防护、禁用项、主从数据源、MyBatis-Plus、SQL/事务/数据库设计/安全。开篇 §0「框架场景辨伪冲突」明确区分 SCF 实现类不加 Impl 与普通 Java ServiceImpl。
+- `architecture-ddd-lite-fullstack`：新增「金融技术部聚合层分层结构」节（contract: common/facade/request/response；service: common/config/facade/mq/helper/service/repository/task/utils），金融场景优先覆盖通用 DDD-lite。
+
+### Removed
+- `skills/dart-coding-standards/`、`skills/arch-lint/`、`skills/init-project-docs/templates/flutter_skill.md`：Flutter / Dart 相关，本团队为 Java 后端，不涉及。
+
+### Changed
+- `coding-standards-common` / `java-coding-standards`：补「金融层叠加」触发指引。
+- CLAUDE.md / docs/skill-flow.md / README：触发表、分类导航③、核心调用顺序（新增第 12.4 步）、冲突解决表、Skill 索引、FAQ 同步；skill 计数同步为 25。
 
 ## [1.37.0] - 2026-06-17
 
