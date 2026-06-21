@@ -1,6 +1,6 @@
 ---
 name: daily-work-log
-description: "每次对业务项目的源码（.dart/.java/.kt/.ts/.py 等）执行 Edit/Write 后、或用户说『记一下工作日志』『记录一下』『写个日志』『更新工作日志』等时，必须触发本 skill 把本次改动按 [Bug 修复] vs [功能开发] 写入用户文档目录 `{USER_DOCUMENTS}/ai-docs/{project}/work-log/{YYYY-MM-DD}.md`（个人工作记录，不入项目仓库）。核心规则：一行一条修改明细、同一 bug 多次修复合并到同一条目、同一功能多轮迭代合并到同一条目、每条目带预估工时（累计）。写入前必须先读当天日志合并现有条目，严禁为同一主题创建多条。每个会话结束前若有未登记的改动，强制回补一次。"
+description: "每次对业务项目的源码（.java/.kt/.ts/.py 等）执行 Edit/Write 后、或用户说『记一下工作日志』『记录一下』『写个日志』『更新工作日志』等时，必须触发本 skill 把本次改动按 [Bug 修复] vs [功能开发] 写入用户文档目录 `{USER_DOCUMENTS}/ai-docs/{project}/work-log/{YYYY-MM-DD}.md`（个人工作记录，不入项目仓库）。核心规则：一行一条修改明细、同一 bug 多次修复合并到同一条目、同一功能多轮迭代合并到同一条目、每条目带预估工时（累计）。写入前必须先读当天日志合并现有条目，严禁为同一主题创建多条。每个会话结束前若有未登记的改动，强制回补一次。"
 ---
 
 # 每日工作日志记录规范
@@ -21,7 +21,7 @@ description: "每次对业务项目的源码（.dart/.java/.kt/.ts/.py 等）执
 
 | 场景 | 触发 |
 |---|---|
-| 本会话完成了至少一次源码 Edit/Write（`.dart` / `.java` / `.kt` / `.ts` / `.py` / `.go` 等），且尚未登记 | ✅ 必须触发（**会话末批处理**，不在改动当时立即写入） |
+| 本会话完成了至少一次源码 Edit/Write（`.java` / `.kt` / `.ts` / `.py` / `.go` 等），且尚未登记 | ✅ 必须触发（**会话末批处理**，不在改动当时立即写入） |
 | 用户说"记一下工作日志"/"写个日志"/"更新工作日志"/"记到日志"/"记录一下" | ✅ 必须触发（用户主动要求 → 立即执行） |
 | 用户说"今天做了什么" / "回顾一下" | ✅ 必须触发（查询模式） |
 | 会话结束前（收尾阶段）若本会话有源码改动未登记 | ✅ 强制回补 |
@@ -107,8 +107,8 @@ description: "每次对业务项目的源码（.dart/.java/.kt/.ts/.py 等）执
 - **预估工时**：{累计 h}h
 - **关联文档**：[docs/bug/{模块}/{bug 名}/{bug 名}.md](相对路径)
 - **涉及文件**：
-  - `lib/path/to/file1.dart`
-  - `lib/path/to/file2.dart`
+  - `src/main/java/path/to/File1.java`
+  - `src/main/java/path/to/File2.java`
 - **修改明细**：
   - `HH:MM` {一句话改动摘要，≤ 50 字}
   - `HH:MM` {一句话改动摘要}
@@ -122,7 +122,7 @@ description: "每次对业务项目的源码（.dart/.java/.kt/.ts/.py 等）执
 - **预估工时**：{累计 h}h
 - **关联文档**：[docs/design/{需求}/{需求}-{YYYYMMDD}-v{N}.md](相对路径)
 - **涉及文件**：
-  - `lib/path/to/file1.dart`
+  - `src/main/java/path/to/File1.java`
 - **修改明细**：
   - `HH:MM` {摘要}
 ```
@@ -205,8 +205,8 @@ flowchart TD
 | 1-2 文件、改 ≤ 20 行 | 0.5h |
 | 3-5 文件、单模块内 | 1h |
 | 6-10 文件 / 跨层（service + dao + dto） | 2h |
-| > 10 文件 / 跨模块 / 含 freezed 新字段（需 build_runner） | 3h |
-| 跨项目（korepos + 云端 + caseflow 等 ≥ 2 个项目） | 4h |
+| > 10 文件 / 跨模块 / 含新增数据表字段（需改 DO/Mapper/DDL） | 3h |
+| 跨项目（聚合层 + 业务工程 + caseflow 等 ≥ 2 个项目） | 4h |
 
 ### 叠加项（满足即 +）
 
@@ -215,8 +215,8 @@ flowchart TD
 | 本次还编写了设计文档 | +1h |
 | 本次还编写了 bug 分析文档 | +1h |
 | 本次还改了 skill 规范 | +0.5h |
-| 本次包含 Rust FFI / 云端对齐核查 | +1h |
-| 本次包含 UI 对接手册同步 | +0.5h |
+| 本次包含跨服务联调核查 | +1h |
+| 本次包含接口文档同步 | +0.5h |
 | 方案迭代（先改一版、再换方案 A/B） | +0.5h × 迭代轮数 |
 
 ### 累计规则
@@ -232,7 +232,7 @@ flowchart TD
 
 - B1 首次登记：改了 5 个文件 + 写了 bug 文档 + 写了设计文档 → `1h + 1h + 1h = 3h`
 - B1 第二次迭代：又改了 3 个文件 + 方案 A 迭代 1 轮 → `3h + 1h + 0.5h = 4.5h`
-- B1 第三次：加 2 行 `@JsonKey` 注解 → `4.5h + 0.25h ≈ 5h`
+- B1 第三次：加 2 行 `@JsonProperty` 注解 → `4.5h + 0.25h ≈ 5h`
 
 ---
 
@@ -249,11 +249,11 @@ flowchart TD
 ### 正面样例
 
 ```
-- `14:32` 修 refund_confirm_service.dart:142 过滤条件从 paymentType==4 切到 pay_channel_code
-- `15:05` 加 RefundTransactionAllocation.originalPayChannelCode 字段（L1 ACL 注解）
-- `15:40` 删 _inferPosRefundType（pay_method 白名单不再需要）
-- `16:10` 方案 A 迭代：RefundTransactionResult 加 originalPayChannelCode 透传
-- `16:30` 补 @JsonKey 注解，avoid 泄漏到 /v2/refund/write wire
+- `14:32` 修 RepayConfirmService.java:142 过滤条件从 paymentType==4 切到 payChannelCode
+- `15:05` 加 RepayTransactionAllocation.originalPayChannelCode 字段（L1 ACL 注解）
+- `15:40` 删 inferRepayType（payMethod 白名单不再需要）
+- `16:10` 方案 A 迭代：RepayTransactionResult 加 originalPayChannelCode 透传
+- `16:30` 补 @JsonProperty 注解，避免泄漏到 /v2/order/write 报文
 ```
 
 ### 反面样例

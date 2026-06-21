@@ -1,6 +1,6 @@
 # Saga / Outbox / Domain Event 实施模板
 
-> `architecture-ddd-lite-fullstack` 的「跨分支编排」和「聚合边界」两节给出了**原则**(跨聚合走 Domain Event / Saga;Orchestrator 内部只编排不写业务);本文件给出三栈(Java / Python / Dart)的**具体实施模板**。
+> `architecture-ddd-lite-fullstack` 的「跨分支编排」和「聚合边界」两节给出了**原则**(跨聚合走 Domain Event / Saga;Orchestrator 内部只编排不写业务);本文件给出两栈(Java / Python)的**具体实施模板**。
 >
 > 何时用本模板:跨 ≥2 个 focused service 的复合动作、跨聚合的最终一致性场景、需要失败补偿 / 异步重试 / 长事务。
 
@@ -67,26 +67,6 @@ class ApproveAndRefundOrchestrator:
             self._cancel.cancel(req.to_cancel_request(), db)
             self._refund.refund(req.to_refund_request(), db)
             # 任一异常 sqlalchemy 自动 rollback
-```
-
-### Dart(Serverpod / Shelf + Drift)
-
-```dart
-// application/approve_and_refund_orchestrator.dart
-class ApproveAndRefundOrchestrator {
-  final CancelService _cancel;
-  final RefundService _refund;
-
-  ApproveAndRefundOrchestrator(this._cancel, this._refund);
-
-  Future<void> execute(ApproveAndRefundRequest req, AppDatabase db) async {
-    await db.transaction(() async {
-      await _cancel.cancel(req.toCancelRequest());
-      await _refund.refund(req.toRefundRequest());
-      // 任一抛异常自动 rollback
-    });
-  }
-}
 ```
 
 ## 三、Outbox Pattern(跨聚合最终一致)

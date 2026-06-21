@@ -1,6 +1,6 @@
 ---
 name: coding-standards-common
-description: Use when writing, reviewing, or modifying source code in any language (Java / TypeScript / JavaScript / Dart / Python / Kotlin / Go / Vue / React 等). 跨语言通用编码铁律 7 条 + 注释三档,语言专属 skill (java-coding-standards / korepos-backend-service 等) 在此基础上叠加。MUST 自动触发,不需用户显式要求。
+description: Use when writing, reviewing, or modifying source code in any language (Java / TypeScript / JavaScript / Python / Kotlin / Go / Vue / React 等). 跨语言通用编码铁律 7 条 + 注释三档,语言专属 skill (java-coding-standards 等) 在此基础上叠加。MUST 自动触发,不需用户显式要求。
 ---
 
 # 通用编码规范(跨语言)
@@ -40,7 +40,7 @@ description: Use when writing, reviewing, or modifying source code in any langua
 - 分支共享同一业务定位(同一状态机 / 同一校验 / 同一下游 / 同一补偿)→ **阶梯 1**:抽 `_handleTypeA()` / `_handleTypeB()` 私有方法,主方法只做分流派发
 - 分支差异本质是不同业务定位(不同业务实体 / 独立状态机 / 不同 PRD 模块 / 不同团队)→ **阶梯 2**:升级到 service 级拆分,详见 `architecture-ddd-lite-fullstack` 「函数级业务场景分流」节
 - **判定锚点是「业务定位」而非「代码相似度」**——长得像但业务定位不同就要拆;业务定位相同即使代码差异较大也归阶梯 1
-- 共享逻辑沉到原子能力层(`common/services/` / `common/backend_infra/services/` 等),**不要**塞进同一 public 方法用 if-else 区分
+- 共享逻辑沉到原子能力层(`common/service/` 等),**不要**塞进同一 public 方法用 if-else 区分
 
 ---
 
@@ -49,7 +49,7 @@ description: Use when writing, reviewing, or modifying source code in any langua
 - **上层调下层,下层不反调上层**;UI / Controller / Endpoint / Page 禁直接执行 SQL / HTTP / 第三方 SDK
 - **同层禁互相 import**;Service 之间不互调,跨场景复用沉到 `orchestrator` 或原子能力层
 - **跨 feature / 跨模块复用**走 `common/` 或等价的原子能力目录,禁复制粘贴
-- 业务层禁直接依赖框架细节;领域模型禁带技术框架注解(JPA / Spring / Drift 等)
+- 业务层禁直接依赖框架细节;领域模型禁带技术框架注解(JPA / Spring / MyBatis 等)
 - 数据对象禁混层使用:DO 留持久层、DTO 走传输边界、VO 给展示层
 
 ---
@@ -60,7 +60,7 @@ description: Use when writing, reviewing, or modifying source code in any langua
 - 例外仅:`0 / 1 / -1`、`true / false`、空串 `""`、空集合、单元测试断言字面量
 - **与 DB 字段值 / 协议码 / 状态机绑定的数字** → **强制枚举**,禁裸数字字面量(如 `state == 3`、`item_type=1`)
 - 阈值类常量(如 `MAX_RETRY = 3`)用 const 并写一行 WHY 注释说明阈值依据
-- 浮点比较禁 `==` / `equals`;金额类用 `BigDecimal` 或差值 ≤ 容差(POS 场景常用 ±0.005)
+- 浮点比较禁 `==` / `equals`;金额类用 `BigDecimal` 或差值 ≤ 容差(金额分摊场景常用 ±0.005)
 
 ---
 
@@ -72,7 +72,7 @@ description: Use when writing, reviewing, or modifying source code in any langua
 
 ### 5.0.0 写注释前 3 秒自检(动手前先过一遍)
 
-> 反复违规的 AI 行为:私有方法 / 内部代码块上方堆 5-12 行 dartdoc / 行内 WHY 注释解释"前端契约演变 / 旧实现 vs 新实现 / 上下游字段口径 / 不走本分支也不受影响"。先用这 4 问自检,有 1 项答错就回去删:
+> 反复违规的 AI 行为:私有方法 / 内部代码块上方堆 5-12 行 Javadoc / 行内 WHY 注释解释"前端契约演变 / 旧实现 vs 新实现 / 上下游字段口径 / 不走本分支也不受影响"。先用这 4 问自检,有 1 项答错就回去删:
 
 1. **可见性问题**:这是不是**公开接口**(public 方法 / 对外 API)?
    - 是 → 允许 1-2 行 doc 描述能力 + 关键参数 / 返回语义
@@ -111,7 +111,7 @@ description: Use when writing, reviewing, or modifying source code in any langua
 - **不写类型**(类型代码已声明)、不写重复字段名的废话(`amount: 金额` = 废话,删)
 - 自解释字段(`userId` / `createTime` / `name`)**省略注释**,不要为凑注释而注释
 - 一行讲不清的复杂字段,说明它属于哪个枚举 / 哪张表 / 哪段业务,细节归 design doc,不在字段上铺开
-- **类头与字段注释不重复**:类头讲整体业务口径 / 不变量,字段只补非自解释的点;同一信息不要在类头和字段各写一遍(类头已说明 `payAmount` / `tipAmount` 口径,字段就别再逐个复述)
+- **类头与字段注释不重复**:类头讲整体业务口径 / 不变量,字段只补非自解释的点;同一信息不要在类头和字段各写一遍(类头已说明 `payAmount` / `discountAmount` 口径,字段就别再逐个复述)
 
 ### 5.2 方法 / 函数级 — 必须,**1–2 行说明 + 参数 / 返回 / 异常**
 
@@ -120,24 +120,26 @@ description: Use when writing, reviewing, or modifying source code in any langua
 - 每个非平凡参数的含义和约束(空值规则、取值范围)
 - 返回值的业务含义(失败语义:抛异常 vs 返回 null vs 返回错误码)
 - 可能抛出的异常及触发条件
-- 语言有 doc comment 语法(Javadoc / TSDoc / Dart doc / docstring)的优先用 doc comment
+- 语言有 doc comment 语法(Javadoc / TSDoc / docstring)的优先用 doc comment
 
 ### 5.2.1 职责边界注释 — 推荐,**仅限原子能力 / 领域服务**
 
 **只对**「原子能力方法」和「领域服务 / focused service 的公开类」可写「职责 / 不负责」契约清单——`不负责` 那部分正是 §5.1 要保留的「最容易误改的边界」,对人和 AI(知识图谱沉淀)都有效:
 
-```dart
-/// 原子能力:登记退款终态
-///
-/// 职责:1. 更新退款状态 2. 写退款流水 3. 发本地事件
-/// 不负责:1. 调支付渠道 2. 校验退款金额 3. 更新订单支付状态
-Future<void> registerRefundSuccess(RefundOrder order) async {}
+```java
+/**
+ * 原子能力:登记退款终态
+ *
+ * 职责:1. 更新退款状态 2. 写交易流水 3. 发本地事件
+ * 不负责:1. 调支付渠道 2. 校验退款金额 3. 更新订单状态
+ */
+void registerRefundSuccess(RefundOrder order) {}
 ```
 
 **硬约束**(否则退化成 §5.1 禁止的「类注释 = 小设计文档」):
 - 每条 ≤1 行、是**契约边界**,不是算法主干 / 数据源选型 / 场景推演 / 迁移史(这些仍进 design doc)
 - 职责 + 不负责合计控制在 ~8 条以内,讲不下说明该拆类 / 该写文档
-- **普通 DTO / Widget / 工具类 / Controller 不用**这种形式,守 §5.1 的 1-3 行
+- **普通 DTO / VO / 工具类 / Controller 不用**这种形式,守 §5.1 的 1-3 行
 
 ### 5.3 核心代码块 — 必须,**1 行**
 
@@ -160,14 +162,13 @@ Future<void> registerRefundSuccess(RefundOrder order) async {}
 - 重复函数名的废话(`getUser: 获取用户`)
 - **TODO / FIXME 格式 `TODO(负责人): 原因`**:负责人必填(问责到人,不是甩锅)、原因必填、**禁止带日期**。反例:无原因 / 无负责人的裸 `// TODO`(噪声);带日期的 `// TODO(turnin 2026-04): ...`(日期归 VCS / 任务系统)。能开任务的优先开任务,而不是把 TODO 长期留在源码
 - 业务规则的长篇科普(超过 3 行) → 进 design doc 或 bug doc
-- **私有方法 / 内部 helper 的多段 dartdoc**(超过 2 行讲"前端契约 / 上下游字段 / 旧契约 vs 新契约 / 跨方法不变式")→ 私有方法不是公开接口,函数名 + 1 行职责就够;契约描述只属于公开接口
+- **私有方法 / 内部 helper 的多段 Javadoc**(超过 2 行讲"前端契约 / 上下游字段 / 旧契约 vs 新契约 / 跨方法不变式")→ 私有方法不是公开接口,函数名 + 1 行职责就够;契约描述只属于公开接口
 - **行内 WHY 注释超过 1 行**(代码块上方堆 3-5 行讲"另一分支怎么算 / UI 入口不走本分支 / 与某表字段口径对齐")→ 压成 1 行,或彻底删掉让 commit body / bug doc 自承载
-- **宿主语言里内嵌的 SQL 字符串内部不写 `--` 注释**(drift `customSelect` / JDBC / MyBatis 拼接 SQL / 任何字符串字面量里的 SQL):SQL 经常被复制调试、拼接、压缩、日志输出,内嵌 `--` 是噪声,还让 DAO 读起来像"SQL 文档"。口径说明放到 `customSelect`(或等价调用)**之前的宿主语言注释**(Dart `///`·`//` / Java `//`),且遵守行内 WHY ≤1 行。注:`check-comment-density.js` 会先剥离字符串字面量再判定,**抓不到 SQL 串里的 `--`**,这条靠本规则 + 评审 + `comment-cleanup`
+- **宿主语言里内嵌的 SQL 字符串内部不写 `--` 注释**(JDBC / MyBatis 拼接 SQL / 任何字符串字面量里的 SQL):SQL 经常被复制调试、拼接、压缩、日志输出,内嵌 `--` 是噪声,还让 DAO 读起来像"SQL 文档"。口径说明放到拼接 SQL 调用**之前的宿主语言注释**(Java `//`),且遵守行内 WHY ≤1 行。注:`check-comment-density.js` 会先剥离字符串字面量再判定,**抓不到 SQL 串里的 `--`**,这条靠本规则 + 评审 + `comment-cleanup`
 - **扩展 / 维护指南**("新增 X 类型时第 1/2/3 步怎么做" / "以后接入 Y 时改这里")→ 属于维护文档 / design doc,**不是当前代码契约**,源码里删或迁移
 - **方法头逐条复述代码已直观表达的逻辑**(把分支条件、状态码映射、fallback 一条条写一遍,而下面代码本身就很直观)→ 代码自解释的别用注释翻译一遍;压成 1-2 行讲**算法意图 + 兜底规则**即可
 
 > **注释密度是信号,不是达标项**:单文件注释占比畸高(如 >40%)、或连续注释块超过 6 行,基本等于"该拆的函数没拆 / 该迁的背景没迁"。降密度靠**拆函数 + 命名自解释 + 把复杂背景迁到 design doc**,不靠继续堆注释。`check-comment-density.js` 只机械抓连续块,占比畸高靠本条 + 评审判断。
-
 ### 5.4.1 字面反例与原因对照(具体字符串 + 为什么禁)
 
 > 列项是抽象规则,字面表是 AI 训练数据里最常学到的反模式具象样本。看到字面就该回避,不要让"规则我懂但具体代码我不确定"成为豁免理由。
@@ -176,27 +177,27 @@ Future<void> registerRefundSuccess(RefundOrder order) async {}
 |----------|------|
 | `// [BUGFIX 2026-04-30] 旧实现用 transaction_no 反查...` | 变更日期 / 原因属于 git log,不属于代码 |
 | `// [DEPRECATED 2026-04-25] 这段以前是 X,现在改成 Y` | 完全属于 commit message |
-| `// [ADDED 2026-04-25] 对齐云端 RefundServiceImpl#handleX(L1063-1070)` | 对齐依据应放方法 doc comment 的"对齐云端"段(不带日期),或写进 design / bug 文档 |
+| `// [ADDED 2026-04-25] 对齐支付核心 RefundServiceImpl#handleX(L1063-1070)` | 对齐依据应放方法 doc comment 的"对齐说明"段(不带日期),或写进 design / bug 文档 |
 | `// [REWRITTEN 2026-04-28] 按 xxx 重写...` 后接旧实现问题 / 新实现步骤 / 未来版本计划 | 变更流水 + 设计文档摘要,应写进 commit body / 设计文档;源码只保留当前行为和必要 WHY |
 | 大段被 `//` 注释的旧代码 | 增加噪声、容易腐烂、git 已经留底 |
 | `// ===== [ADDED 2026-04-28] 校验链路 + 分摊编排私有方法 =====` 风格分节标题 | section divider 注释 = 文件结构没拆好;用方法分组 + 类层级表达,不用画注释分割线,更不要在分割线里夹日期 / 版本 |
 | `// 详见 v6 调整流水 2026-04-25 条目` | 引用易失效;让读者跳到外部文档才能理解的代码不合格 |
-| `// PR #1234 / Issue #56 / Linear ticket KP-789` | 同上 |
+| `// PR #1234 / Issue #56 / Jira ticket KP-789` | 同上 |
 | `// TODO(turnin 2026-04): 这里以后再优化` | **日期**是噪声(归 VCS / 任务系统),且无具体原因。正确:`// TODO(turnin): 等 v1.22 协议接入后删`——负责人 + 原因、不带日期;更应开任务 |
 | `// 查询用户` / `// 判断为空` / `// 遍历集合` / `// 设置状态`(紧贴下一行同义代码) | 复述代码 what,零信息量。删——靠命名自解释,要写就写 why(`// 异步退款需等回调,此处先返回`) |
 | 函数头连续十几行说明"旧实现忽略 A/B/C、新实现第 1/2/3 步、理论上一定完成、v1.1 计划" | 函数头注释过载。当前职责写在 doc comment,步骤说明拆到对应代码块附近 |
-| 私有方法 `_validateXxx` 上方写 12 行 dartdoc 讲"前端契约 / 早期版本曾要求 X / 现已统一为 Y / 再加会双计" | 私有方法不是公开接口,**契约演变史 ≠ 当前职责**。1-2 行讲"当前校验什么"即可;契约迁移属于 commit body / bug doc。函数名 `_validateMethodsAmountSum` 已自解释,旧契约描述全删 |
-| 代码块上方堆 5 行行内注释讲"cancel 桥接路径 / 联台按 scaleRatio 缩 / 否则与 income_refund_service_fee_amount 口径不一致 / UI 部分退款入口不走本分支不受影响" | §5.3 行内注释**硬阈值 1 行**。"另一分支怎么走 / 不走本分支也不受影响" = 旁路场景影响面叙事,归反向索引 / design doc。压成 1 行 WHY 或彻底删 |
-| `resolveOrderBusinessState` 方法头把分支条件、状态码映射、fallback 完整复述一遍(下面代码本身直观) | 复述代码 = 噪声。压成 1-2 行讲算法意图:"按云端算法据 payType/orderState/pickUpState 推导业务状态,未知值兜底待下单",不逐条翻译代码 |
-| `RefundTipPolicyService` 类头 60+ 行写关键契约 / 算法主干 / 数据源选型 / 复合场景推演 | 类注释写成了小设计文档(§5.1)。类头只留当前职责 + 最易误改的不变量,算法主干 / 选型 / 场景推演进 design doc |
+| 私有方法 `validateXxx` 上方写 12 行 Javadoc 讲"前端契约 / 早期版本曾要求 X / 现已统一为 Y / 再加会双计" | 私有方法不是公开接口,**契约演变史 ≠ 当前职责**。1-2 行讲"当前校验什么"即可;契约迁移属于 commit body / bug doc。函数名 `validateRefundPlanAmountSum` 已自解释,旧契约描述全删 |
+| 代码块上方堆 5 行行内注释讲"分期桥接路径 / 联合支付按 scaleRatio 缩 / 否则与 service_fee_amount 口径不一致 / 全额退款入口不走本分支不受影响" | §5.3 行内注释**硬阈值 1 行**。"另一分支怎么走 / 不走本分支也不受影响" = 旁路场景影响面叙事,归反向索引 / design doc。压成 1 行 WHY 或彻底删 |
+| `resolveOrderBusinessState` 方法头把分支条件、状态码映射、fallback 完整复述一遍(下面代码本身直观) | 复述代码 = 噪声。压成 1-2 行讲算法意图:"按支付核心算法据 payType/orderState/refundState 推导业务状态,未知值兜底待出账",不逐条翻译代码 |
+| `OrderStatusResolverService` 类头 60+ 行写关键契约 / 算法主干 / 数据源选型 / 复合场景推演 | 类注释写成了小设计文档(§5.1)。类头只留当前职责 + 最易误改的不变量,算法主干 / 选型 / 场景推演进 design doc |
 | `CancelRefundPlanner` 注释"新增订单类型时第 1/2/3 步怎么做" | 扩展 / 维护指南 ≠ 当前代码契约,进维护文档 / design doc,源码删 |
-| `RefundTxSnapshot` 类头已解释 payAmount/tipAmount,字段上再逐个解释一遍 | 类头与字段重复(§5.1.5)。类头讲整体口径,字段只补非自解释点,同一信息不写两遍 |
-| 函数体内连续多段讲"反结 / 金额维度 / 失败信号 / retry 冲正"(占函数大半篇幅) | 函数体大段流水账违反 §5 放置原则 + §5.3。有价值的 WHY 压成少量核心规则行内注释,复杂背景移 design doc / 业务文档 |
-| `customSelect` 的 SQL 字符串里堆 7 行 `-- tip_amount 在联合支付时...`/`-- 复制写到 orders 上...`/`-- 与 bill.tip_amount 同口径...`(refund_products_dao.dart) | 内嵌 SQL 不写 `--` 注释。压成 1 行放到 `customSelect` 之前的 Dart 注释:`// 联单 tip 是整桌快照,取 MAX 避免兄弟桌重复累加`,SQL 串本身保持干净 |
+| `RefundTxSnapshot` 类头已解释 payAmount/discountAmount,字段上再逐个解释一遍 | 类头与字段重复(§5.1.5)。类头讲整体口径,字段只补非自解释点,同一信息不写两遍 |
+| 函数体内连续多段讲"冲正 / 金额维度 / 失败信号 / retry 冲销"(占函数大半篇幅) | 函数体大段流水账违反 §5 放置原则 + §5.3。有价值的 WHY 压成少量核心规则行内注释,复杂背景移 design doc / 业务文档 |
+| 拼接 SQL 的字符串里堆 7 行 `-- discount_amount 在合并订单时...`/`-- 复制写到 orders 上...`/`-- 与 order.discount_amount 同口径...`(OrderRefundMapper.xml) | 内嵌 SQL 不写 `--` 注释。压成 1 行放到拼接 SQL 之前的 Java 注释:`// 合并订单的优惠是整单快照,取 MAX 避免子订单重复累加`,SQL 串本身保持干净 |
 
 > **判定准绳**:删掉这条注释,下一个改这段代码的人会不会犯错?会则保留(短句),不会则删。
 
-> **机械兜底(v1.29 起;v1.35 起默认硬阻断)**:`hooks/check-comment-density.js`(PreToolUse Write/Edit/MultiEdit,默认 block)扫本次新增内容的注释,命中变更标记 / 日期 / 工单号 / 带元信息分节线 / 版本流水措辞等**客观红线即 exit 2 硬阻断**;`long-block`(连续注释块超阈值)是启发式软规则,只提示不阻断——避免误伤公开 API 的长 dartdoc。hook 只抓客观无歧义项,prose 式实现史 / 私有方法契约史仍靠本节规则 + 评审判断,不能因"hook 没报"就放行。`CASEFLOW_COMMENT_HOOK=warn` 降级为仅提示、=off 关闭。
+> **机械兜底(v1.29 起;v1.35 起默认硬阻断)**:`hooks/check-comment-density.js`(PreToolUse Write/Edit/MultiEdit,默认 block)扫本次新增内容的注释,命中变更标记 / 日期 / 工单号 / 带元信息分节线 / 版本流水措辞等**客观红线即 exit 2 硬阻断**;`long-block`(连续注释块超阈值)是启发式软规则,只提示不阻断——避免误伤公开 API 的长 Javadoc。hook 只抓客观无歧义项,prose 式实现史 / 私有方法契约史仍靠本节规则 + 评审判断,不能因"hook 没报"就放行。`CASEFLOW_COMMENT_HOOK=warn` 降级为仅提示、=off 关闭。
 
 ### 5.5 修改代码时同步清理过期注释 / 历史版本说明 / 废话注释
 
@@ -225,7 +226,6 @@ Future<void> registerRefundSuccess(RefundOrder order) async {}
 - **段落式设计史 / 实现步骤流水**:函数头堆 5+ 行讲"我是怎么一步步实现的"
 
 > 这些信息属于 git commit body / design doc / bug doc,**不属于源码**。源码只回答"现在是什么、为什么这么写"。
-
 #### C. 必须删除 —— 废话注释(零信息量)
 
 - 重复函数名 / 字段名:`// getUser: 获取用户`、`/** 用户ID */ Long userId`(字段名已自解释)
@@ -267,7 +267,7 @@ Future<void> registerRefundSuccess(RefundOrder order) async {}
 - **动手前先问一句**:我要写的这块,是不是某处已有的**知识 / 常量 / 约定**的复制?是 → 先建 / 找到单一来源再引用,**别复制**;若重复的是**逻辑** → 数到三再抽。
 - dead code 直接删,**不留**注释占位。
 - 重构与删除分开提交,避免一次 PR 既改行为又改结构。
-- 重复使用 ≥2 feature 的业务计算 → 沉淀到原子能力层(`common/services/` / `common/backend_infra/services/` 等)。
+- 重复使用 ≥2 feature 的业务计算 → 沉淀到原子能力层(`common/service/` 等)。
 
 ### 7.5 外部 API / 不熟悉的库:先核验,不臆造
 
@@ -291,8 +291,7 @@ Future<void> registerRefundSuccess(RefundOrder order) async {}
 | 通用 skill(本文件) | 语言 / 框架专属 skill |
 |---|---|
 | 命名表意 / 函数原子 / 层次分明 / 零魔法值 / 注释三档 / 异常不静默 / 删冗余 | **java-coding-standards**: 包装类比较、SimpleDateFormat、SLF4J 占位符、HashMap 容量、BigDecimal 比较、JDK8+ DateTimeFormatter、SQL 列名规范、索引规则等 Java / 数据库独占条款 |
-| 同上 | **korepos-backend-service**: backend 目录结构、BackendInfra 边界、一接口一 service、Service 禁裸 SQL、跨 feature 业务原子能力、长方法拆 step、DB 字段值枚举绑定等 Flutter backend 独占条款 |
-| 同上 | **bugfix-coding-style**: 禁源码内变更日志 / 函数头不堆复盘 / 复杂逻辑就近 WHY(本 skill §5.4 与之完全对齐) |
+| 同上 | **finance-coding-standards**: 接口契约(禁 Map、继承 FinanceBizBaseReq)、控制流(禁 ≥2 层 if-else)、日志分级、命名(SCF 实现类不加 Impl)、NPE 防护、主从数据源、SQL 规范、事务禁 RPC、金额用分等金融技术部独占条款 |
 | 同上 | **bugfix-coding-style**: 禁源码内变更日志 / 函数头不堆复盘 / 复杂逻辑就近 WHY(本 skill §5.4 与之完全对齐) |
 **触发顺序**:任何源码 Edit/Write 前,先满足本 skill 的 7 条铁律 → 再走语言/框架专属 skill 的独占条款 → 最后由 `coding-violation-log` 在用户纠错时登记差异。
 

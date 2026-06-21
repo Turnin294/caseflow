@@ -1,12 +1,12 @@
 # caseflow
 
-> **30-second TL;DR**: A Claude Code plugin that turns AI-assisted development from "luck-based" into "process-driven" — 24 skills + 3 hooks enforce the complete pipeline: requirement analysis → design doc → code orientation → architecture gate → coding standards → commit standards → knowledge sediment. Make AI think before editing, and leave traceable artifacts after.
+> **30-second TL;DR**: A Claude Code plugin that turns AI-assisted development from "luck-based" into "process-driven" — 24 skills + 2 hooks enforce the complete pipeline: requirement analysis → design doc → code orientation → architecture gate → coding standards → commit standards → knowledge sediment. Make AI think before editing, and leave traceable artifacts after.
 
 **What it solves:**
 - AI dives straight into code, skipping design / not consulting existing code / not sedimenting knowledge → enforced `design-doc-required` + `pre-implementation-code-orientation` gates
 - AI keeps appending methods to god services → `architecture-ddd-lite-fullstack` "new business branch = new focused service" rule
 - AI pollutes source comments with change history / old impl recaps → `bugfix-coding-style` bans change-log comments
-- Team AI-collaboration experience doesn't accumulate / every newcomer re-hits the same pits → 4-piece knowledge graph (backend / reverse-index / glossary / cross-project)
+- Team AI-collaboration experience doesn't accumulate / every newcomer re-hits the same pits → 3-piece knowledge graph (backend / reverse-index / glossary)
 - AI can't self-comply with commit standards → `hooks/check-git-commit-skill.js` intercepts large changes and enforces the 5-step flow
 
 ## Quick start (5-minute trial)
@@ -67,16 +67,15 @@ Choose user-scope (recommended) at install time.
 ```
 
 ## Included skills (24 total, grouped by phase)
-
 See [README.md § Included Skills](README.md#包含的-skills) for the complete grouped list, or [CLAUDE.md § Skill Index](CLAUDE.md#skill-索引) for full descriptions.
 
 Brief overview:
 
 - **① Requirement / design analysis** — `solution-review-required` / `design-doc-required` / `bug-doc-required` / `business-logic-orientation`
 - **② Pre-implementation orientation** — `pre-implementation-code-orientation` / `doc-index-required`
-- **③ Architecture & coding gates** — `architecture-ddd-lite-fullstack` / `coding-standards-common` / `java-coding-standards` / `bugfix-coding-style` (korepos backend rules korepos-backend-service migrated to kpay-daily-plugin)
+- **③ Architecture & coding gates** — `architecture-ddd-lite-fullstack` / `coding-standards-common` / `java-coding-standards` / `bugfix-coding-style`
 - **④ Commit & log** — `git-commit-standards` / `daily-work-log`
-- **⑤ Knowledge graph** — `backend-knowledge-graph-required` / `reverse-index-required` / `glossary-required` / `cross-project-locator`
+- **⑤ Knowledge graph** — `backend-knowledge-graph-required` / `reverse-index-required` / `glossary-required`
 - **⑥ Quality loop** — `coding-violation-log` / `markdown-writing-standards` / `project-docs-update`
 - **⑦ Project initialization** — `init-project-docs` / `generate-project-profile`
 - **⑧ Plugin self-maintenance** — `dev-log`

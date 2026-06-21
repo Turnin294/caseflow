@@ -1,22 +1,21 @@
 ---
 name: glossary-required
-description: "Use BEFORE answering questions using domain business terms (订单/账单/退款/分摊/流水/快照/对账 等) AND BEFORE Write/Edit any .md that introduces/relies on business terms. 5 BLOCKING triggers (PRD 含未登记词 / 用户与 AI 同义词错位 / 调查发现新术语 / 用户要求整理 / 场景文档含未登记词) — full list in SKILL.md body. Scope: 业务领域术语 ↔ 代码命名 ↔ 同义词 三方映射;通用技术词汇归 `backend-knowledge-graph-required` 的「技术难点」。与 `init-project-docs/templates/07_glossary.md` 互补——本 skill 会话级日常补登轻量五栏,init 负责项目初始化批量。"
+description: "Use BEFORE answering questions using domain business terms (订单/优惠券/退款/分摊/流水/快照/对账 等) AND BEFORE Write/Edit any .md that introduces/relies on business terms. 5 BLOCKING triggers (PRD 含未登记词 / 用户与 AI 同义词错位 / 调查发现新术语 / 用户要求整理 / 场景文档含未登记词) — full list in SKILL.md body. Scope: 业务领域术语 ↔ 代码命名 ↔ 同义词 三方映射;通用技术词汇归 `backend-knowledge-graph-required` 的「技术难点」。与 `init-project-docs/templates/07_glossary.md` 互补——本 skill 会话级日常补登轻量五栏,init 负责项目初始化批量。"
 ---
 
 # 业务术语强制登记
 
 ## 定位
 
-**本 skill 是 AI Agent 把 PRD/需求/设计文档中的"业务领域名词"对齐到"代码内部命名"的唯一权威源。** 没有它,AI 在新需求分析时会反复在「退货 vs 退款」、「账单 vs 流水」、「分摊 vs 分配」、「快照 vs 引用」之间踩坑,也无法做后续场景匹配 / 反向影响分析。
+**本 skill 是 AI Agent 把 PRD/需求/设计文档中的"业务领域名词"对齐到"代码内部命名"的唯一权威源。** 没有它,AI 在新需求分析时会反复在「退货 vs 退款」、「订单 vs 流水」、「分摊 vs 分配」、「快照 vs 引用」之间踩坑,也无法做后续场景匹配 / 反向影响分析。
 
 目标:让 AI 在分析任何业务需求前先回答清楚——
 
 - PRD 里的"X"在本项目代码里叫什么(类名 / 表名 / 枚举 / 字段)
 - 这个术语是否有同义词、近义词、过期叫法
-- 它对应的核心业务场景与代码坐标在哪
-- 这个术语在跨项目(POS 生态)中是否有不同叫法(若有则路由到 `cross-project-locator`)
+- 这个术语对应的核心业务场景与代码坐标在哪
 
-不处理:通用编程概念(线程 / 缓存 / 事务 / 子进程)、跨项目链路术语对照(走 `cross-project-locator`)、批量项目初始化术语表(走 `init-project-docs` 的 07_glossary.md)。
+不处理:通用编程概念(线程 / 缓存 / 事务 / 子进程)、批量项目初始化术语表(走 `init-project-docs` 的 07_glossary.md)。
 
 ---
 
@@ -26,7 +25,7 @@ description: "Use BEFORE answering questions using domain business terms (订单
 
 | 触发场景 | 命中信号 | 必做动作 |
 |---|---|---|
-| **用户提供 PRD / 需求 / 设计文档,其中含 ≥1 个业务领域名词** | 文档里出现订单 / 账单 / 退款 / 分摊 / 流水 / 快照 / 对账 / 充值 / 提现 / 库存等业务名词 | 答题前先扫一遍,查 glossary 是否已登记;**未登记**必须候选追加 |
+| **用户提供 PRD / 需求 / 设计文档,其中含 ≥1 个业务领域名词** | 文档里出现订单 / 优惠券 / 退款 / 分摊 / 流水 / 快照 / 对账 / 充值 / 提现 / 库存等业务名词 | 答题前先扫一遍,查 glossary 是否已登记;**未登记**必须候选追加 |
 | **会话中用户与 AI 对同一名词使用不同字面** | 用户说「退货」AI 答「退款」、用户说「分摊」AI 答「分配」、用户说「日结」AI 答「对账」 | 立即停下对齐到规范术语,在 glossary 增加同义词条目 |
 | **AI 完成代码调查发现 ≥1 个业务术语 ↔ 代码命名映射** | 调查结论里出现具体实体类 / 表名 / 枚举 / 字段名,且这些名字与用户所用业务名词对应关系尚未登记 | 同回合候选追加,字段含中文名 / 英文标识 / 一行定义 / 关联代码坐标 |
 | **用户主动要求** | 「补术语」「整理术语表」「建 glossary」「维护术语映射」 | 先读现有 glossary + 候选池,再补充正式表 |
@@ -34,7 +33,7 @@ description: "Use BEFORE answering questions using domain business terms (订单
 
 > **常见误判反例**:
 > - ❌ "用户只是问业务流程,没让我补术语,所以不用触发" → **错**,业务名词出现即触发
-> - ❌ "这是通用 IT 词汇(订单 / 账单),不需要登记" → **错**,本项目里业务名词的具体含义、关联代码、状态枚举可能与通用语义不同
+> - ❌ "这是通用 IT 词汇(订单 / 优惠券),不需要登记" → **错**,本项目里业务名词的具体含义、关联代码、状态枚举可能与通用语义不同
 > - ❌ "项目里没有 glossary.md,所以 skill 不适用" → **错**,没有就先写候选池
 > - ❌ "用户用了'退货'我用'退款',意思一样不用纠正" → **错**,字面不一致即触发对齐,术语对齐是 Agent 后续场景匹配 / 反向索引的前提
 > - ❌ "init-project-docs 里已有 07_glossary.md 了,不用本 skill" → **错**,07_glossary.md 是项目初始化批量生成,日常会话级补登仍走本 skill 的精简表
@@ -45,7 +44,7 @@ description: "Use BEFORE answering questions using domain business terms (订单
 
 ### 本 skill 负责
 
-- **业务领域名词**:订单 / 账单 / 退款 / 分摊 / 流水 / 快照 / 对账 / 充值 / 提现 / 库存 / 渠道 / 商户 / 商品 / SKU / 营销 / 优惠 / 会员 / 积分等领域名词
+- **业务领域名词**:订单 / 优惠券 / 退款 / 分摊 / 流水 / 快照 / 对账 / 充值 / 提现 / 库存 / 渠道 / 商户 / 商品 / SKU / 营销 / 优惠 / 会员 / 积分等领域名词
 - **业务术语 ↔ 代码命名映射**:中文名 ↔ 类名 / 表名 / 枚举 / 字段
 - **同义词归一**:用户口语化表达 ↔ 项目规范术语
 - **过期叫法标记**:历史命名 → 当前规范命名
@@ -55,7 +54,6 @@ description: "Use BEFORE answering questions using domain business terms (订单
 | 不负责的内容 | 归属 skill |
 |---|---|
 | 通用编程概念(线程 / 缓存 / 事务 / 子进程 / 并发) | `backend-knowledge-graph-required` 的"技术难点" |
-| 跨项目同名术语在不同项目中的不同叫法对照 | `cross-project-locator` 的 `shared-glossary.md` |
 | 批量项目初始化时一次性生成完整术语表 | `init-project-docs` 的 `templates/07_glossary.md` |
 | 表关系 / SQL 查询逻辑 / 状态机定义 | `backend-knowledge-graph-required` |
 
@@ -99,8 +97,8 @@ description: "Use BEFORE answering questions using domain business terms (订单
 
 | 中文名 | 英文 / 代码标识 | 一行定义 | 同义词 / 旧叫法 | 关联代码坐标 |
 |---|---|---|---|---|
-| 退款 | Refund / `RefundOrder` | 已支付订单的全额或部分金额返还,产生 RefundOrder + RefundFlow 记录 | 退货(口语) / cancel-payment(过期) | `lib/features/refund/...` |
-| 分摊 | Allocation / `BillAllocation` | 订单总金额按规则拆分到多个商户/账户 | 分配(口语) | `BillAllocationService.java` |
+| 退款 | Refund / `RefundOrder` | 用户按退款规则全额或部分退回,产生 RefundOrder + RefundFlow 记录 | 退货(口语) / pay-back(过期) | `src/main/java/.../refund/...` |
+| 分摊 | Allocation / `OrderAllocation` | 订单总金额按规则拆分到多个商户/账户 | 分配(口语) | `OrderAllocationService.java` |
 | 流水 | Flow / `*_flow` 表 | 资金 / 库存 / 状态变更的不可篡改追加日志 | journal(过期) / log(歧义) | `payment_flow`, `refund_flow` |
 ```
 
@@ -133,7 +131,7 @@ flowchart TD
     D --> E
     E -- "已登记" --> F["在答题/写作中使用规范术语\n并引用 glossary 中的定义"]
     E -- "未登记" --> G{"该术语是否属于本 skill 范围?\n(业务领域词,非通用编程词)"}
-    G -- "否(技术词)" --> H["路由到 backend-knowledge-graph-required\n或 cross-project-locator"]
+    G -- "否(技术词)" --> H["路由到 backend-knowledge-graph-required\n的技术难点"]
     G -- "是(业务词)" --> I["按精简五栏格式追加到候选池\n或正式表(若已存在)"]
     I --> J{"用户是否要求\n上传终版到项目 docs/?"}
     J -- "否(默认)" --> K["留在候选池"]
@@ -204,7 +202,6 @@ flowchart TD
 | `bug-doc-required` | bug 分析涉及业务名词时同样查 glossary;新发现术语候选 |
 | `business-logic-orientation` | 现状梳理时大量出现业务术语,必须同步更新 glossary 候选 |
 | `backend-knowledge-graph-required` | 表 / 枚举 / 状态机沉淀时附带的中文业务名也走 glossary;技术难点术语**不**走本 skill |
-| `cross-project-locator` | 跨项目同名术语在不同项目里有不同叫法时,**本项目内**叫法登记在本 skill,**跨项目对照**登记在 cross-project-locator 的 `shared-glossary.md` |
 | `reverse-index-required` | 反向索引使用规范术语命名条目,术语未登记时先经本 skill 登记再写反向索引 |
 
 ---
@@ -232,7 +229,7 @@ flowchart TD
 
 1. 凭空发明业务术语:必须基于代码 / DDL / PRD 中真实出现过的名字
 2. 把通用编程概念塞进 glossary:线程 / 缓存 / 事务等归 backend-knowledge-graph 的技术难点
-3. 把跨项目对照塞进单项目 glossary:跨项目同名异叫法登记 cross-project-locator
+3. 把同一术语在不同服务里的不同叫法混登:本项目内只登记本项目规范叫法,不混入其它服务的命名
 4. 用户用口语 AI 也跟着用口语:必须主动对齐到规范术语
 5. 候选池写成长篇定义:候选池保持精简五栏,长定义留给正式表
 6. 不查重就追加:同一术语已存在时只补充字段,不另起一行

@@ -1,6 +1,6 @@
 ---
 name: reverse-index-required
-description: "Use BEFORE answering impact-analysis questions (加这个状态会破坏哪些旧逻辑 / 字段哪里在用 / 事件订阅清单 / API 谁在调) AND BEFORE Write/Edit枚举/状态机/字段/事件 payload/API endpoint 定义类源码。维护 4 类反向索引（states / fields / events / apis）。冷启动用 `hooks/scan-reverse-index.js` 一次性扫描，后续增量。详细 5 类 BLOCKING 触发条件与边界（与 backend-knowledge-graph-required 正向图谱 / cross-project-locator 跨项目调用方互补）见 SKILL.md body 的「触发时机」节。"
+description: "Use BEFORE answering impact-analysis questions (加这个状态会破坏哪些旧逻辑 / 字段哪里在用 / 事件订阅清单 / API 谁在调) AND BEFORE Write/Edit枚举/状态机/字段/事件 payload/API endpoint 定义类源码。维护 4 类反向索引（states / fields / events / apis）。冷启动用 `hooks/scan-reverse-index.js` 一次性扫描，后续增量。详细 5 类 BLOCKING 触发条件与边界（与 backend-knowledge-graph-required 正向图谱互补，单服务内 vs 服务间调用方）见 SKILL.md body 的「触发时机」节。"
 ---
 
 # 反向影响索引强制维护
@@ -16,7 +16,7 @@ description: "Use BEFORE answering impact-analysis questions (加这个状态会
 - **events**:这个同步事件订阅了哪些业务场景?新业务场景需要不需要触发?报文字段够不够?
 - **apis**:这个 API 被哪些方调用?改 API 出参 / 入参时哪些调用方需要协同?
 
-不处理:跨项目 API 调用方对照(走 `cross-project-locator`)、表关系 / SQL 查询逻辑(走 `backend-knowledge-graph-required`)、业务术语映射(走 `glossary-required`)。
+不处理:表关系 / SQL 查询逻辑(走 `backend-knowledge-graph-required`)、业务术语映射(走 `glossary-required`)。
 
 ---
 
@@ -25,10 +25,10 @@ description: "Use BEFORE answering impact-analysis questions (加这个状态会
 | 触发场景 | 命中信号 | 必做动作 |
 |---|---|---|
 | **用户问反向影响类问题** | 「加这个状态会破坏哪些旧逻辑」「这个字段哪里在用」「事件订阅清单」「这个 API 谁在调」「改这个会影响什么」 | 先读对应 reverse-index/{states\|fields\|events\|apis}.md 给出引用清单,再回答 |
-| **AI 即将 Edit/Write 枚举定义文件** | 文件含 `enum SomeStatus { ... }` 或 Java enum 类、Dart enum、TS const enum | 先读 `states.md` 看有哪些判断点;改完后必同步更新 |
+| **AI 即将 Edit/Write 枚举定义文件** | 文件含 `enum SomeStatus { ... }` 或 Java enum 类、TS const enum | 先读 `states.md` 看有哪些判断点;改完后必同步更新 |
 | **AI 即将 Edit/Write DTO/Entity 字段定义** | 新增 / 删除 / 重命名字段、改字段类型 | 先读 `fields.md` 看读写点;改完后必同步 |
-| **AI 即将 Edit/Write 同步事件 payload 定义** | 改 SyncEvent / Event 类、改 MQ message 结构、改云端同步报文 | 先读 `events.md` 看订阅场景;改完后必同步 |
-| **AI 即将 Edit/Write API endpoint 定义** | 新增 / 修改 / 删除 Controller endpoint、shelf endpoint、Spring `@RequestMapping` 等 | 先读 `apis.md` 看调用方;改完后必同步 |
+| **AI 即将 Edit/Write 同步事件 payload 定义** | 改 SyncEvent / Event 类、改 MQ message 结构、改同步报文 | 先读 `events.md` 看订阅场景;改完后必同步 |
+| **AI 即将 Edit/Write API endpoint 定义** | 新增 / 修改 / 删除 Controller endpoint、Spring `@RequestMapping` 等 | 先读 `apis.md` 看调用方;改完后必同步 |
 | **AI 完成 ≥1 项以上变更后** | 上述 4 类变更落地后 | 同回合内必更新对应反向索引 |
 | **项目存在反向索引文件** | `docs/knowledge-graph/reverse-index/` 或 `ai-docs/{project}/knowledge-graph/reverse-index/_candidates.md` | 编码前必读;变更后必回写 |
 | **用户主动要求** | 「建反向索引」「扫反向影响」「生成 reverse index」「冷启动反向索引」 | 引导跑 `hooks/scan-reverse-index.js` 后再人工修订 |
@@ -37,7 +37,7 @@ description: "Use BEFORE answering impact-analysis questions (加这个状态会
 > - ❌ "我用 grep 现场扫一下就行,不用建反向索引" → **错**,grep 漏字符串字面量、SQL where 条件、配置文件;反向索引必须显式登记
 > - ❌ "只是改一个字段类型,不影响业务,不用更新反向索引" → **错**,字段类型改了读写点的解析逻辑可能受影响,必须同步
 > - ❌ "项目没建反向索引,所以 skill 不适用" → **错**,没建就先跑冷启动扫描脚本生成候选池
-> - ❌ "这个改动是跨项目的,反向索引归 cross-project-locator" → **错**,**单服务内**的反向影响仍走本 skill;**跨项目调用方**才走 cross-project-locator
+> - ❌ "这个改动是跨服务的,反向索引不用建" → **错**,**单服务内**的反向影响仍走本 skill;服务间调用方在本服务侧的 `apis.md` 仍要登记
 > - ❌ "新增枚举值不破坏旧逻辑,因为旧代码不会命中新值" → **错**,这正是反向索引要回答的问题——旧代码的 `default:` 分支、漏 case、SQL `IN (...)` 列表都可能因新值出错,必须显式扫描
 
 ---
@@ -74,7 +74,7 @@ description: "Use BEFORE answering impact-analysis questions (加这个状态会
 |---|---|---|---|
 | PENDING | `OrderService.java:142` (canCancel) | 仅 PENDING 可取消 | 是(新中间态可能也需要可取消) |
 | PAID | `OrderService.java:178` (canRefund) | 仅 PAID 可发起退款 | 是 |
-| PAID | `BillSyncJob.java:88` (shouldSync) | 仅 PAID 触发账单同步到云端 | 是 |
+| PAID | `OrderSyncJob.java:88` (shouldSync) | 仅 PAID 触发订单同步到云端 | 是 |
 | PAID | `OrderQueryDao.java:55` SQL `WHERE status = 'PAID'` | 报表只统计 PAID 订单 | 是(新成功态可能也要纳入统计) |
 ```
 
@@ -88,14 +88,14 @@ description: "Use BEFORE answering impact-analysis questions (加这个状态会
 每个表 / Entity 一个 H2,字段表格:
 
 ```markdown
-## bill 表 / `Bill` 实体
+## order 表 / `Order` 实体
 
-定义位置:`src/main/resources/ddl/bill.sql` + `Bill.java`
+定义位置:`src/main/resources/ddl/order.sql` + `Order.java`
 
 | 字段名 | 读点(file:line) | 写点(file:line) | 同步报文是否包含 | 备注 |
 |---|---|---|---|---|
-| `total_amount` | `BillReport.java:42` 报表汇总 | `BillService.java:88` 创建账单 / `RefundService.java:120` 退款扣减 | 是(BillSyncEvent.totalAmount) | 改字段需同步报表口径与云端报文 |
-| `currency` | `BillExportService.java:33` 导出 | `BillCreateService.java:55` 默认 CNY | 否 | 加字段时若涉及多币种需扩同步 |
+| `total_amount` | `OrderReport.java:42` 报表汇总 | `OrderService.java:88` 创建订单 / `RefundService.java:120` 退款扣减 | 是(OrderSyncEvent.totalAmount) | 改字段需同步报表口径与云端报文 |
+| `currency` | `OrderExportService.java:33` 导出 | `OrderCreateService.java:55` 默认 CNY | 否 | 加字段时若涉及多币种需扩同步 |
 ```
 
 ### events.md(同步事件反向索引)
@@ -112,7 +112,7 @@ description: "Use BEFORE answering impact-analysis questions (加这个状态会
 - 订单完成后 — `OrderCompleteService.java:88` 触发
 - 订单作废后 — `OrderVoidService.java:55` 触发
 
-**报文字段**:`orderId, totalAmount, status, items[], createdAt`
+**报文字段**:`orderId, totalAmount, status, createdAt`
 
 **消费方**:
 - 云端 / `cloud-order-receiver` 接口 `/api/order/sync`
@@ -121,7 +121,7 @@ description: "Use BEFORE answering impact-analysis questions (加这个状态会
 **新业务场景接入清单(回答"新场景是否需要扩订阅"的关键)**:
 - ✅ 已覆盖:订单创建 / 完成 / 作废
 - ❌ 未覆盖:订单退款 / 订单部分退款(目前走 `RefundSyncEvent`)
-- ⚠️ 可能需扩展:订单合并 / 订单拆分(尚未上线,新增时需评估)
+- ⚠️ 可能需扩展:订单改价 / 订单超时关闭(尚未上线,新增时需评估)
 
 **报文字段缺漏审视**:加新字段时,云端 receiver 是否能识别?若否,需先扩 receiver 再扩报文。
 ```
@@ -135,19 +135,19 @@ description: "Use BEFORE answering impact-analysis questions (加这个状态会
 
 定义位置:`OrderRefundController.java:45`
 
-**请求**:`RefundRequest { orderId, amount, reason }`
-**响应**:`RefundResponse { refundOrderId, status }`
+**请求**:`RefundRequest { orderId, amount, channel }`
+**响应**:`RefundResponse { refundFlowId, status }`
 
 **调用方**:
-- 前端 PWA / `lib/features/refund/data/refund_api.dart:88` — 用户主动退款
-- 内部 BFF / `kpay-pos-business-app-bff` `/refund/proxy` — 透传调用
+- 前端 H5（经网关转发）`/refund/submit` — 用户主动退款
+- 内部聚合层 / `order-aggregate-service` `/refund/proxy` — 透传调用
 - 定时任务 / `RefundRetryJob.java:120` — 失败重试
 
 **入参 / 出参变更影响**:
-- 改 `RefundRequest`:前端 PWA + BFF 必须同步;BFF 透传不改字段名时无感
-- 改 `RefundResponse`:前端 + BFF 都要协同
+- 改 `RefundRequest`:前端 H5 + 聚合层必须同步;聚合层透传不改字段名时无感
+- 改 `RefundResponse`:前端 + 聚合层都要协同
 
-**幂等性**:`orderId + amount + reason` 哈希作为幂等键,重复提交返回原退款单
+**幂等性**:`orderId + amount + channel` 哈希作为幂等键,重复提交返回原退款流水
 ```
 
 ---
@@ -161,8 +161,8 @@ description: "Use BEFORE answering impact-analysis questions (加这个状态会
 
 | 类型 | 主键 | 待补充信息 | 来源 | 备注 |
 |---|---|---|---|---|
-| state | OrderStatus.PAID | 判断点 `BillExportService.java:88` SQL `IN ('PAID','SHIPPED')` | 用户提问中发现 | 扫描脚本未识别 SQL 字符串字面量 |
-| event | OrderSyncEvent | 新订阅场景:订单合并 | 设计文档评审 | 实现完成后补到 events.md |
+| state | OrderStatus.PAID | 判断点 `OrderExportService.java:88` SQL `IN ('PAID','REFUNDED')` | 用户提问中发现 | 扫描脚本未识别 SQL 字符串字面量 |
+| event | OrderSyncEvent | 新订阅场景:订单改价 | 设计文档评审 | 实现完成后补到 events.md |
 ```
 
 ---
@@ -175,14 +175,14 @@ node ${CLAUDE_PLUGIN_ROOT}/hooks/scan-reverse-index.js --project=. --output=./do
 
 # 仅扫描特定语言
 node ${CLAUDE_PLUGIN_ROOT}/hooks/scan-reverse-index.js --project=. --lang=java
-node ${CLAUDE_PLUGIN_ROOT}/hooks/scan-reverse-index.js --project=. --lang=dart
+node ${CLAUDE_PLUGIN_ROOT}/hooks/scan-reverse-index.js --project=. --lang=ts
 
 # 输出到用户目录候选池
 node ${CLAUDE_PLUGIN_ROOT}/hooks/scan-reverse-index.js --project=. --output=user-candidates
 ```
 
 **扫描器能力(V1)**:
-- 识别 Java / Dart / TS 中的 enum 定义
+- 识别 Java / TS 中的 enum 定义
 - 识别 enum 引用点(`EnumName.VALUE`)
 - 识别 switch case / if / equals 判断
 - 识别 SQL where 字面量(单引号字符串 + 已知枚举值的字面对应)
@@ -192,12 +192,12 @@ node ${CLAUDE_PLUGIN_ROOT}/hooks/scan-reverse-index.js --project=. --output=user
 - 不识别动态枚举(运行时根据配置生成)
 - 不识别字段在配置文件 / properties / yaml 的引用
 - 不识别同步事件订阅关系(需人工标注)
-- 不识别跨项目调用方(走 `cross-project-locator`)
+- 不识别服务间调用方(需人工补到本服务侧 `apis.md` 候选区)
 - **不识别 Java / Kotlin / TS switch case 内部裸值**(`case PAID:` 形式省略了 enum 前缀,只识别 `EnumName.PAID` 形式);请人工补到候选区
 - 不识别枚举的 `name()` / `valueOf()` / `Enum.values()` 反射式判断
 - SQL 字面量识别仅匹配单引号 `'PAID'` 加常见 where/in/select 语境,有假阴性
 
-V2 计划:增加 AST 解析(基于 ts-morph / java-parser / analyzer-cli),提升识别精度。
+V2 计划:增加 AST 解析(基于 ts-morph / java-parser),提升识别精度。
 
 ---
 
@@ -293,7 +293,6 @@ flowchart TD
 | skill | 协作关系 |
 |---|---|
 | `backend-knowledge-graph-required` | 表关系 / 状态机 / 原子能力沉淀正向图谱;**反向索引**(谁判断了这个状态、谁读写了这个字段)归本 skill,二者互补 |
-| `cross-project-locator` | 单服务内 API 调用方 → `apis.md`(本 skill);**跨项目** API 调用方对照 → `cross-project-locator` |
 | `glossary-required` | 反向索引条目使用规范术语命名;术语未登记时先经 glossary-required |
 | `design-doc-required` | 设计文档「影响面」节必引用反向索引,不能凭空说"不影响" |
 | `bug-doc-required` | bug 根因分析涉及"为什么旧代码漏判这个状态"时,根因表必引用 states.md |
@@ -331,5 +330,5 @@ flowchart TD
 2. 用 grep 临时扫,不沉淀到反向索引文件:反向索引必须显式登记到 markdown
 3. 反向索引行无 `file:line`:无 file:line = 不可验证 = 不可信
 4. "新增态时是否需要补判断"列填空:这是反向索引价值最高的字段,空 = 形同未填
-5. 跨项目调用方塞进单项目 `apis.md`:本 skill 只管单服务,跨项目走 `cross-project-locator`
+5. 服务间调用方在本服务侧的 `apis.md` 仍要登记:本 skill 管单服务视角,不遗漏调用方
 6. 把表关系 / SQL 模板塞进反向索引:那归 `backend-knowledge-graph-required`

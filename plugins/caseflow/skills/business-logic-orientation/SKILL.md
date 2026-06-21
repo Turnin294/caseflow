@@ -65,7 +65,7 @@ flowchart TD
 
 | 确认项 | 说明 |
 |--------|------|
-| 模块/功能名称 | 如「退款退货」「支付结算」「订单履约」 |
+| 模块/功能名称 | 如「退款逻辑」「支付结算」「订单查询」 |
 | 场景边界 | 按「维度 A x 维度 B x 维度 C」的组合矩阵列出所有场景 |
 | 技术栈类型 | 前端 / 后端 / 全栈（决定必选章节） |
 | 梳理目的 | 重构 / 迁移 / 回归测试 / 新人 onboarding（影响详细程度） |
@@ -135,7 +135,7 @@ flowchart TD
 | ... | ... | ... | ... | ... |
 
 **规范：**
-- 文件路径从模块根目录开始（如 `lib/features/refund/...` 或 `src/main/java/...`）
+- 文件路径从模块根目录开始（如 `src/main/java/com/example/refund/...`）
 - 行数通过实际读取确认，用于判断复杂度
 - 按架构分层排列（Presentation > Application > Data > Domain）
 
@@ -183,9 +183,9 @@ flowchart TD
 提取该场景最关键的代码段（通常 10-30 行），标注来源文件和行号。目的是让开发者无需跳转 IDE 即可理解核心逻辑。
 
 **规范：**
-- 代码块标注语言和来源：`dart`、`java` 等
+- 代码块标注语言和来源：`java`、`ts` 等
 - 代码上方注释标注文件路径和行号范围
-- 只提取核心逻辑，省略 debugPrint/日志等无关代码
+- 只提取核心逻辑，省略日志打印等无关代码
 - 补充简要文字说明代码的业务含义
 
 ### 4. 知识图谱
@@ -266,8 +266,8 @@ flowchart TD
 
 | 表.字段 | 原值 | 新值 | 触发条件 | 代码位置 |
 |---------|------|------|---------|---------|
-| orders.orderState | 6 | 7 | 整单退款成功 | file:line |
-| orders.orderState | 7 | 6 | KPay 退款回滚 | file:line |
+| order_main.orderState | 6 | 7 | 整笔退款成功 | file:line |
+| order_main.orderState | 7 | 6 | 支付渠道回滚 | file:line |
 
 ### B4. 事务边界与并发控制
 
@@ -338,14 +338,14 @@ WHERE ...
 
 | 方法 | 文件 | 行 | 入参 | 出参 | 场景 |
 |------|------|---|------|------|------|
-| `methodName()` | file.dart | 33 | orderId: int | bool | 1,2,5 |
+| `methodName()` | OrderService.java | 33 | orderId: Long | boolean | 1,2,5 |
 
 #### AI 索引 - 4. 调用链索引
 
 每个场景一行，用 `->` 箭头表示调用链：
 
 ```
-场景1(现金整单): Screen -> handleConfirmRefund:33 -> confirmRefund:300 -> processSelectedItemsRefund:1646 -> db.transaction -> updateOriginalOrderRefundStatus:112 -> pushOrderData -> allocateAndPersist
+场景1(整笔退款): Controller -> handleConfirmRefund:33 -> confirmRefund:300 -> processOrderRefund:1646 -> tx.execute -> updateOrderRefundStatus:112 -> pushOrderData -> allocateAndPersist
 ```
 
 #### AI 索引 - 5. 表操作索引（后端）
@@ -364,7 +364,7 @@ I=INSERT, U=UPDATE, D=DELETE, S=SELECT, -=不涉及
 
 | 表.字段 | 原值 | 新值 | 触发 | 代码 |
 |---------|------|------|------|------|
-| orders.orderState | 6 | 7 | 整单退款 | file:1980 |
+| order_main.orderState | 6 | 7 | 整笔退款 | file:1980 |
 
 #### AI 索引 - 7. 业务规则索引
 
@@ -372,7 +372,7 @@ I=INSERT, U=UPDATE, D=DELETE, S=SELECT, -=不涉及
 
 | 规则 | 公式/条件 | 代码 |
 |------|---------|------|
-| 退款总额优先级1 | canRefundableAmountTotal != null -> 直接使用 | refund_state.dart:170 |
+| 退款总额优先级1 | refundableAmountTotal != null -> 直接使用 | RefundStateService.java:170 |
 
 ---
 

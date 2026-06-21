@@ -64,10 +64,10 @@
 - **现象**:AI 修 bug 时在函数头加 `// [BUGFIX 2026-05-12] 修复退款金额计算错误,原来用 amount 现在用 amount - tax`。
 - **根因**:AI 训练数据里有大量"代码注释包含变更历史"的样本,默认习得这种模式。
 - **反例**:函数头出现 `[REWRITTEN 日期]`、`[DEPRECATED]`、`[ADDED v1.2]`、设计文档第几节引用、旧实现 1/2/3 步骤等。
-  - **真实案例 2026-05-29(korepos hotfix)**:AI 给新增的 `migrateToVersion15` 函数写了 11 行 doc comment 讲"v10 失败 / v14 漏补 / refund_confirm_service catch-all 兜底 / UI 弹退款失败",本应在 commit body 承载的全链路 RCA 叙事被塞进了源码注释。用户纠正后简化为 1 行 `/// 退款依赖字段/表兜底:补 ...`。**违规链路根因**:AI 没自动触发 `bugfix-coding-style` / `coding-standards-common`(CLAUDE.md 已声明 bug 修复 / 任何源码改动**必须**触发),沿袭了 `refund_confirm_service.dart` 里满地的 `// [ADDED 2026-04-28]` / `// [MODIFIED v11]` 旧风格(v1.17 之前的写法)。
-  - **真实案例 2026-05-29(refund_confirm_service 私有方法 dartdoc)**:私有方法 `_validateMethodsAmountSum` 上 AI 写了 12 行 dartdoc——前 2 行"校验 sum == refundAmount,容差 0.005"是正确职责描述,**后 10 行**全是"前端契约 / 早期版本曾要求 / 现已统一为 / 再加会双计"的契约演变史。当前职责只需要 1-2 行,旧契约 vs 新契约的迁移叙事属于 commit body / bug doc。用户原话:"代码内部不需要一堆废话注释 / 一堆分化注释主要说明函数能力和参数就行"。**判定准绳**:私有方法的 dartdoc 不是公开接口契约,函数名 + 1-2 行职责就够;公开接口方法才需要写参数 / 返回 / 异常的完整契约说明。
-  - **真实案例 2026-05-29(refund_confirm_service 行内 5 行 WHY)**:`if (cancelBridgeServiceFeeAmount != null)` 之前堆了 5 行行内注释讲"cancel 桥接路径 / 联台按 scaleRatio 缩 / confirm 兼容路径没有算价权威 / 否则 refund_order / refund_bill 上服务费字段全 0 / 与 order_item_payment_allocate 维度 income_refund_service_fee_amount 口径不一致 / UI 部分退款入口不走本分支"。§5.3 行内注释**硬阈值 1 行**,5 行 = 4 行该删。要么压缩成 1 行 WHY,要么完全删掉让代码 + commit body / bug doc 自承载。
-  - **真实案例 2026-05-29(korepos refund/backendv2/service 存量包)**:`lib/features/refund/backendv2/service` 下多处 service/internal 类把设计文档塞进 dartdoc:如 `order_status_resolver_service.dart` 注释约 47.7%、`refund_tip_policy_service.dart` 类头 60+ 行讲关键契约 / SQL 数据源选型 / 复合场景推演、`refund_amount_guard_service.dart` 方法头逐步复述算法、`cancel_refund_planner.dart` 写"新增订单类型时 1/2/3 怎么做"维护指南。问题不是单条 `[ADDED]` 标记,而是**存量源码注释承担设计文档 + 迁移史 + 调试备忘**。正确处理应触发 `comment-cleanup`:逐条 Read,把当前职责/非显然 WHY 压成最短表达,函数体内除核心块外默认删,设计史和未来演进迁到 design doc / commit body。
+  - **真实案例(退款 hotfix)**:AI 给新增的兼容老版本逻辑的方法写了 11 行 Javadoc 讲"v10 失败 / v14 漏补 / refundConfirmService catch-all 兜底 / 前端弹退款失败",本应在 commit body 承载的全链路 RCA 叙事被塞进了源码注释。用户纠正后简化为 1 行 `/** 退款依赖字段/表兜底:补 ... */`。**违规链路根因**:AI 没自动触发 `bugfix-coding-style` / `coding-standards-common`(CLAUDE.md 已声明 bug 修复 / 任何源码改动**必须**触发),沿袭了 `RefundConfirmService.java` 里满地的 `// [ADDED 2026-04-28]` / `// [MODIFIED v11]` 旧风格(v1.17 之前的写法)。
+  - **真实案例(RefundConfirmService 私有方法 Javadoc)**:私有方法 `validateMethodsAmountSum` 上 AI 写了 12 行 Javadoc——前 2 行"校验 sum == refundAmount,容差 0.005"是正确职责描述,**后 10 行**全是"前端契约 / 早期版本曾要求 / 现已统一为 / 再加会双计"的契约演变史。当前职责只需要 1-2 行,旧契约 vs 新契约的迁移叙事属于 commit body / bug doc。用户原话:"代码内部不需要一堆废话注释 / 一堆分化注释主要说明函数能力和参数就行"。**判定准绳**:私有方法的 Javadoc 不是公开接口契约,函数名 + 1-2 行职责就够;公开接口方法才需要写参数 / 返回 / 异常的完整契约说明。
+  - **真实案例(RefundConfirmService 行内 5 行 WHY)**:`if (cancelBridgeServiceFeeAmount != null)` 之前堆了 5 行行内注释讲"cancel 桥接路径 / 联台按 scaleRatio 缩 / confirm 兼容路径没有算价权威 / 否则 refundOrder / refundBill 上服务费字段全 0 / 与 orderItemPaymentAllocate 维度 incomeRefundServiceFeeAmount 口径不一致 / 部分退款入口不走本分支"。§5.3 行内注释**硬阈值 1 行**,5 行 = 4 行该删。要么压缩成 1 行 WHY,要么完全删掉让代码 + commit body / bug doc 自承载。
+  - **真实案例(refund 退款 service 存量包)**:退款 service 包下多处 service/internal 类把设计文档塞进 Javadoc:如 `OrderStatusResolverService.java` 注释约 47.7%、`RefundDiscountPolicyService.java` 类头 60+ 行讲关键契约 / SQL 数据源选型 / 复合场景推演、`RefundAmountGuardService.java` 方法头逐步复述算法、`CancelRefundPlanner.java` 写"新增订单类型时 1/2/3 怎么做"维护指南。问题不是单条 `[ADDED]` 标记,而是**存量源码注释承担设计文档 + 迁移史 + 调试备忘**。正确处理应触发 `comment-cleanup`:逐条 Read,把当前职责/非显然 WHY 压成最短表达,函数体内除核心块外默认删,设计史和未来演进迁到 design doc / commit body。
 - **正确做法**:源码只描述**当前正确**逻辑,变更原因 / 旧实现写进 commit body 或 design doc / bug doc;复杂逻辑用 1-2 行 WHY 注释解释 "why this code now",不写 "how we got here"。
 - **关联 skill**:`bugfix-coding-style`、`coding-standards-common` §5.4
 - **历史 commit**:`9e12fc1`(方向反转)
@@ -77,7 +77,7 @@
 - **现象**:`RefundService.refund()` 方法第一行 `log.info(...)`,然后 `permissionCheck(...)`,然后 `auditService.record(...)`,然后才是业务逻辑;每个 focused service 都重复一遍。
 - **根因**:AI 不清楚"横切关注点应该走 AOP / 中间件 / 装饰器统一注入",默认按"业务方法包含所有相关动作"的线性思维写。
 - **反例**:每个 focused service 方法体里前 3 行都是 log / permission / audit 调用。
-- **正确做法**:横切由 `@Transactional` / `@PreAuthorize` / `@Audited` 等注解 + AOP,或 FastAPI `Depends`,或 Shelf middleware 统一注入;focused service 只写业务逻辑。
+- **正确做法**:横切由 `@Transactional` / `@PreAuthorize` / `@Audited` 等注解 + AOP,或 FastAPI `Depends`,或 Spring Interceptor 统一注入;focused service 只写业务逻辑。
 - **关联 skill**:`architecture-ddd-lite-fullstack`「横切关注点不计入 god service 判定」
 - **历史 commit**:`333e4f9`
 
@@ -130,11 +130,11 @@
 
 ### B4. 把多个 SKILL/规则塞到一个 god skill 里
 
-- **现象**:korepos-backend-service(已迁至 kpay-daily-plugin)单 skill 曾达 2373 行,远超其它 skill 平均 350 行;新规则不停往里加,后续维护越来越难。
+- **现象**:某项目专属后端 skill 单文件曾达 2373 行,远超其它 skill 平均 350 行;新规则不停往里加,后续维护越来越难。
 - **根因**:遇到"项目专属的复杂规则集"时,默认全塞进单个 skill 文件,不考虑拆分模板 / 拆 step 子文档。
-- **反例**:`skills/korepos-backend-service/SKILL.md` 包含 Step 1(编辑前自检)+ Step 2(service 实现)+ Step 3(DAO/DTO)+ 各类强约束,全部在一个文件里。
+- **反例**:某后端 skill 的 `SKILL.md` 包含 Step 1(编辑前自检)+ Step 2(service 实现)+ Step 3(DAO/DTO)+ 各类强约束,全部在一个文件里。
 - **正确做法**:按 step 或主题拆 sub-SKILL.md 或拆模板文件,主 SKILL.md 只做路由 / 索引。**注**:本案例当前作为"已知技术债",项目专用 skill 的 trade-off 是可接受的;非项目专用 skill 严禁这样组织。
-- **关联 skill**:korepos-backend-service(已迁至 kpay-daily-plugin;本案例)
+- **关联 skill**:项目专用 skill 组织反模式(本案例)
 - **历史 commit**:plugin 评审 H5(用户明确保留)
 
 ---
@@ -175,7 +175,7 @@
       }
   }
   ```
-- **反例**(Dart - korepos 场景):handler 内按 `itemType` 分流堂食 / 外卖,每个分支 50+ 行,触达通知和包装策略完全不同——业务定位是两类独立动作,不该共享一个 handler 方法。
+- **反例**(订单分流场景):service 内按 `bizType` 分流普通订单 / 预售订单,每个分支 50+ 行,下单校验和履约策略完全不同——业务定位是两类独立动作,不该共享一个 service 方法。
 - **正确做法**:先用「业务定位 vs 代码相似度判定锚点表」判分支差异本质(PRD 视角 / 状态机 / 下游 / 校验 / 补偿 / 团队 6 个信号,命中 ≥3 个倾向阶梯 2)。
   - 同业务定位(同状态机 / 同补偿)→ **阶梯 1**:抽 `_handleTypeA()` / `_handleTypeB()` 私有方法,主方法只做派发。
   - 不同业务定位 → **阶梯 2**:升级 service 级,建 `NormalOrderService` / `PresaleOrderService`,共享逻辑沉到原子能力层。
@@ -191,7 +191,7 @@
 
 - **现象**:本会话连续 5 次规则方向反转,只在 commit body 写明,没有 dev-log 条目。后续维护者看 git log 只能看到"reverse-X"提交,不知道为什么反转 / 反转前是什么 / 哪些其它规则受影响。
 - **根因**:"决策型变更必写 dev-log"被 AI 自己绕过——通常理由是"commit body 已经写清楚了"。
-- **反例**:连续 4 次方向反转(注释语言豁免取消 / Service 业务动作扩展 / 同分支变种豁免取消 / Python-Dart 三栈拉齐)都没有 dev-log。
+- **反例**:连续 4 次方向反转(注释语言豁免取消 / Service 业务动作扩展 / 同分支变种豁免取消 / Java-Python 多栈拉齐)都没有 dev-log。
 - **正确做法**:任何规则方向反转、跨 skill 链路变化、重大原则沉淀必写 dev-log,即使 commit body 已经详细;commit body 是"本次为什么改",dev-log 是"这条规则为什么存在"。
 - **关联 skill**:`dev-log`
 - **历史 commit**:`abec8f8`(本次补回 2026-05-12.md)

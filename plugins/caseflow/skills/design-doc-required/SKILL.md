@@ -1,6 +1,6 @@
 ---
 name: design-doc-required
-description: "MUST invoke the instant a user presents any new requirement, feature request, refactoring plan, asks to analyze/evaluate/discuss feasibility, OR requests any code modification — including 'help me change the code' / '帮我改一下' / '按文档实现'. Do NOT wait until code-writing begins. ALSO trigger when about to Edit/Write any source file (.java/.dart/.ts/.py/.kt etc.) without prior invocation. Invoke BEFORE any analysis, planning, or code. Full trigger phrase list and 三档模版分级（极简跳过 / 轻量 / 完整）规则见 SKILL.md body。"
+description: "MUST invoke the instant a user presents any new requirement, feature request, refactoring plan, asks to analyze/evaluate/discuss feasibility, OR requests any code modification — including 'help me change the code' / '帮我改一下' / '按文档实现'. Do NOT wait until code-writing begins. ALSO trigger when about to Edit/Write any source file (.java/.ts/.py/.kt etc.) without prior invocation. Invoke BEFORE any analysis, planning, or code. Full trigger phrase list and 三档模版分级（极简跳过 / 轻量 / 完整）规则见 SKILL.md body。"
 ---
 
 # 开发前设计文档强制检查

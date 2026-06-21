@@ -3,7 +3,7 @@
 > AI 入口文件 | 最后更新：{YYYY-MM-DD} | 维护人：{name}
 > **AI 第一个读这个文件，然后根据任务类型查阅下方"文档导航"。**
 
-<!-- AI 生成提示：扫描 pom.xml/build.gradle/pubspec.yaml 获取项目名和技术栈 -->
+<!-- AI 生成提示：扫描 pom.xml/build.gradle/package.json 获取项目名和技术栈 -->
 
 ---
 
@@ -17,8 +17,8 @@
 
 | 类别 | 技术 | 版本 | 说明 |
 |---|---|---|---|
-| 语言 | {Java/Kotlin/Dart} | {版本} | {用途} |
-| 框架 | {Spring Boot/Flutter/Vue} | {版本} | {用途} |
+| 语言 | {Java/Kotlin/TypeScript} | {版本} | {用途} |
+| 框架 | {Spring Boot/Vue/React} | {版本} | {用途} |
 | 数据库 | {PostgreSQL/MySQL/SQLite} | {版本} | {用途} |
 | 缓存 | {Redis} | — | {用途} |
 | 消息队列 | {RabbitMQ/Kafka} | — | {用途} |

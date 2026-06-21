@@ -55,7 +55,7 @@ bugfix-coding-style              ← bug / 删冗余 / 对齐云端场景
             ↓
 coding-standards-common          ← 强制门禁(无例外)
             ↓
-{language}-coding-standards（korepos backend 接口的 korepos-backend-service 已迁至 kpay-daily-plugin）
+{language}-coding-standards
             ↓
 markdown-writing-standards       ← 仅含 Mermaid 时
             ↓
@@ -85,7 +85,6 @@ markdown-writing-standards       ← 仅含 Mermaid 时
 | `backend-knowledge-graph-required` | 后端表 / SQL / 状态 / 原子能力相关 | 编码后回写图谱或候选池 | `reverse-index-required`(影响面分析) |
 | `reverse-index-required` | 改枚举 / 字段 / 事件 / API | 同回合回写反向索引 | `backend-knowledge-graph-required`(正向 vs 反向) |
 | `glossary-required` | PRD / 设计 / 对话含未登记业务术语 | — | `init-project-docs`(批量初始化 07_glossary.md) |
-| `cross-project-locator` | ≥2 个 kpay POS 工程命中 | — | 与单服务图谱互斥(单服务归 backend-kg) |
 
 ### ⑥ 质量回路
 
@@ -113,7 +112,6 @@ markdown-writing-standards       ← 仅含 Mermaid 时
 | Skill A | Skill B | 互斥原因 |
 |---------|---------|---------|
 | `daily-work-log` | `dev-log` | 主体不同——业务项目 vs caseflow plugin 本身 |
-| `cross-project-locator` | `backend-knowledge-graph-required` | 单服务图谱归 backend-kg,跨项目拓扑归 cross-project-locator;同回合只该走其中之一 |
 | `business-logic-orientation` | `pre-implementation-code-orientation` | orientation 是重构前的现状梳理(独立文档),pre-implementation 是基于已写好的 design 文档定位代码;同回合只走其一 |
 | `XxxService` 命名 / `XxxUseCase` / `XxxCommandHandler` (项目级命名 taxonomy) | (无) | 同一项目只选一种,不混用——参见 `architecture-ddd-lite-fullstack`「服务命名 taxonomy」节 |
 
@@ -139,7 +137,7 @@ markdown-writing-standards       ← 仅含 Mermaid 时
 | 类别 | 走 / 不走 |
 |---|---|
 | ✅ 必走 | `pre-implementation-code-orientation`(若已有设计文档) → `coding-standards-common` → 语言专属编码 skill → `git-commit-standards`(hook 自动放行) |
-| ❌ 跳过 | `design-doc-required` 工作流程(走极简跳过, **但 check-design-doc.js hook 仍要求项目存在任意设计文档**, 详见 CLAUDE.md S 档说明节) / `architecture-ddd-lite-fullstack` / `bug-doc-required` / 知识图谱组(`backend-knowledge-graph-required` / `glossary-required` / `cross-project-locator`) / `reverse-index-required` / `daily-work-log` / `coding-violation-log` 回顾模式 |
+| ❌ 跳过 | `design-doc-required` 工作流程(走极简跳过, **但 check-design-doc.js hook 仍要求项目存在任意设计文档**, 详见 CLAUDE.md S 档说明节) / `architecture-ddd-lite-fullstack` / `bug-doc-required` / 知识图谱组(`backend-knowledge-graph-required` / `glossary-required`) / `reverse-index-required` / `daily-work-log` / `coding-violation-log` 回顾模式 |
 | ⚠️ 例外 | `solution-review-required` 仍触发(用户给具体方案时), 因为它先于档位判定执行 |
 
 ### M 档（中改：单 feature ∧ 不动接口契约 ∧ ≤6 文件 ∧ ≤200 行）
@@ -148,7 +146,7 @@ markdown-writing-standards       ← 仅含 Mermaid 时
 |---|---|
 | ✅ 必走 | S 档所有 + `design-doc-required`(轻量模版) + `architecture-ddd-lite-fullstack` + `bug-doc-required`(bug 场景) + `daily-work-log` |
 | 🔁 批处理 | `glossary-required` / `reverse-index-required` / `daily-work-log` —— **编码中只追加候选池, 不打断主流程, 会话末统一整理** |
-| ❌ 跳过 | `backend-knowledge-graph-required`(若不涉及后端表/SQL/状态) / `cross-project-locator`(若 ≤1 个 kpay POS 工程) |
+| ❌ 跳过 | `backend-knowledge-graph-required`(若不涉及后端表/SQL/状态) |
 
 ### L 档（大改：跨 feature / 改契约 / 改状态机 / 改枚举值 / 改字段定义 / 改同步事件 payload / 改 API endpoint / 新增表 / 新增对外契约 / 复杂事务）
 
@@ -159,7 +157,7 @@ markdown-writing-standards       ← 仅含 Mermaid 时
 | 触发 | 处理 |
 |---|---|
 | S 档改着发现要动 enum / 字段 / 状态机 | 立即停下, 补做 `design-doc-required`(轻量或完整) + `reverse-index-required` 评估影响, 再继续 |
-| M 档改着发现要跨 feature | 升 L 档, 补做 `cross-project-locator` + 全链路其它步骤 |
+| M 档改着发现要跨 feature | 升 L 档, 补做全链路其它步骤 |
 | L 档改着发现接口契约改了 | 已经在 L 档, 但要补 `reverse-index-required` 的 `apis.md` 更新 + `glossary-required` 候选追加 |
 
 ### 沉淀类 skill 的"批处理"对依赖图的影响

@@ -1,6 +1,6 @@
 ---
 name: pre-implementation-code-orientation
-description: "You MUST invoke this skill after design-doc-required or bug-doc-required completes and a confirmed document exists, but BEFORE writing any implementation code. This is the mandatory bridge between documentation and coding. Trigger: user says 'start implementing', 'now write the code', 'let's begin coding', 'help me modify the code', 'change the code', '帮我修改代码', '改代码', '开始写代码', '帮我改一下', or you are about to make the first code edit (Edit/Write on .java, .dart, .ts, .py, .kt, etc.) for the task. Do NOT write a single line of implementation code until this skill has loaded the code coordinates from the document."
+description: "You MUST invoke this skill after design-doc-required or bug-doc-required completes and a confirmed document exists, but BEFORE writing any implementation code. This is the mandatory bridge between documentation and coding. Trigger: user says 'start implementing', 'now write the code', 'let's begin coding', 'help me modify the code', 'change the code', '帮我修改代码', '改代码', '开始写代码', '帮我改一下', or you are about to make the first code edit (Edit/Write on .java, .ts, .py, .kt, etc.) for the task. Do NOT write a single line of implementation code until this skill has loaded the code coordinates from the document."
 ---
 
 # 实施前代码定位
@@ -41,9 +41,9 @@ flowchart TD
 
 ```
 全类名 → 文件路径规则：
-com.kpaygroup.pos.order.modules.service.v1.impl.OrderV1ServiceImpl
-    → kpay-pos-order-manage-server/src/main/java/
-      com/kpaygroup/pos/order/modules/service/v1/impl/OrderV1ServiceImpl.java
+com.zhuanzhuan.order.modules.service.v1.impl.OrderV1ServiceImpl
+    → order-manage-server/src/main/java/
+      com/zhuanzhuan/order/modules/service/v1/impl/OrderV1ServiceImpl.java
 ```
 
 ### 第三步：提取关键代码路径
@@ -71,10 +71,10 @@ com.kpaygroup.pos.order.modules.service.v1.impl.OrderV1ServiceImpl
 ```
 已定位代码，关键位置确认：
 
-1. OrderV1ServiceImpl:5616  queryOrderAllDataToB() — 入口，调用 queryOrderToB 后进 handleOrderRelationData
+1. OrderV1ServiceImpl:5616  queryOrderAllData() — 入口，调用 queryOrder 后进 handleOrderRelationData
 2. OrderV1ServiceImpl:5642  handleOrderRelationData() — 核心问题方法，10个并行Future + allOf.join()
-3. PosOrderMapper.kt:184    queryOrderToB() — 主订单查询，无 deleted 过滤，无数据量上限
-4. PosOrderMapperExtend.xml:798  queryOrderToB SQL — WHERE store_id AND order_time BETWEEN，缺索引风险
+3. OrderMapper.java:184    queryOrder() — 主订单查询，无 deleted 过滤，无数据量上限
+4. OrderMapperExtend.xml:798  queryOrder SQL — WHERE user_id AND order_time BETWEEN，缺索引风险
 
 准备实施：[修复方案简述]
 ```

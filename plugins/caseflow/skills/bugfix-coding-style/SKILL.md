@@ -1,6 +1,6 @@
 ---
 name: bugfix-coding-style
-description: "Use when applying any bug fix, alignment correction, redundant-code removal, OR adding missing logic to align with upstream/cloud during integration/联调 phase. Trigger when: (1) design-doc-required has routed the change to 「第四·五步：轻量修订流水」 branch, (2) user describes the change as 'fix bug', 'align with cloud/upstream', 'add missing piece', '修 bug', '对齐云端', '删冗余', '修正实现', '改回正确逻辑', '补上漏掉的逻辑', '补缺漏', or (3) about to Edit/Write source code with intent of replacing existing erroneous logic OR adding alignment code that was missed in previous iterations. **注释红线不在本 skill 定义** — 唯一规则源是 coding-standards-common §5.4 + §5.4.1(common 触发顺序早于本 skill,不会漏)。本 skill 只承担 bug 修复期独有的应用层指引:v1.17 方向反转的历史背景、推荐写法 dart 代码示例、摆放位置、适用范围矩阵、遇到存量 [DEPRECATED]/[ADDED] 注释顺手清理的边界、红色警告对照表。"
+description: "Use when applying any bug fix, alignment correction, redundant-code removal, OR adding missing logic to align with upstream during integration/联调 phase. Trigger when: (1) design-doc-required has routed the change to 「第四·五步：轻量修订流水」 branch, (2) user describes the change as 'fix bug', 'align with upstream', 'add missing piece', '修 bug', '对齐上游', '删冗余', '修正实现', '改回正确逻辑', '补上漏掉的逻辑', '补缺漏', or (3) about to Edit/Write source code with intent of replacing existing erroneous logic OR adding alignment code that was missed in previous iterations. **注释红线不在本 skill 定义** — 唯一规则源是 coding-standards-common §5.4 + §5.4.1(common 触发顺序早于本 skill,不会漏)。本 skill 只承担 bug 修复期独有的应用层指引:v1.17 方向反转的历史背景、推荐写法 java 代码示例、摆放位置、适用范围矩阵、遇到存量 [DEPRECATED]/[ADDED] 注释顺手清理的边界、红色警告对照表。"
 ---
 
 # Bug 修复 / 联调期编码风格
@@ -24,7 +24,7 @@ description: "Use when applying any bug fix, alignment correction, redundant-cod
 |-------------|---------------|
 | 留对照证据方便快速回滚 | git 本身就是回滚锚点，注释段反而和实际代码脱节、容易腐烂 |
 | code review 看"改了什么、为什么" | review 看 PR diff 即可；commit message + bug 文档讲"为什么"更准确 |
-| 跨端联调时直接指原代码作凭据 | 联调结论应沉淀到 bug 文档 / 设计文档，不应靠源码注释当临时白板 |
+| 跨服务联调时直接指原代码作凭据 | 联调结论应沉淀到 bug 文档 / 设计文档，不应靠源码注释当临时白板 |
 | 让代码"留下故事" | 故事归 git history。源码每多一行噪声注释，下个读者多一份认知负担 |
 
 ## 红线(单一来源:`coding-standards-common` §5.4 + §5.4.1)
@@ -33,7 +33,7 @@ description: "Use when applying any bug fix, alignment correction, redundant-cod
 >
 > 触发顺序里 `coding-standards-common` 早就先于 `bugfix-coding-style` 必走(见 `CLAUDE.md` 「核心调用顺序」§11 → §10),不会漏读;以后新增注释反模式**只改 common 一处**,避免双地维护漂移。
 >
-> 本 skill 只保留下方 **bug 修复期独有**的应用层指引:历史背景(为什么 v1.17 方向反转)、推荐写法 dart 代码示例、摆放位置示例、适用范围矩阵、**遇到存量 `[DEPRECATED]` / `[ADDED]` 注释顺手清理的边界**、与其他 skill 的协作、红色警告对照表。
+> 本 skill 只保留下方 **bug 修复期独有**的应用层指引:历史背景(为什么 v1.17 方向反转)、推荐写法 java 代码示例、摆放位置示例、适用范围矩阵、**遇到存量 `[DEPRECATED]` / `[ADDED]` 注释顺手清理的边界**、与其他 skill 的协作、红色警告对照表。
 
 ## 推荐写法（WHY 注释只放有当下价值的）
 
@@ -41,11 +41,11 @@ description: "Use when applying any bug fix, alignment correction, redundant-cod
 
 | 类型 | 例子 | 摆放位置 |
 |------|------|---------|
-| 方法/类承担的隐藏不变式 | "字段映射约定：POS 回调 outTradeNO 对应本地 out_trade_no 而非 transaction_no" | 方法/类 doc comment |
+| 方法/类承担的隐藏不变式 | "字段映射约定：支付回调 outTradeNo 对应本地 out_trade_no 而非 transaction_no" | 方法/类 doc comment |
 | 当前行为摘要 | "按用户选择的 refundMethods 将可退池分摊到原支付流水" | 方法 doc comment，最多 1-3 行 |
-| 与外部系统的字段语义对齐 | "对齐云端 PayV1ServiceImpl#refundOrderNotifyForKpayOffline" | 类 doc comment（不带日期/版本） |
-| 单行非显然的业务约束 | `// 加 ±0.005 浮点容差是为了让前端 toFixed(2) 与 Rust BigDecimal 的尾差不报错` | 该行上方 |
-| 对易误解参数的语义说明 | `/// [businessDate] 营业日（不一定等于 createTime 的日期）` | 参数 doc tag |
+| 与外部系统的字段语义对齐 | "对齐支付核心 PayV1ServiceImpl#payNotifyForOfflineChannel" | 类 doc comment（不带日期/版本） |
+| 单行非显然的业务约束 | `// 加 ±0.005 浮点容差是为了让前端 toFixed(2) 与 BigDecimal 的尾差不报错` | 该行上方 |
+| 对易误解参数的语义说明 | `// @param businessDate 业务日（不一定等于 createTime 的日期）` | 参数 doc tag |
 
 判断准绳：**删掉这条注释，下一个改这段代码的人会不会犯错？** 会则保留，不会则删。
 
@@ -70,58 +70,61 @@ description: "Use when applying any bug fix, alignment correction, redundant-cod
 
 如果代码块确实复杂，把说明放到**对应代码块上方**，保持短句：
 
-```dart
-/// 按用户选择的退款方式，将可退池分摊到原支付流水。
-///
-/// 分摊结果保留原流水金额，用于后续按流水维度判断撤销资格。
-Future<List<RefundTransactionAllocation>> allocateByRefundMethods(...) async {
-  final pool = await _eligibilityDao.queryRefundableTxPool(originalOrderId);
+```java
+/**
+ * 按用户选择的退款方式，将可退池分摊到原支付流水。
+ *
+ * 分摊结果保留原流水金额，用于后续按流水维度判断撤销资格。
+ */
+List<RefundTransactionAllocation> allocateByRefundMethods(...) {
+    RefundablePool pool = eligibilityDao.queryRefundableTxPool(originalOrderId);
 
-  // 非现金退款只能消耗同 wireType 的原流水，避免跨渠道占用可退额度。
-  for (final method in nonCashMethods) {
-    _allocateSameWireType(pool, method);
-  }
+    // 非现金退款只能消耗同 wireType 的原流水，避免跨渠道占用可退额度。
+    for (RefundMethod method : nonCashMethods) {
+        allocateSameWireType(pool, method);
+    }
 
-  // 现金退款先消耗现金池；外溢规则未启用时，剩余金额只记录日志不落库。
-  _allocateCashPool(pool, cashMethod);
+    // 现金退款先消耗现金池；外溢规则未启用时，剩余金额只记录日志不落库。
+    allocateCashPool(pool, cashMethod);
 }
 ```
 
 ## 摆放位置
 
-```dart
-/// 按 POS 回调的 outTradeNO 反查退款流水。
-///
-/// 字段映射约定：POS 回调字段 outTradeNO 对应本地 `order_transaction.out_trade_no`，
-/// **不是** `transaction_no`（那是本地系统流水号 RTX/T...）。退款场景下两者必然不同。
-///
-/// 命中行须满足 `refund_flag=1`，确保只匹配退款流水而非原支付流水。
-Future<RefundCallbackLookupResult?> lookupByOutTradeNo(String outTradeNo) async {
-  // Step 1: 退款流水
-  final transaction = await (db.select(db.orderTransaction)
-        ..where((t) =>
-            t.outTradeNo.equals(outTradeNo) &
-            t.refundFlag.equals(1) &
-            t.deleted.equals(0))
-        ..limit(1))
-      .getSingleOrNull();
-  // ...
+```java
+/**
+ * 按支付回调的 outTradeNo 反查支付流水。
+ *
+ * 字段映射约定：支付回调字段 outTradeNo 对应本地 `order_transaction.out_trade_no`，
+ * **不是** `transaction_no`（那是本地系统流水号 RTX/T...）。退款场景下两者必然不同。
+ *
+ * 命中行须满足 `refund_flag=1`，确保只匹配退款流水而非原支付流水。
+ */
+RefundCallbackLookupResult lookupByOutTradeNo(String outTradeNo) {
+    OrderTransaction transaction = orderTransactionMapper.selectOne(
+        new LambdaQueryWrapper<OrderTransaction>()
+            .eq(OrderTransaction::getOutTradeNo, outTradeNo)
+            .eq(OrderTransaction::getRefundFlag, 1)
+            .eq(OrderTransaction::getDeleted, 0)
+            .last("limit 1"));
+    // ...
 }
 ```
 
 对照反例：
 
-```dart
+```java
 // ❌ 禁止：变更日志、deprecated 旧代码、引用文档
 //
 // [BUGFIX 2026-04-30] 旧实现用 transaction_no 反查，原支付场景因 transaction_no
 // 与 out_trade_no 同值（均为 T...）而凑巧命中；退款场景导致全部反查未命中。
 // 详见 v6 调整流水 2026-04-30 条目。
-// final transaction = await (db.select(db.orderTransaction)
-//       ..where((t) => t.transactionNo.equals(outTradeNo) & t.deleted.equals(0))
-//       ..limit(1))
-//     .getSingleOrNull();
-final transaction = await ...; // 新代码
+// OrderTransaction transaction = orderTransactionMapper.selectOne(
+//     new LambdaQueryWrapper<OrderTransaction>()
+//         .eq(OrderTransaction::getTransactionNo, outTradeNo)
+//         .eq(OrderTransaction::getDeleted, 0)
+//         .last("limit 1"));
+OrderTransaction transaction = ...; // 新代码
 ```
 
 ## 适用范围
@@ -162,7 +165,7 @@ final transaction = await ...; // 新代码
 |------|----------|
 | "删了改不回去" | git revert 一条命令的事；源码里堆 deprecated 注释才是不可靠的回滚机制 |
 | "Reviewer 看不懂为什么改" | 写在 commit message body / PR description / bug 文档里 |
-| "我加了 [ADDED 日期] 显得有交代" | 是噪声不是交代；把对齐依据上提到方法 doc 的"对齐云端"段（不带日期） |
+| "我加了 [ADDED 日期] 显得有交代" | 是噪声不是交代；把对齐依据上提到方法 doc 的"对齐说明"段（不带日期） |
 | "这段代码以前 bug 过，警示后人" | 加测试用例覆盖、写进 bug 文档；不在源码注释里复述故事 |
 | "TODO 想标个日期方便回头查" | 别。开 issue / 任务卡，源码里只留"为什么这里需要 TODO"的内容（且更应避免） |
 | "用户没说要清理，那就保留旧 DEPRECATED" | 错。本 skill v1.17 起规则反转，遇到就可以顺手清（限改同一段代码时） |

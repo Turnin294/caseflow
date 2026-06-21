@@ -1,12 +1,12 @@
 # caseflow
 
-> **30 秒 TL;DR**:Claude Code 插件,把"AI 协作开发"从"凭运气"变成"按流程"——25 个 skill + 5 个 hook 强制执行从需求分析 → 设计文档 → 代码定位 → 架构门禁 → 编码规范 → 提交规范 → 知识沉淀的完整链路。让 AI 改代码前先想清楚,改完后留下可追溯的痕迹。
+> **30 秒 TL;DR**:Claude Code 插件,把"AI 协作开发"从"凭运气"变成"按流程"——24 个 skill + 6 道 hook 强制执行从需求分析 → 设计文档 → 代码定位 → 架构门禁 → 编码规范 → 提交规范 → 知识沉淀的完整链路。让 AI 改代码前先想清楚,改完后留下可追溯的痕迹。
 
 **它解决什么问题:**
 - AI 一上来就改代码,绕过设计 / 不查既有 / 不沉淀 → 强制 `design-doc-required` + `pre-implementation-code-orientation` 门禁
 - AI 在 god service 里继续追加方法 → `architecture-ddd-lite-fullstack` 的"业务分支 = 新 focused service"铁律
 - AI 在源码注释里堆变更历史 / 旧实现复盘 → `bugfix-coding-style` 禁止变更日志注释
-- 团队 AI 协作经验不沉淀 / 每个新人重复踩坑 → 知识图谱四件套(backend / reverse-index / glossary / cross-project)
+- 团队 AI 协作经验不沉淀 / 每个新人重复踩坑 → 知识图谱三件套(backend / reverse-index / glossary)
 - AI 改完代码不会自己合规 commit → `hooks/check-git-commit-skill.js` 拦截大改、强制走五步流程
 
 ## 快速上手(5 分钟试用)
@@ -48,10 +48,9 @@ Claude: (触发 git-commit-standards 五步流程) 生成规范 commit
 - **业务逻辑现状梳理**（重构/迁移前按场景维度产出流程图、知识图谱、代码索引）
 - **实施前代码定位**（从文档坐标表精准定位关键文件，禁止重新扫描）
 - **源码注释风格约束**（源码只描述当前正确逻辑，禁止变更历史和函数头大段复盘，复杂逻辑在对应代码块写短 WHY）
-- **跨项目拓扑定位与登记**（kpay POS 生态跨项目调用链、接口对照、业务全链路的唯一查询/写入入口）
 - **每日工作日志**（业务项目源码改动后按 bug / 功能 分类沉淀到 `docs/work-log/{YYYY-MM-DD}.md`，同主题合并、工时累计叠加）
 - **业务术语会话级强制登记**（PRD / 设计 / 对话中出现业务领域名词且术语表未登记时必须候选追加；用户与 AI 同义词错位必须主动对齐到规范术语；与 init-project-docs 的批量初始化术语表分工互补）
-- **反向影响索引强制维护**（4 类索引：状态判断点 / 字段读写点 / 同步事件订阅 / API 调用方；冷启动用 `hooks/scan-reverse-index.js` 扫描 Java/Dart/TS 枚举与 SQL 字面量产出 states 初版；增量维护规则：变更枚举/字段/事件/API 同回合必须回写）
+- **反向影响索引强制维护**（4 类索引：状态判断点 / 字段读写点 / 同步事件订阅 / API 调用方；冷启动用 `hooks/scan-reverse-index.js` 扫描 Java/TS 枚举与 SQL 字面量产出 states 初版；增量维护规则：变更枚举/字段/事件/API 同回合必须回写）
 - **caseflow 源码仓库自动提交推送**（仅插件源码仓库规则变更完成后自动小步 commit + push，业务项目不触发）
 
 ## 项目结构
@@ -75,7 +74,7 @@ caseflow/
 | `.claude-plugin/` | Claude Code 插件声明目录，包含插件版本、展示信息和 marketplace 条目 | 发布前必须同步递增 `plugin.json` 与 `marketplace.json` 的 `version` |
 | `.codex-plugin/` | Codex 插件声明目录，包含 Codex 侧插件元数据 | 维护 Codex 分发时同步递增 `plugin.json` 的 `version` |
 | `skills/` | 插件核心目录，每个子目录是一个独立 Skill，至少包含 `SKILL.md` | 新增或修改 Skill 后，同步更新 `AGENTS.md`、`CLAUDE.md`、README 的 Skills 表和 `docs/skill-flow.md` |
-| `hooks/` | 强制拦截脚本目录：`check-git-commit-skill.js` 默认启用（拦截未调用 git-commit-standards skill 的大改 git commit）；`check-dto-annotation.js` 默认启用（拦截 wire DTO 用 `@freezed` 或裸 `@JsonSerializable()` 的违规）；`check-design-doc.js` **v1.26 起默认启用**（项目级设计文档存在性兜底——源码 Edit/Write 前在项目 `docs/design/` + 用户目录 `ai-docs/{project}/design/` 任一位置找不到 `.md` 则阻断；`CASEFLOW_DESIGN_DOC_HOOK=off` 一次性绕过） | 新增 hook 时同步更新 `hooks.json`、CLAUDE.md/AGENTS.md 辅助资源表 |
+| `hooks/` | 强制拦截脚本目录：`check-git-commit-skill.js` 默认启用（拦截未调用 git-commit-standards skill 的大改 git commit）；`check-design-doc.js` **v1.26 起默认启用**（项目级设计文档存在性兜底——源码 Edit/Write 前在项目 `docs/design/` + 用户目录 `ai-docs/{project}/design/` 任一位置找不到 `.md` 则阻断；`CASEFLOW_DESIGN_DOC_HOOK=off` 一次性绕过） | 新增 hook 时同步更新 `hooks.json`、CLAUDE.md/AGENTS.md 辅助资源表 |
 | `docs/` | 维护文档目录，记录 Skill 链路、配置机制和决策型变更背景 | 链路结构变化时直接更新 `skill-flow.md`，历史由 git log 承担，不再创建文件式快照（v21.1 起反转） |
 
 ### 关键文件
@@ -89,10 +88,9 @@ caseflow/
 | `docs/dev-log/YYYY-MM-DD.md` | 决策型变更日志，只记录长期背景 | 新增/删除 Skill、规则方向反转、触发链路变化、重大团队原则沉淀时 |
 | `hooks/hooks.json` | Hook 注册配置，控制是否启用写入前脚本校验 | 需要启用或调整 Hook 时 |
 | `hooks/check-git-commit-skill.js` | git commit 前按 staged diff 大小判定的拦截脚本（Node 跨平台，默认启用） | 调整阈值或拦截逻辑时（环境变量 `CASEFLOW_TRIVIAL_FILES` / `CASEFLOW_TRIVIAL_LINES` 也可调） |
-| `hooks/check-dto-annotation.js` | wire DTO 注解拦截脚本（Node 跨平台，默认启用，PreToolUse Write/Edit/MultiEdit）：拦截 `lib/features/*/common/models/(request\|response)/*.dart` 下的 `@freezed` 与裸 `@JsonSerializable()`；例外文件需在头部加 `// FREEZED-EXCEPTION:` 标记 | 调整 wire DTO 注解校验规则时（环境变量 `CASEFLOW_DTO_HOOK=off` 临时禁用） |
-| `hooks/scan-reverse-index.js` | 反向索引冷启动扫描器（Node 跨平台，**手工运行，未注册到 hooks.json**）：扫描项目 Java / Dart / TS 源码，识别 enum 定义 + `EnumName.VALUE` 引用 + SQL 字面量候选，产出 `states.md`；fields / events / apis 仅生成存根需人工填充；用法 `node hooks/scan-reverse-index.js --project=. --output=./docs/knowledge-graph/reverse-index/`；`--output=user-candidates` 写入用户文档目录候选池 | 项目首次接入反向索引时一次性运行；后续由 `reverse-index-required` skill 增量维护 |
-| `hooks/check-design-doc.js` | **项目级设计文档存在性兜底**（Node 跨平台，**v1.26 起默认启用**，PreToolUse Write/Edit/MultiEdit）：仅对源码扩展名触发（`.dart` / `.java` / `.kt` / `.ts` / `.py` 等），跳过 `.md` / `.json` / 测试 / Dockerfile / Makefile；在项目 `docs/design/`、用户目录 `~/Documents/ai-docs/{project}/design/`、`~/ai-docs/{project}/design/` 任一位置找到 `.md` 即放行；**只兜底"项目里存在任何设计文档"，不强校验"本次需求对应文档"**——后者由 `design-doc-required` skill 承担。环境变量 `CASEFLOW_DESIGN_DOC_HOOK=off` 一次性禁用 | 调整源码扩展名集合 / 测试文件识别 / 路径查找规则时 |
-| `hooks/check-comment-density.js` | **源码注释红线机械兜底（§5.4）**（Node 跨平台，**v1.29 起默认启用，v1.35 起默认 block 硬阻断**，PreToolUse Write/Edit/MultiEdit）：仅对源码扩展名触发，`.md` / `.json` / 配置文件跳过；只扫本次新增文本（去字符串字面量后判定注释），命中变更标记 / 日期 / 工单·PR·Issue 号 / 带个人或日期的 TODO / 带元信息分节线 / 版本流水措辞等客观红线即 exit 2 硬阻断；`long-block` 连续注释块超阈值是启发式软规则只提示不阻断（避免误伤公开 API 长 dartdoc）；规则源是 `coding-standards-common` §5.4，hook 只抓客观无歧义项；环境变量 `CASEFLOW_COMMENT_HOOK=warn` 降级仅提示、=off 关闭，`CASEFLOW_COMMENT_MAX_BLOCK` 调注释块行数阈值 | 调整注释红线机械规则 / 阈值时 |
+| `hooks/scan-reverse-index.js` | 反向索引冷启动扫描器（Node 跨平台，**手工运行，未注册到 hooks.json**）：扫描项目 Java / TS 源码，识别 enum 定义 + `EnumName.VALUE` 引用 + SQL 字面量候选，产出 `states.md`；fields / events / apis 仅生成存根需人工填充；用法 `node hooks/scan-reverse-index.js --project=. --output=./docs/knowledge-graph/reverse-index/`；`--output=user-candidates` 写入用户文档目录候选池 | 项目首次接入反向索引时一次性运行；后续由 `reverse-index-required` skill 增量维护 |
+| `hooks/check-design-doc.js` | **项目级设计文档存在性兜底**（Node 跨平台，**v1.26 起默认启用**，PreToolUse Write/Edit/MultiEdit）：仅对源码扩展名触发（`.java` / `.kt` / `.ts` / `.py` 等），跳过 `.md` / `.json` / 测试 / Dockerfile / Makefile；在项目 `docs/design/`、用户目录 `~/Documents/ai-docs/{project}/design/`、`~/ai-docs/{project}/design/` 任一位置找到 `.md` 即放行；**只兜底"项目里存在任何设计文档"，不强校验"本次需求对应文档"**——后者由 `design-doc-required` skill 承担。环境变量 `CASEFLOW_DESIGN_DOC_HOOK=off` 一次性禁用 | 调整源码扩展名集合 / 测试文件识别 / 路径查找规则时 |
+| `hooks/check-comment-density.js` | **源码注释红线机械兜底（§5.4）**（Node 跨平台，**v1.29 起默认启用，v1.35 起默认 block 硬阻断**，PreToolUse Write/Edit/MultiEdit）：仅对源码扩展名触发，`.md` / `.json` / 配置文件跳过；只扫本次新增文本（去字符串字面量后判定注释），命中变更标记 / 日期 / 工单·PR·Issue 号 / 带个人或日期的 TODO / 带元信息分节线 / 版本流水措辞等客观红线即 exit 2 硬阻断；`long-block` 连续注释块超阈值是启发式软规则只提示不阻断（避免误伤公开 API 长文档注释）；规则源是 `coding-standards-common` §5.4，hook 只抓客观无歧义项；环境变量 `CASEFLOW_COMMENT_HOOK=warn` 降级仅提示、=off 关闭，`CASEFLOW_COMMENT_MAX_BLOCK` 调注释块行数阈值 | 调整注释红线机械规则 / 阈值时 |
 | `.claude-plugin/plugin.json` | Claude 插件基础元数据 | 每次发布前递增版本 |
 | `.claude-plugin/marketplace.json` | Claude marketplace 入口 | 每次发布前与 `.claude-plugin/plugin.json` 保持版本一致 |
 | `.codex-plugin/plugin.json` | Codex 插件基础元数据 | 每次发布前递增版本 |
@@ -112,12 +110,12 @@ skills/
 
 1. `SKILL.md` 的 frontmatter `name` 必须与目录名一致。
 2. 新增或修改 Skill 覆盖范围后，编辑 **`CLAUDE.md`**（canonical source），然后运行 `node scripts/sync-agents.js` 同步生成 `AGENTS.md`（不要手动编辑 AGENTS.md，CI 会校验）。
-3. 若影响触发链路或调用顺序，必须同步 `docs/skill-flow.md`；链路结构变化时创建 `docs/skill-flow-{YYYYMMDD}-v{N}.md` 快照。
+3. 若影响触发链路或调用顺序，必须同步 `docs/skill-flow.md`；链路结构变化时直接更新该文件，历史由 git log 承担，不再创建文件式快照。
 
 ## 前置依赖
 
 - **Claude Code** ≥ 当前稳定版（Skill / Hook 机制基于 Claude Code 插件接口）
-- **Node.js ≥ 18**（hooks/check-git-commit-skill.js、check-dto-annotation.js、scan-reverse-index.js 用 Node 写,Claude Code 自带运行时通常即满足。若用宿主 Node,执行 `node --version` 确认）
+- **Node.js ≥ 18**（hooks/check-git-commit-skill.js、scan-reverse-index.js 用 Node 写,Claude Code 自带运行时通常即满足。若用宿主 Node,执行 `node --version` 确认）
 - **Git ≥ 2.20**（hook 内用 `git diff --staged --name-status` 等命令）
 
 ## 维护者本地开发
@@ -192,7 +190,7 @@ git clone https://github.com/Turnin294/caseflow.git
 ```
 
 ```
-/plugin marketplace add /path/to/kpay-caseflow
+/plugin marketplace add /path/to/caseflow
 /plugin install caseflow@caseflow
 /reload-plugins
 ```
@@ -236,16 +234,15 @@ v1.26 起 **`check-design-doc.js` hook 默认启用**（[hooks/hooks.json](hooks
 - `doc-index-required` — Phase-A 写前查重 + Phase-B 写完登记（用户目录 / 项目 docs 等同）
 
 ### ③ 架构与编码（实施时）
-- `architecture-ddd-lite-fullstack` — DDD-lite 分层 + Feature 模块 + 每分支一 focused service + **函数级业务场景分流（分支差异即拆分）** + 跨分支编排 + 横切关注点豁免 + 命名 taxonomy + 聚合边界（**Java / Python / Dart 三栈一致适用**）
+- `architecture-ddd-lite-fullstack` — DDD-lite 分层 + Feature 模块 + 每分支一 focused service + **函数级业务场景分流（分支差异即拆分）** + 跨分支编排 + 横切关注点豁免 + 命名 taxonomy + 聚合边界（**Java / Python 后端 + Vue / React 前端一致适用**）
 - `coding-standards-common` — 跨语言通用 7 条铁律 + 注释三档（沟通语言一票否决）
 - `java-coding-standards` — Java 独占条款（Javadoc / Integer 比较 / SLF4J / HashMap 容量等）
 - `finance-coding-standards` — 金融技术部 Java 后端独占条款（部门优先，叠加在 common + java 之上）：接口契约（禁 Map / FinanceBizBaseReq / ZZOpenScfBaseResult / FinanceBizAsserts）/ 禁 ≥2 层 if-else 嵌套 / 日志分级 / SCF 实现类不加 Impl / 主从数据源 / 金额用分 + 枚举英文字符串。优先级链路：金融 → 转转研发中心通用 → caseflow 自有
 - `llm-agent-coding-standards` — LLM / Agent 集成独占条款（确定性优先 / LLM 输出当不可信入参 / 模糊→结构化用受控枚举 / 约定 SSOT / 工具描述是运行时契约 / Agent 循环兜底 / 上下文代码注入）；叠加在 `coding-standards-common` 之上
 - `bugfix-coding-style` — 源码只描述当前逻辑，禁变更日志注释 / 函数头复盘
-- _（korepos backend 接口强约束 `korepos-backend-service` 已迁至 **kpay-daily-plugin** 插件，连同 `reset-kpos-local-state` 与 wire DTO 注解 hook 一并搬走）_
 
 > **想调整注释规范改哪里**（注释规则跨语言统一，不按语言各写一套）：
-> - **唯一规则源 = `skills/coding-standards-common/SKILL.md §5`** —— §5.1-5.3 三档 + §5.1.5 字段档 + §5.2.1 职责边界注释 + §5.4/§5.4.1 红线与反例 + 放置原则 + §5.0 注释语言。**对 Java / Dart / TS / Python / Kotlin / Go 一视同仁**，调注释规范只改这一处。
+> - **唯一规则源 = `skills/coding-standards-common/SKILL.md §5`** —— §5.1-5.3 三档 + §5.1.5 字段档 + §5.2.1 职责边界注释 + §5.4/§5.4.1 红线与反例 + 放置原则 + §5.0 注释语言。**对 Java / TS / JS / Python / Kotlin / Go 一视同仁**，调注释规范只改这一处。
 > - **语言专属只补 doc 注释语法**：`java-coding-standards`（Javadoc）。非 Java 语言无需单独条款，直接套 §5 + 自身 doc 语法（TSDoc / docstring）。
 > - **机械兜底阈值**（连续注释块行数等）改 `hooks/check-comment-density.js`；**存量批量清理流程**在 `comment-cleanup`（只引用 §5，不重定义）。
 
@@ -257,7 +254,6 @@ v1.26 起 **`check-design-doc.js` hook 默认启用**（[hooks/hooks.json](hooks
 - `backend-knowledge-graph-required` — 后端单服务业务图谱 + 项目级技术难点图谱
 - `reverse-index-required` — 反向影响索引 4 类（状态 / 字段 / 事件 / API）
 - `glossary-required` — 业务术语会话级登记 + 同义词归一
-- `cross-project-locator` — 跨项目（≥2 个工程）拓扑定位与登记
 
 ### ⑥ 质量回路
 - `coding-violation-log` — 编码违规登记 + 编码前回顾防重犯
@@ -307,12 +303,11 @@ v1.26 起 **`check-design-doc.js` hook 默认启用**（[hooks/hooks.json](hooks
 
 ## 脚本级拦截（默认启用）
 
-**v1.26 起，三道 PreToolUse hook 默认启用**（跨平台 Node 脚本，无需平台分支）：
+**v1.26 起，两道 PreToolUse hook 默认启用**（跨平台 Node 脚本，无需平台分支）：
 
 | Hook | 触发 matcher | 默认启用 | 旁路 |
 |---|---|---|---|
 | `check-git-commit-skill.js` | `Bash`（仅命中 `git commit`） | ✅ | 小改自动放行（≤2 文件 ∧ ≤30 行 ∧ 仅 M）；`CASEFLOW_TRIVIAL_FILES` / `CASEFLOW_TRIVIAL_LINES` 可调阈值 |
-| `check-dto-annotation.js` | `Write` / `Edit` / `MultiEdit` | ✅ | 文件头加 `// FREEZED-EXCEPTION:` 标记；`CASEFLOW_DTO_HOOK=off` 一次性关闭 |
 | `check-design-doc.js` | `Write` / `Edit` / `MultiEdit` | ✅ | 跳过 .md / .json / 测试 / Dockerfile；项目 `docs/design/` 或用户目录 `ai-docs/{project}/design/` 存在任意 `.md` 即放行；`CASEFLOW_DESIGN_DOC_HOOK=off` 一次性关闭 |
 
 **check-design-doc.js 的语义边界**：它是**项目级设计文档存在性兜底**——只要项目里有任何一份设计文档就放行，不验证"本次需求对应文档"。"本次需求是否真的有设计"由 `design-doc-required` skill 负责（软门禁，依赖 AI 自律 + S/M/L 档位分流）。两者协同：skill 决定"该不该写设计"，hook 兜底"项目至少要有设计文档存在"。
@@ -334,7 +329,7 @@ Author: 你的姓名 <你的邮箱>
 
 通过 `.claude-plugin/plugin.json` 中的 `version` 字段判断是否有更新。**每次发布必须递增版本号**，否则升级无法检测到变更。
 
-仅在维护 caseflow / kpay-caseflow 插件源码仓库时，仓库自身变更完成后默认自动执行 `git add -A`、规范 commit 和 `git push`，以小步提交方式及时分发规则调整。业务项目即使安装本 plugin，也不会因此自动提交、推送或修改版本号。若某次插件仓库维护只想保留本地变更，需要明确说明“不要提交”或“不要 push”。
+仅在维护 caseflow 插件源码仓库时，仓库自身变更完成后默认自动执行 `git add -A`、规范 commit 和 `git push`，以小步提交方式及时分发规则调整。业务项目即使安装本 plugin，也不会因此自动提交、推送或修改版本号。若某次插件仓库维护只想保留本地变更，需要明确说明“不要提交”或“不要 push”。
 
 是否每次 `git push` 都弹授权由 Codex / Claude / IDE 宿主的命令审批策略决定；本插件只能规定“需要自动 push”，不能绕过宿主授权。若宿主支持保存 `git push` 授权，保存后后续才可免重复确认。
 

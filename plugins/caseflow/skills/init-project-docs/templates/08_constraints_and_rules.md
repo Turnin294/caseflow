@@ -12,7 +12,7 @@
 
 <!-- AI 生成提示：根据项目架构风格填充对应红线 -->
 <!-- Spring Boot 项目：Controller 写业务逻辑、Service 直接操作 HttpServletRequest 等 -->
-<!-- Flutter 项目：Widget 直接写 SQL、domain 层引入技术框架等 -->
+<!-- 前端项目（Vue/React）：组件直接调 SQL/拼接 HTTP、视图层引入数据访问逻辑等 -->
 
 ---
 

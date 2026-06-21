@@ -25,8 +25,8 @@
 | `backend-knowledge-graph-required` | caseflow | 后端接口/服务开发前读取后端图谱，重点回顾表逻辑索引、原子能力索引和 SQL 查询索引；会话中提到业务、表、字段来源、SQL/DAO/Mapper 查询逻辑时自动沉淀 SQL 指纹；生成/更新全景 ER、SQL 查询卡、表逻辑和原子能力；编码后同步 DAO/SQL、表关系、订单/退款/支付状态判定、金额聚合、原子能力复用 |
 | `bug-doc-required` | caseflow | 编写 bug 分析文档时；完成后必须继续调用 design-doc-required 写修复实施方案 |
 | `pre-implementation-code-orientation` | caseflow | 文档写完后、开始实施代码前（含「帮我修改代码」「改代码」等直接编码请求） |
-| `architecture-ddd-lite-fullstack` | caseflow | 编写或审查 Java / React / Vue / Flutter 业务代码前；在实施前代码定位后，先判断 Feature、分层、单向依赖、原子能力与结构质量（清晰、易维护、低耦合、高内聚）；含 **函数级业务场景分流**（阶梯 1 私有方法 / 阶梯 2 升级 service，判定锚点是「业务定位」而非「代码相似度」） |
-| `coding-standards-common` | caseflow | 编写/修改任何源码语言（Java / TS / JS / Dart / Python / Kotlin / Go 等）前；通用 7 条铁律 + 注释三档（+ 字段可选档）+ 注释放置原则（注释只落在类/字段/方法声明上，函数体内除 §5.3 六类核心块外不写，靠拆函数+命名表达）+ §7.6 复用项目公共能力优先（编码前查 coding-profile 的 common-capabilities.md，禁造轮子/禁原生替代公共封装）；先于具体语言 skill 触发 |
+| `architecture-ddd-lite-fullstack` | caseflow | 编写或审查 Java / React / Vue 业务代码前；在实施前代码定位后，先判断 Feature、分层、单向依赖、原子能力与结构质量（清晰、易维护、低耦合、高内聚）；含 **函数级业务场景分流**（阶梯 1 私有方法 / 阶梯 2 升级 service，判定锚点是「业务定位」而非「代码相似度」） |
+| `coding-standards-common` | caseflow | 编写/修改任何源码语言（Java / TS / JS / Python / Kotlin / Go 等）前；通用 7 条铁律 + 注释三档（+ 字段可选档）+ 注释放置原则（注释只落在类/字段/方法声明上，函数体内除 §5.3 六类核心块外不写，靠拆函数+命名表达）+ §7.6 复用项目公共能力优先（编码前查 coding-profile 的 common-capabilities.md，禁造轮子/禁原生替代公共封装）；先于具体语言 skill 触发 |
 | `java-coding-standards` | caseflow | 编写或修改任何 Java 代码时（自动应用，通用条款 delegate 到 coding-standards-common） |
 | `finance-coding-standards` | caseflow | 编写或修改金融技术部 Java 后端代码时（SCF 服务 / 聚合层 / FinanceBiz 系列基类）；叠加在 coding-standards-common + java-coding-standards 之上，部门独占条款，冲突时金融优先（优先级链路：金融 → 转转研发中心通用 → caseflow 自有）；注意辨伪冲突（SCF 实现类不加 Impl ≠ 普通 Java ServiceImpl） |
 
@@ -41,9 +41,9 @@
 | `project-docs-update` | caseflow | 项目代码结构变更后同步知识图谱文档（检测差异 + 自动/确认更新） |
 
 | `comment-cleanup` | caseflow | 用户主动要求时对**存量**文件/类/模块成批清理违反注释红线的注释（`vN 新增` 版本标记 / `[BUGFIX]` 等变更日志 / 历史叙事 prose / 私有方法契约史 / 废话 / 死代码），多语言；红线规则单一来源引用 `coding-standards-common` §5.4 + §5.4.1，本 skill 只管范围圈定 / 分类决策 / 安全边界 / 提交纪律；**清理 ≠ 字面匹配删除**，Read 后判断、啰嗦的改写成一句话、函数体内非核心块注释默认清。与 §5.5 顺手清理、`check-comment-density.js` hook 写入拦截互补 |
-| `bugfix-coding-style` | caseflow | bug 修复 / 任何源码改动期的应用层指引（v1.28.8 起注释红线单一来源化）：**注释禁令统一收口到 `coding-standards-common` §5.4 + §5.4.1，本 skill 不再独立定义红线表**。只承担 bug 修复期独有内容：v1.17 方向反转的历史背景、推荐写法 dart 代码示例、摆放位置示例、适用范围矩阵、遇到存量 `[DEPRECATED]` / `[ADDED]` 注释顺手清理的边界、红色警告对照表 |
+| `bugfix-coding-style` | caseflow | bug 修复 / 任何源码改动期的应用层指引（v1.28.8 起注释红线单一来源化）：**注释禁令统一收口到 `coding-standards-common` §5.4 + §5.4.1，本 skill 不再独立定义红线表**。只承担 bug 修复期独有内容：v1.17 方向反转的历史背景、推荐写法 Java 代码示例、摆放位置示例、适用范围矩阵、遇到存量 `[DEPRECATED]` / `[ADDED]` 注释顺手清理的边界、红色警告对照表 |
 | `glossary-required` | caseflow | 业务术语会话级强制登记;PRD / 设计 / 对话出现未登记的业务领域名词时自动候选追加;用户与 AI 同义词错位时主动对齐到规范术语;候选池 `{USER_DOCUMENTS}/ai-docs/{project}/glossary/_candidates.md`、正式版 `docs/knowledge-graph/glossary.md`;与 init-project-docs 的批量初始化术语表分工互补 |
-| `reverse-index-required` | caseflow | 反向影响索引强制维护(4 类:状态/字段/事件/API);冷启动 `hooks/scan-reverse-index.js` 扫描 Java/Dart/TS 枚举 + SQL 字面量产出 states 初版;增量维护规则:变更枚举 / 字段 / 事件 / API 同回合必须回写反向索引;与 backend-knowledge-graph-required 互补(正向 vs 反向)、与 cross-project-locator 边界明确(单服务内 vs 跨项目调用方) |
+| `reverse-index-required` | caseflow | 反向影响索引强制维护(4 类:状态/字段/事件/API);冷启动 `hooks/scan-reverse-index.js` 扫描 Java/TS 枚举 + SQL 字面量产出 states 初版;增量维护规则:变更枚举 / 字段 / 事件 / API 同回合必须回写反向索引;与 backend-knowledge-graph-required 互补(正向 vs 反向) |
 
 ---
 
@@ -115,9 +115,6 @@ flowchart TD
     %% 知识图谱维护
     IPD -. "后续维护" .-> PDU
     GCS -. "含新模块/接口时提醒" .-> PDU
-
-    %% Flutter 架构检查
-
 
     %% 反向索引同回合回写(v21+)
     JCS -. "改完枚举/字段/事件/API 同回合回写" .-> RIDX
@@ -202,7 +199,7 @@ flowchart TD
     M7 --> M8
 ```
 
-> **触发判断：** 只有当前 git 仓库就是 `caseflow` / `kpay-caseflow` 插件源码仓库，且在本次会话中创建、修改、删除了 `skills/` 下任意文件，或调整了 `CLAUDE.md`、`AGENTS.md`、插件元数据、README、skill-flow 等插件自身规则，才进入本维护链路。
+> **触发判断：** 只有当前 git 仓库就是 `caseflow` 插件源码仓库，且在本次会话中创建、修改、删除了 `skills/` 下任意文件，或调整了 `CLAUDE.md`、`AGENTS.md`、插件元数据、README、skill-flow 等插件自身规则，才进入本维护链路。
 >
 > **自动提交判断：** 只要 caseflow 插件源码仓库变更完成且 `git status --short` 非空，必须立即按 `git-commit-standards` 自动提交并 push，避免多轮变更累计到一个大提交。业务项目即使安装本 plugin，也不自动 commit/push、不自动改版本号。用户明确要求暂不提交或暂不 push 时除外。
 
@@ -265,12 +262,11 @@ flowchart LR
 | 用户要求“参考现有代码照着写”时可以直接抄吗? | 不可以默认抄。现有代码只能作为事实材料，必须先判断它是否符合当前架构、分层、状态机、数据一致性和测试约束。质量差的旧代码只能提取业务规则，不能作为新实现模板继续扩散。 |
 | 用户没问更优方案时，AI 要主动提吗? | 要。`solution-review-required` 的核心职责就是反迎合：当用户方案或现有代码惯性存在明显风险时，必须主动指出问题，并给出更简单、更安全或更可维护的建议。 |
 | 后端知识图谱会因为会话里反复提到就自动更新吗? | 会自动记录到用户目录候选池，避免遗漏；但不会把未验证猜测直接写入正式图谱。代码/DDL/枚举/API 契约验证过，或本次后端代码变更影响 DAO/SQL、表关系、状态判定、金额聚合、原子能力时，必须同步正式图谱或候选池。 |
-| backend-knowledge-graph-required 管哪些范围? | 管后端单服务。沉淀领域能力、原子能力、流程、全景 ER、SQL 查询逻辑、表逻辑、表关系、枚举、状态判定、API、外部依赖和代码坐标；前端 UI、跨项目拓扑不放进这个 skill。 |
+| backend-knowledge-graph-required 管哪些范围? | 管后端单服务。沉淀领域能力、原子能力、流程、全景 ER、SQL 查询逻辑、表逻辑、表关系、枚举、状态判定、API、外部依赖和代码坐标；前端 UI 不放进这个 skill。 |
 | 后端接口开发前要看哪些图谱? | 先看 `07_table_logic_index.md`、`08_atomic_capability_index.md` 和 `09_sql_query_index.md`，再看命中的 `table-logic/{scenario}.md`、`atomic-capabilities/{capability}.md`、`sql-queries/{scenario}.md`、表卡、流程卡、枚举卡，最后才读 DAO/Service 代码。 |
 | 会话里提到 SQL 或业务查询逻辑要怎么处理? | 必须同回合追加到 `_sql_candidates.md`，记录业务问题、SQL 指纹、参数、返回字段、涉及表、join/where/group by/order by 语义、状态枚举、原子能力和代码坐标；用户要求整理时合并到 `09_sql_query_index.md`、`sql-queries/` 和全景 ER。 |
 | “完善 SQL”时能直接新写一条吗? | 不能默认新写。先查 `09_sql_query_index.md` 和 `sql-queries/`，命中相似 SQL 时按 SQL 指纹合并为同一查询能力的变体，只补必要的 join/where/group by/order by，并回写图谱。 |
 | 订单部分退、订单状态判定这类反复问题怎么处理? | 必须沉淀到 `table-logic/` 和原子能力索引。卡片要写清涉及表、状态/金额字段、判定矩阵、状态变化矩阵、可复用 DAO/Service 方法和代码坐标，后续新增接口先按图谱判断是否支持。 |
-| 多项目知识图谱还要整理什么? | 不做各服务内部能力的重复沉淀，主要记录服务间调用关系、入口契约、关键业务对象、数据归属、失败传播和幂等补偿边界；具体跨项目链路由 `cross-project-locator` 负责。 |
 | 需要单独调用 doc-index-required 吗? | 创建任何 Markdown 文档前都要先应用它的"输出路径规则"。**v1.20 起：用户目录知识库与项目 `docs/` 索引体系等同**，写文档前都要 Phase-A 读 INDEX 查重，写完都要 Phase-B 登记；`work-log/`（日期型）和 `knowledge-graph/`（自管 `00_index.md`）走豁免模式。 |
 | AI 生成文档默认写到哪里? | 默认写到用户 Documents 下的 `ai-docs/{project}/{type}/{topic}/{filename}`（无 `{agent}/`、无 `{YYYY-MM-DD}/`、文件名不带日期）；Windows 为 `%USERPROFILE%\Documents\ai-docs\...`，macOS/Linux 为 `~/Documents/ai-docs/...`，无 Documents 时兜底 `~/ai-docs/...`。例：`ai-docs/{project}/design/{需求名}/{需求名}-current.md`、`ai-docs/{project}/bug/{模块名}/{bug名}/{bug名}.md`。 |
 | 正式设计文档还能写 `docs/design/` 吗? | 可以，但不再由 AI 默认写入。终版文档由用户自行上传；或用户明确指定 `docs/...` 路径后，AI 才写项目目录并更新索引。 |
@@ -303,9 +299,9 @@ flowchart LR
 | Phase 3-4 的自动模式和确认模式怎么选? | 自动模式：AI 尽力推断后生成，标注"需人工校验"，适合快速产出初稿。确认模式：逐份展示等用户确认，适合对准确度要求高的场景。 |
 | Step 0 知识图谱预热是什么? | 在 design-doc-required / bug-doc-required 执行前，先读 `00_project_overview.md` 获取全局索引，再按 AI 上下文路由表加载当前任务类型对应的 2-3 份文档。避免全量扫码，按需获取上下文。 |
 | 什么时候走「轻量修订」而不是新建快照? | 设计文档已存在 + 改动通过 design-doc-required 第四·五步硬清单（不新增接口/字段/类、不改方法签名、单文件 ≤30 行净变更、性质属修正/对齐/删冗余/修 bug）。Git 管理下必要时更新 current 文档，变更说明写 commit body；任一项 ❌ 进入需求变更处理。 |
-| 轻量修订期间代码怎么写? | 注释红线遵循 **`coding-standards-common` §5.4 + §5.4.1（v1.28.8 起注释红线单一来源化到 common）**：直接改写或新增，**禁止**在源码中保留 `[DEPRECATED]` / `[ADDED]` / `[BUGFIX 日期]` / `[REWRITTEN]` / section divider 带日期等变更日志标记，**禁止**注释保留旧代码段。源码只描述当前正确逻辑，变更原因写进 commit message body；函数/类 doc comment 只写当前职责、输入输出语义、不变式和误用风险，复杂逻辑在对应代码块附近写 1-2 行 WHY 注释。`bugfix-coding-style` 承担应用层指引（推荐写法 dart 示例、摆放位置、适用范围、旧标记顺手清理）。 |
-| 函数上能不能写一大段旧实现问题和新实现步骤? | 不能。`[REWRITTEN 日期]`、旧实现缺陷、新实现 1/2/3 步、设计文档第几节、未来版本计划都不应堆在函数头（规则源：`coding-standards-common` §5.4 + §5.4.1 字面反例对照表）。私有方法的 dartdoc 更不能堆"前端契约 / 早期版本曾要求 / 现已统一为"的契约演变史——私有方法不是公开接口，函数名 + 1 行职责就够；契约迁移属于 commit body / bug doc。代码块上方的行内 WHY 注释硬阈值 1 行，超过 1 行就该删或拆。 |
-| `bugfix-coding-style` 和 `coding-violation-log` 有什么区别? | bugfix-coding-style v1.28.8 起是**应用层指引**（注释红线收口到 `coding-standards-common` §5.4 + §5.4.1，本 skill 承担 bug 修复期推荐写法 dart 示例 / 摆放位置 / 旧标记顺手清理边界 / 红色警告对照表），coding-violation-log 是**反应式登记**（用户纠错后记录到违规表防重犯）。前者管"怎么写得对"，后者管"错过的别再错"。 |
+| 轻量修订期间代码怎么写? | 注释红线遵循 **`coding-standards-common` §5.4 + §5.4.1（v1.28.8 起注释红线单一来源化到 common）**：直接改写或新增，**禁止**在源码中保留 `[DEPRECATED]` / `[ADDED]` / `[BUGFIX 日期]` / `[REWRITTEN]` / section divider 带日期等变更日志标记，**禁止**注释保留旧代码段。源码只描述当前正确逻辑，变更原因写进 commit message body；函数/类 doc comment 只写当前职责、输入输出语义、不变式和误用风险，复杂逻辑在对应代码块附近写 1-2 行 WHY 注释。`bugfix-coding-style` 承担应用层指引（推荐写法 Java 示例、摆放位置、适用范围、旧标记顺手清理）。 |
+| 函数上能不能写一大段旧实现问题和新实现步骤? | 不能。`[REWRITTEN 日期]`、旧实现缺陷、新实现 1/2/3 步、设计文档第几节、未来版本计划都不应堆在函数头（规则源：`coding-standards-common` §5.4 + §5.4.1 字面反例对照表）。私有方法的 doc comment 更不能堆"前端契约 / 早期版本曾要求 / 现已统一为"的契约演变史——私有方法不是公开接口，函数名 + 1 行职责就够；契约迁移属于 commit body / bug doc。代码块上方的行内 WHY 注释硬阈值 1 行，超过 1 行就该删或拆。 |
+| `bugfix-coding-style` 和 `coding-violation-log` 有什么区别? | bugfix-coding-style v1.28.8 起是**应用层指引**（注释红线收口到 `coding-standards-common` §5.4 + §5.4.1，本 skill 承担 bug 修复期推荐写法 Java 示例 / 摆放位置 / 旧标记顺手清理边界 / 红色警告对照表），coding-violation-log 是**反应式登记**（用户纠错后记录到违规表防重犯）。前者管"怎么写得对"，后者管"错过的别再错"。 |
 | 注释红线有三套机制（§5.5 / hook / comment-cleanup），分别管什么? | **同一份红线（`coding-standards-common` §5.4 + §5.4.1），三个触发面**：§5.5「改到哪清到哪」——改逻辑时顺手清被覆盖到的方法/块；`check-comment-density.js` hook——写入**新内容**（Write/Edit）时 warn 抓机械红线（变更标记/日期/工单号/`vN 新增`/超长块）；`comment-cleanup` skill——用户**主动要求**对**存量**文件/类/模块成批清理（regex 抓不到的 prose 史 / 契约史靠它的语义判断）。规则不重复定义，全部引用 §5.4。 |
 | 项目没有知识图谱时 Step 0 怎么办? | 自动跳过。Step 0 检测用户目录知识库 `{USER_DOCUMENTS}/ai-docs/{project}/00_project_overview.md` 不存在时直接进入后续流程，完全向后兼容（知识图谱由 init-project-docs 统一生成在用户目录，不再在项目 `docs/`）。 |
 | 什么时候走「轻量模版」? | 命中第一·七步全部 9 项硬清单（不新增表/字段/对外契约/类 ≥3、不跨服务、不引入新中间件、不重设状态机、改动可由「核心流程图 + 规则表 + 失败行为表」描述）。任一 ❌ 升级到完整模版。已有架构内的单接口新增/调整、接口自身流程或库表读写流程描述就是典型轻量场景。 |
@@ -313,9 +309,9 @@ flowchart LR
 | 轻量文档实施完后还要做什么? | 回填代码入口的真实行号（编码前可以写「待实现」，实施完成后填实际 Service / DAO 文件:line），让文档同时承担「设计意图」与「库表行为索引」两个角色。 |
 | 轻量改到一半发现要新增表怎么办? | 立即升级到完整模版（按 lightweight-template 第 6 节「升级到完整模版的触发条件」处理）。以轻量文档为草稿，按 template.md 章节逐节展开；Git 管理下更新 current + coding，只有重大基线/非 Git/用户要求时才建快照。 |
 | glossary-required 和 init-project-docs 的 07_glossary.md 是什么关系? | init-project-docs 负责**项目首次初始化**时一次性批量产出完整版术语表(7 章节、按业务域分组、含完整业务规则/反例);`glossary-required` 负责**日常会话级**增量补登(精简五栏 + 同义词归一对齐)。两者共用同一份 `docs/knowledge-graph/glossary.md`,但触发时机和模板形态不同——init 是项目化的批量动作,本 skill 是会话化的写前/答前拦截。 |
-| 通用编程概念(线程 / 缓存 / 事务 / 子进程)要不要登记到 glossary? | 不要。`glossary-required` 只管业务领域名词;线程 / 缓存 / 事务 / 子进程编排等通用编程或运维边界概念归 `backend-knowledge-graph-required` 的「项目级技术难点图谱」,长对话反复疑问 ≥3 轮自动追加技术难点候选。跨项目同名异叫法对照(项目 A 叫「订单」、项目 B 叫「Order」)归 `cross-project-locator/shared-glossary.md`。 |
+| 通用编程概念(线程 / 缓存 / 事务 / 子进程)要不要登记到 glossary? | 不要。`glossary-required` 只管业务领域名词;线程 / 缓存 / 事务 / 子进程编排等通用编程或运维边界概念归 `backend-knowledge-graph-required` 的「项目级技术难点图谱」,长对话反复疑问 ≥3 轮自动追加技术难点候选。 |
 | 用户用「退货」我用「退款」要纠正吗? | 必须主动对齐到规范术语。glossary-required 的核心职责之一就是同义词归一——以代码命名为准,把用户口语化表达标记为「同义词 / 旧叫法」。AI 后续回答统一用规范术语,首次出现时做映射提示「(您所说的「退货」= 本项目术语「退款」)」。**不主动对齐 = 流程违反**,因为 Agent 后续场景匹配 / 反向索引 / 工时分析全靠术语一致性。 |
 | 反向索引和后端知识图谱有什么区别? | 互补关系。`backend-knowledge-graph-required` 是**正向**沉淀(这个枚举有什么值、这张表有什么字段、这个状态机怎么转);`reverse-index-required` 是**反向**沉淀(这个枚举值在哪里被判断、这个字段在哪里被读写、这个事件谁订阅、这个 API 谁调用)。AI 回答「加这个状态会破坏哪些旧逻辑」类问题时,正向图谱回答不了,必须查反向索引。两者用不同文件分别存放:`docs/knowledge-graph/backend/` vs `docs/knowledge-graph/reverse-index/`。 |
-| 反向索引第一次怎么建? | 跑冷启动扫描器:`node ${CLAUDE_PLUGIN_ROOT}/hooks/scan-reverse-index.js --project=. --output=./docs/knowledge-graph/reverse-index/`。V1 扫描器支持 Java / Dart / TS,识别 enum 定义 + `EnumName.VALUE` 引用 + SQL 字面量候选,产出 `states.md` 初版;`fields.md` / `events.md` / `apis.md` 输出存根需人工填充。扫描器局限:不识别 case 裸值(Java `case PAID:`)、反射调用(`Enum.valueOf`)、配置文件中的字面量,这些用候选区人工补。 |
+| 反向索引第一次怎么建? | 跑冷启动扫描器:`node ${CLAUDE_PLUGIN_ROOT}/hooks/scan-reverse-index.js --project=. --output=./docs/knowledge-graph/reverse-index/`。V1 扫描器支持 Java / TS,识别 enum 定义 + `EnumName.VALUE` 引用 + SQL 字面量候选,产出 `states.md` 初版;`fields.md` / `events.md` / `apis.md` 输出存根需人工填充。扫描器局限:不识别 case 裸值(Java `case PAID:`)、反射调用(`Enum.valueOf`)、配置文件中的字面量,这些用候选区人工补。 |
 | 反向索引每次怎么维护? | 增量,**同回合回写**。改了枚举值就回写 states.md;改了字段就回写 fields.md;改了同步事件 payload 就回写 events.md;改了 API 就回写 apis.md。**严禁延迟到下次会话**——上下文一旦丢失,反向索引重做成本极高。每次新增枚举值时,必须逐条复核「新增态时是否需要补判断」列(回顾每个已存在判断点是否需要补 case)。 |
-| 跨项目调用方索引归哪个 skill? | 单服务内 API 的调用方走 `reverse-index-required` 的 `apis.md`;跨项目(如 PWA → BFF → 云端)的调用方对照走 `cross-project-locator` 的 `kpay-pos-topology/`。判断界限:被调对象是同服务内类则单服务索引,被调对象在另一个工程则跨项目拓扑。 |
+| API 调用方索引归哪个 skill? | 单服务内 API 的调用方走 `reverse-index-required` 的 `apis.md`,记录调用方 + 入参/出参变更协同清单。 |

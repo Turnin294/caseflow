@@ -4,7 +4,7 @@
 > 新增表/字段必须在此登记。
 
 <!-- AI 生成提示：扫描 Entity/Model 类 + Mapper XML/注解提取表结构 -->
-<!-- Flutter 项目：扫描 table_definitions/ 或 DAO 中的建表语句 -->
+<!-- 也可扫描 DDL 脚本或建表语句获取表结构 -->
 
 ---
 

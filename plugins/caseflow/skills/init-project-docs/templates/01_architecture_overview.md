@@ -10,7 +10,7 @@
 
 <!-- 根据实际项目类型选择适用的分层描述 -->
 
-### 方式 A：Spring Boot 后端（Controller-Service-Mapper）
+### 方式 A：传统三层（Controller-Service-Mapper）
 
 ```
 src/main/java/
@@ -25,24 +25,24 @@ src/main/java/
 └── common/             # 通用工具
 ```
 
-### 方式 B：Flutter 移动端（Clean Architecture）
+### 方式 B：DDD-lite 领域分层
 
 ```
-lib/
-├── presentation/       # UI 层：pages/widgets/state
-├── application/        # 应用层：usecase/facade
-├── domain/             # 领域层：entity/rule/repository接口
-├── data/               # 数据层：repository实现/datasource
-└── infrastructure/     # 基础设施：db/network/device
+src/main/java/
+├── interfaces/         # 接口层：Controller/SCF Provider
+├── application/        # 应用层：UseCase/编排/事务边界
+├── domain/             # 领域层：entity/领域服务/repository 接口
+├── infrastructure/     # 基础设施：repository 实现/外部调用/消息
+└── common/             # 通用工具
 ```
 
-### 方式 C：Vue 前端
+### 方式 C：Vue / React 前端
 
 ```
 src/
 ├── views/              # 页面
 ├── components/         # 通用组件
-├── composables/        # 业务 Hook
+├── composables/hooks/  # 业务 Hook
 ├── store/              # 全局状态
 ├── api/                # 接口封装
 └── utils/              # 工具函数

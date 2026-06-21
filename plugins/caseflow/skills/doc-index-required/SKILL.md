@@ -22,9 +22,9 @@ AI 生成的设计文档、Bug 分析、API 文档、知识图谱、现状梳理
 | 占位符 | 含义 | 示例 |
 |---|---|---|
 | `{USER_DOCUMENTS}` | Windows: `%USERPROFILE%\Documents`；macOS/Linux: `~/Documents`；兜底: `~` | |
-| `{project}` | 当前项目目录名（避免多项目混淆） | `korepos`、`kpay-pos-business-app-bff` |
+| `{project}` | 当前项目目录名（避免多项目混淆） | `order-manage`、`order-biz-aggregator` |
 | `{type}` | 文档类型，决定走哪份子索引 | `design`、`bug`、`orientation`、`knowledge-graph`、`work-log`、`api`、`scan` |
-| `{topic_path}` | 主题路径（按需求/模块/bug 名归集，**不带日期**） | `退款退货逻辑重构/`、`订单履约/订单附加费必填字段缺失/` |
+| `{topic_path}` | 主题路径（按需求/模块/bug 名归集，**不带日期**） | `退款退单逻辑重构/`、`订单履约/订单附加费必填字段缺失/` |
 | `{filename}` | 文件名（**不带日期**，使用 `-current` 或固定主题名） | `退款退货逻辑重构-current.md`、`订单附加费必填字段缺失.md` |
 
 > **路径硬约束（v1.20 起）：**

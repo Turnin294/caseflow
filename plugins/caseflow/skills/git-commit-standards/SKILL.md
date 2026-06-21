@@ -18,8 +18,8 @@ description: Use when the user asks to commit code or generate a commit message 
 
 **caseflow 特例（只作用于插件源码仓库）：** 仅当以下三项同时满足时，才自动完成 `git add` → `git commit` → `git push`：
 
-1. 当前 git 仓库的目录名或 remote URL 明确指向 `caseflow` / `kpay-caseflow`。
-2. 本次变更对象属于插件自身文件：`skills/`、`hooks/`、`.claude-plugin/`、`.codex-plugin/`、`AGENTS.md`、`CLAUDE.md`、`README.md`、`docs/skill-flow*`、`docs/dev-log/`。
+1. 当前 git 仓库的目录名或 remote URL 明确指向 `caseflow`。
+2. 本次变更对象属于插件自身文件：`skills/`、`hooks/`、`.claude-plugin/`、`.codex-plugin/`、`AGENTS.md`、`CLAUDE.md`、`README.md`、`docs/skill-flow*`。
 3. 用户没有明确说"不要提交 / 不要 push / 只改不提交"。
 
 业务项目即使安装了 caseflow plugin，也**绝不**触发自动 stage、自动 commit、自动 push 或自动版本号递增。业务项目提交必须走普通确认流程。

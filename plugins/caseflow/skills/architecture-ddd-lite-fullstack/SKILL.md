@@ -1,6 +1,6 @@
 ﻿---
 name: architecture-ddd-lite-fullstack
-description: "Use before writing or reviewing any business code in Java (Spring Boot/Spring Cloud), Python (FastAPI/Django/Flask), Dart (Flutter/Serverpod/Shelf), React, or Vue. MUST be invoked after design/pre-implementation orientation and before the first source-code edit to decide the target layer, feature module, reusable atomic capability, and maintainability boundaries. Enforces DDD-lite layering, feature-based structure, one-way dependencies, clear code structure, low coupling, high cohesion, and prevents business logic from being written directly in Controller/UI/Page."
+description: "Use before writing or reviewing any business code in Java (Spring Boot/Spring Cloud), Python (FastAPI/Django/Flask), React, or Vue. MUST be invoked after design/pre-implementation orientation and before the first source-code edit to decide the target layer, feature module, reusable atomic capability, and maintainability boundaries. Enforces DDD-lite layering, feature-based structure, one-way dependencies, clear code structure, low coupling, high cohesion, and prevents business logic from being written directly in Controller/UI/Page."
 ---
 
 # DDD-lite 全栈架构编码规范
@@ -9,7 +9,7 @@ description: "Use before writing or reviewing any business code in Java (Spring 
 
 该项目采用 DDD-lite + Feature 模块化架构，目标是：代码结构清晰、易于维护、低耦合、高内聚、可复用、可扩展、适合 AI 协作开发。
 
-**本 SKILL 与语言无关**——所有核心原则（分层+单向依赖 / Feature 模块化 / focused service per branch / 跨分支编排独立 / 横切走中间件 / 命名 taxonomy 项目级统一 / 聚合边界）是 SOLID + Clean Architecture + DDD-lite 的应用级表达，**在 Java、Python、Dart、TypeScript 上都一致适用**。SKILL 内的代码示例多用 Java 写法是因为它能精确表达事务/AOP/注解等机制，但**所有规则都有对应的 Python（decorator / contextvar / middleware）、Dart（class + middleware / Riverpod provider）、TypeScript（decorator / NestJS Pipe）等价实现**,见各章节后端机制对照表与「Python 后端约束」「Dart 后端约束」节。
+**本 SKILL 与语言无关**——所有核心原则（分层+单向依赖 / Feature 模块化 / focused service per branch / 跨分支编排独立 / 横切走中间件 / 命名 taxonomy 项目级统一 / 聚合边界）是 SOLID + Clean Architecture + DDD-lite 的应用级表达，**在 Java、Python、TypeScript 上都一致适用**。SKILL 内的代码示例多用 Java 写法是因为它能精确表达事务/AOP/注解等机制，但**所有规则都有对应的 Python（decorator / contextvar / middleware）、TypeScript（decorator / NestJS Pipe）等价实现**,见各章节后端机制对照表与「Python 后端约束」节。
 
 任何业务代码，必须先判断属于哪一层，再实现；不允许直接写在 Controller / UI / Page 中。
 
@@ -23,7 +23,7 @@ description: "Use before writing or reviewing any business code in Java (Spring 
 - **架构分层** → [标准分层模型](#标准分层模型) / [各层职责](#各层职责)
 - **项目组织** → [Feature 模块化结构](#feature-模块化结构) / [原子能力沉淀](#原子能力沉淀) / [聚合边界与事务一致性](#聚合边界与事务一致性) / [结构质量门禁](#结构质量门禁)
 - **Service 形态铁律** → [Service 业务动作扩展铁律](#service-业务动作扩展铁律每个业务分支一个-focused-service任何新方法都不进-god-service) / [函数级业务场景分流](#函数级业务场景分流分支差异即拆分不只是-service-级函数级也要拆) / [跨分支编排](#跨分支编排同一回合调用-2-个-focused-service-时的归属) / [横切关注点不计入 god service 判定](#横切关注点不计入-god-service-判定aop--拦截器--事务声明的豁免)
-- **技术栈约束** → [前端约束](#前端约束) / [Flutter 约束](#flutter-约束) / [Java 后端约束](#java-后端约束) / [Python 后端约束](#python-后端约束) / [Dart 后端约束](#dart-后端约束)
+- **技术栈约束** → [前端约束](#前端约束) / [Java 后端约束](#java-后端约束) / [Python 后端约束](#python-后端约束)
 - **命名规范** → [服务命名 taxonomy](#服务命名-taxonomyservice--usecase--handler--orchestrator)
 
 ---
@@ -34,7 +34,7 @@ description: "Use before writing or reviewing any business code in Java (Spring 
 
 | 场景 | 动作 |
 |------|------|
-| 准备编写 Java / Python / Dart / TypeScript / React / Vue / Flutter 业务代码 | 先判断代码所属层级与 feature 模块 |
+| 准备编写 Java / Python / TypeScript / React / Vue 业务代码 | 先判断代码所属层级与 feature 模块 |
 | 根据设计文档或 coding.md 开始实现 | 在第一行源码改动前完成分层检查 |
 | 新增接口、页面、UseCase、Service、Repository、DAO、HTTP Client | 明确职责边界和调用链 |
 | 重构现有业务逻辑 | 先识别现有逻辑应沉到 Application / Domain / Infrastructure 的哪一层 |
@@ -62,7 +62,7 @@ Infrastructure（DB / HTTP / MQ / Storage）
 1. 上层只能依赖下层，依赖方向必须单向。
 2. UI / Controller / Page 层不能直接调用 Repository、DAO、DB、HTTP、MQ、Storage。
 3. Application 层负责业务流程编排，不直接写技术细节。
-4. Domain 层只表达业务规则、状态机、校验逻辑，不依赖 Spring、HTTP、DB、Flutter Provider、React/Vue 框架。
+4. Domain 层只表达业务规则、状态机、校验逻辑，不依赖 Spring、HTTP、DB、React/Vue 框架。
 5. Repository 层只定义数据访问抽象，不写具体 DB / HTTP 实现。
 6. Infrastructure 层只做技术实现，包括 DB、Redis、HTTP Client、MQ、Storage、本地缓存。
 
@@ -81,7 +81,6 @@ features/
     repository/        # Repository 接口定义
     infrastructure/    # Repository 实现、DB、HTTP、MQ、Storage
     api/               # 前端 HTTP 请求封装
-    dao/               # Flutter 本地数据访问
     components/        # 前端纯展示组件
     hooks/             # React Hook / Vue Composable / 状态编排
     types/             # DTO / ViewModel / 类型定义
@@ -132,7 +131,7 @@ features/
 - 提供业务语义清晰的 Entity、Value Object、Policy、Rule。
 
 禁止：
-- 依赖 Spring、MyBatis、HTTP Client、DB、MQ、Flutter Provider、React/Vue 框架。
+- 依赖 Spring、MyBatis、HTTP Client、DB、MQ、React/Vue 框架。
 - 读取配置、发请求、写日志流水表。
 
 ### Repository 层
@@ -177,8 +176,8 @@ OrderRepository
 | 条件 | 示例 |
 |------|------|
 | 被两个及以上 UseCase 复用 | 退款金额计算、订单可退校验 |
-| 代表稳定业务规则 | 状态流转校验、会员价计算 |
-| 需要独立测试 | 手续费分摊、优惠抵扣拆分 |
+| 代表稳定业务规则 | 状态流转校验、罚息计算 |
+| 需要独立测试 | 手续费分摊、本息拆分 |
 | 未来可能被接口、定时任务、消息消费共同调用 | 退款终态登记、库存释放 |
 
 ### 命名示例
@@ -188,7 +187,7 @@ RefundService
   validateRefundable()
   calculateRefundAmount()
   createRefundTransaction()
-  callRefundChannel()
+  callPayChannel()
   registerRefundFinalState()
 ```
 
@@ -210,7 +209,7 @@ RefundService
 
 | # | 判定问 | 答 Yes → Refund 是**独立聚合** | 答 No → Refund 是**Order 聚合内动作** |
 |---|--------|--------------------------------|---------------------------------------|
-| A1 | Refund 有独立生命周期吗?(待退 → 已退 → 已撤销,与 Order 状态机不重合) | ✓ 独立聚合 | 跟 Order 状态机绑死 |
+| A1 | Refund 有独立生命周期吗?(待退 → 已退 → 已冲正,与 Order 状态机不重合) | ✓ 独立聚合 | 跟 Order 状态机绑死 |
 | A2 | Refund 需要独立查询吗?(列表页 / 详情页能脱离 Order 单独打开) | ✓ 独立聚合 | 只通过 Order 详情页展开 |
 | A3 | Refund 需要独立审计 / 版本号 / 乐观锁吗? | ✓ 独立聚合 | 跟 Order 共审计 |
 | A4 | Refund 会被其它业务流程独立引用吗?(对账 / 财务 / 风控独立拉取) | ✓ 独立聚合 | 只在 Order 流程内使用 |
@@ -218,7 +217,7 @@ RefundService
 
 **判定输出**:
 
-- ≥3 个 Yes → **独立聚合**:建 `RefundRepository`、`refund_order` 表、`Refund` 实体;`RefundService` 操作 Refund 聚合,与 `OrderService` 通过 `OrderRefundedEvent` / Saga 协同。
+- ≥3 个 Yes → **独立聚合**:建 `RefundRepository`、`refund_record` 表、`Refund` 实体;`RefundService` 操作 Refund 聚合,与 `OrderService` 通过 `OrderRefundedEvent` / Saga 协同。
 - ≤2 个 Yes → **Order 聚合内动作**:Refund 是 Order 的状态变迁,`RefundService` 仍然是 focused branch service,但内部直接通过 `OrderRepository` 修改 Order 聚合,事务内完成。
 - 模糊 → 默认按"独立聚合"处理,因为反向重构(独立 → 内置)比正向(内置 → 独立)简单。
 
@@ -228,13 +227,13 @@ RefundService
 |------|------------------------|
 | Order 聚合内动作(refund / cancel / reject 都修改 Order 状态) | focused service 直接通过 `OrderRepository` 修改 Order;同事务;不发 Domain Event(除非外部需要监听) |
 | Refund 是独立聚合 | `RefundService` 通过 `RefundRepository` 操作 Refund 聚合;不直接修改 Order;Order 状态变化通过订阅 `RefundCompletedEvent` 异步更新 |
-| 跨 ≥2 聚合的复合动作(approveAndRefund 改 Order + Refund + Inventory) | 走 `Saga` / `Orchestrator`:事务内只改一个聚合,其余通过 Event / 补偿动作 |
+| 跨 ≥2 聚合的复合动作(approveAndPay 改 Order + Payment + Inventory) | 走 `Saga` / `Orchestrator`:事务内只改一个聚合,其余通过 Event / 补偿动作 |
 
 ### 反模式
 
 - ❌ **一个 `@Transactional` 方法同时修改 ≥2 个聚合根**(`Order` + `Refund` + `Inventory` 同事务硬改) → 走 Domain Event 或 Saga
 - ❌ **跨聚合持有强引用 / 同事务 join 修改** → 只持有 ID,通过 Repository 查
-- ❌ **业务流程紧耦合聚合**:订单创建必须等库存扣减完成才返回(同事务) → 库存预占(同事务)+ 库存扣减(异步 / Saga)
+- ❌ **业务流程紧耦合聚合**:支付必须等库存扣减完成才返回(同事务) → 库存预占(同事务)+ 库存扣减(异步 / Saga)
 - ❌ **没想清楚聚合边界就拆 focused service** → 先按上面 5 问判定聚合,再决定 focused service 的数据访问路径
 
 ### 与既有规则的关系
@@ -282,7 +281,7 @@ RefundService
 >
 > **判定锚点是「业务定位」而非「代码相似度」**——长得像但业务定位不同就是阶梯 2；业务定位相同即使代码差异较大也是阶梯 1。
 >
-> 详细判定锚点表（PRD 视角 / 状态机 / 下游 / 校验 / 补偿 / 团队 6 个信号）+ Java + Dart 双示例 + 1-100 期反惯性话术清单见 [rules/structure-quality-gates.md § 函数级业务场景分流](./rules/structure-quality-gates.md#函数级业务场景分流分支差异即拆分不只是-service-级函数级也要拆)。
+> 详细判定锚点表（PRD 视角 / 状态机 / 下游 / 校验 / 补偿 / 团队 6 个信号）+ Java 示例 + 1-100 期反惯性话术清单见 [rules/structure-quality-gates.md § 函数级业务场景分流](./rules/structure-quality-gates.md#函数级业务场景分流分支差异即拆分不只是-service-级函数级也要拆)。
 
 ---
 
@@ -309,32 +308,6 @@ API
 3. 业务流程放在 hook / composable / service。
 4. UI 组件必须尽量纯展示，不承载业务规则。
 5. 跨页面复用的业务逻辑不能复制粘贴，必须沉淀为 service 或 reusable hook。
-
----
-
-## Flutter 约束
-
-标准调用链：
-
-```text
-Widget
-  ↓
-ViewModel / Provider / StateNotifier
-  ↓
-Application Service / UseCase
-  ↓
-Repository
-  ↓
-Infrastructure / DAO / HTTP
-```
-
-强制规则：
-
-1. Widget 不写业务逻辑。
-2. 状态管理层只做状态编排，不直接写 SQL / HTTP。
-3. 所有数据访问必须通过 Repository。
-4. SQLite、HTTP、本地文件统一放 Infrastructure / DAO。
-5. 金额、状态、业务规则优先沉到 Domain / Application，不散落在 Widget。
 
 ---
 
@@ -440,41 +413,6 @@ Infrastructure(SQLAlchemy / Django ORM / httpx / aio-pika)
 
 ---
 
-## Dart 后端约束
-
-适用于 Serverpod / Shelf / koreposBackendService / Aqueduct 等。
-
-> Flutter 客户端约束见上面「Flutter 约束」节;本节专管 Dart 服务端 / Flutter backend 模块的业务代码。
-
-标准调用链：
-
-```text
-Endpoint(Shelf router / Serverpod Endpoint class / koreposBackendService backend)
-  ↓
-Application Service / UseCase  (XxxService class)
-  ↓
-Domain Service / Policy / Entity  (纯 Dart class / freezed model)
-  ↓
-Repository Interface(abstract class)
-  ↓
-Infrastructure(Drift / sqflite / dio / Serverpod db)
-```
-
-强制规则：
-
-1. Endpoint(Shelf handler / Serverpod `Endpoint` 子类 / koreposBackendService 的 `backend/` 目录入口)只处理协议适配、freezed / json_serializable DTO 反序列化、响应包装。
-2. Service 不能变成巨型类;一个 Service 围绕一个清晰业务分支。**god service 不允许新增业务方法**——铁律与 Java / Python 完全一致;`korepos-backend-service` 的"一接口一 service"是它在 Flutter backend 侧的更强表达。
-3. 领域规则(纯 class / freezed sealed class / value object)**不依赖** Flutter / Drift / Riverpod / Serverpod 框架,可在纯 Dart VM 下单测。
-4. Drift / sqflite / dio / Serverpod db / shared_preferences 等技术调用必须隔离到 Infrastructure / DAO。
-5. **事务边界放在 Application 层**(`db.transaction(() async { ... })` / Drift `transaction()` / Serverpod `session.db.transaction()`),Domain 不感知 transaction;跨聚合走 Serverpod stream / Riverpod provider 通信 + Saga。
-6. **依赖注入用 get_it / Riverpod / 构造器注入**,禁止在 Service 内部直接 `new` 具体 Infrastructure 实现;Service 只依赖 Repository 抽象。
-7. **DTO 用 freezed + json_serializable**(参见 `korepos-backend-service` 强约束:wire DTO 必须 `@JsonSerializable(explicitToJson: true)`,禁 `@freezed`);DTO ↔ Domain ↔ DB Entity 三态分离,在 Application / Infrastructure 边界做转换。
-8. **避免在 Service 用 `dynamic` / `Object?` / `Map<String, dynamic>` 容忍多形态**(详见 `korepos-backend-service` Step 2/3 通用章节),所有字段声明唯一确定类型。
-
-横切机制对照见上面「横切关注点不计入 god service 判定」节的 Dart 列:Shelf middleware / Riverpod ProviderObserver / Serverpod future hooks 等价 Spring AOP,**横切实现类不计入 god service**。
-
----
-
 ## 命名规范
 
 ### 服务命名 taxonomy(Service / UseCase / Handler / Orchestrator)
@@ -487,12 +425,11 @@ Infrastructure(Drift / sqflite / dio / Serverpod db)
 |-----------|-------------|---------|------|
 | 传统 Spring Boot / 主流 Java 后端 | Spring Boot / Spring Cloud | **`XxxService`** | 与 `@Service` 注解 + Spring 教科书 + 团队既有命名一致 |
 | Python Web 后端(主流) | FastAPI / Django / Flask | **`XxxService`** | Python 社区主流命名(FastAPI 文档、cosmic-python 等),与 Java 跨栈一致 |
-| Dart 后端(跨端 + Flutter backend) | Serverpod / Shelf / korepos-backend-service(kpay-daily-plugin) | **`XxxService`**(与 kpay-daily-plugin 的 korepos-backend-service 对齐) | 已有强约束 + Flutter 社区主流 |
 | TypeScript 后端 | NestJS / tRPC | **`XxxService`** | NestJS `@Injectable()` 标准命名 |
 | CQRS / 命令-查询分离 / EventSourcing | Axon(Java) / MediatR(.NET) / cqrs(Python) | **`XxxCommandHandler`**(写)/ **`XxxQueryHandler`**(读) | CQRS 教科书命名 |
 | Clean Architecture / Hexagonal / 强调用例 | 跨语言通用 | **`XxxUseCase`** / **`XxxInteractor`** | Robert Martin 命名,与 Use Case Driven Design 一致 |
 
-> 多语言项目原则:**全栈选同一种命名**(默认 `XxxService`),避免 Java 项目用 `XxxService`、Python 项目用 `XxxUseCase`、Dart 项目用 `XxxHandler` 这种"按语言切换叫法"——团队 onboarding 成本太高。CQRS 流派除外(它本身就是跨语言一致的)。
+> 多语言项目原则:**全栈选同一种命名**(默认 `XxxService`),避免 Java 项目用 `XxxService`、Python 项目用 `XxxUseCase` 这种"按语言切换叫法"——团队 onboarding 成本太高。CQRS 流派除外(它本身就是跨语言一致的)。
 
 **2. 跨分支编排类(orchestrator)统一叫法**(与上面 focused service 命名解耦):
 
@@ -512,7 +449,6 @@ Infrastructure(Drift / sqflite / dio / Serverpod db)
 | Controller | `RefundController` | RESTful 路由对应 |
 | React Hook | `useRefund` | 复用业务流程 |
 | Vue Composable | `useRefund` | 同上 |
-| Flutter ViewModel | `RefundViewModel` | 状态编排 |
 | 横切实现(AOP / Filter) | `AuditAspect` / `LoggingInterceptor` / `SecurityFilter` | 用 `Aspect` / `Interceptor` / `Filter` / `Middleware` 后缀标明横切机制 |
 
 **4. 反模式(禁止)**:

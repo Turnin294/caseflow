@@ -48,7 +48,7 @@ flowchart TD
 
 ### 检测项 1：模块变更
 
-**扫描**：Controller/Service 包结构（Java）或 features/ 目录（Flutter）
+**扫描**：Controller/Service 包结构（Java）或模块目录（前端）
 **对比**：`{KG_ROOT}/02_module_map.md`
 **触发更新条件**：
 - 新增了模块（包/目录）但文档未记录

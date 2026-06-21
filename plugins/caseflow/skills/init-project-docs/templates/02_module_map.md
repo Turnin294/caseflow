@@ -3,7 +3,7 @@
 > 最后更新：{YYYY-MM-DD}
 > 状态：✅ 稳定 | 🔄 开发中 | ⚠️ 待重构
 
-<!-- AI 生成提示：扫描 Controller/Service 包按业务域分组；Flutter 扫描 features/ 目录 -->
+<!-- AI 生成提示：扫描 Controller/Service 包按业务域分组；前端扫描 views/components 目录 -->
 
 ---
 
@@ -19,7 +19,7 @@
 
 ### {模块名}
 - **功能**：{核心功能列表}
-- **代码入口**：{Controller/Page 路径}
+- **代码入口**：{Controller/View 路径}
 - **数据表**：{关联表}
 - **核心接口**：{HTTP 端点}
 - **核心规则**：{关键业务约束}

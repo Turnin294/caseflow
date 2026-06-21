@@ -85,13 +85,13 @@
 | 图类型 | 分组维度 | 示例 |
 |--------|---------|------|
 | `flowchart` / `graph` | 按业务阶段、系统边界、职责层 | `subgraph Stage1["阶段一 前置查询"]` |
-| `sequenceDiagram` | 用 `box` 包裹同一系统/层的参与者 | `box 本地数据层` 包裹 Repository + SQLite |
+| `sequenceDiagram` | 用 `box` 包裹同一系统/层的参与者 | `box 数据访问层` 包裹 Repository + MySQL |
 | `classDiagram` | 按包/模块分组 | `namespace Application` |
 
 **flowchart/graph 分组规则：**
 
 1. **同一业务阶段的模块必须放入同一 subgraph**（如"前置查询阶段"包裹所有查询接口）
-2. **同一系统/服务的模块必须放入同一 subgraph**（如"外部服务"包裹 KPay API + POS 设备）
+2. **同一系统/服务的模块必须放入同一 subgraph**（如"外部服务"包裹放款网关 + 账务中心）
 3. **subgraph 嵌套不超过 2 层**，避免视觉混乱
 4. **subgraph 必须使用 `ID["显示名"]` 格式**，ID 用英文，显示名用中文
 
@@ -103,21 +103,21 @@
 
 ```
 正确:
-  box rgb(212, 237, 218) 本地数据层
-    participant REPO as RefundLocalRepository
-    participant DB as SQLite
+  box rgb(212, 237, 218) 数据访问层
+    participant REPO as RepaymentRepository
+    participant DB as MySQL
   end
 
   box rgb(248, 215, 218) 外部服务
-    participant KPAY as KPay Cloud
-    participant POS as POS Device
+    participant LOAN as 放款网关
+    participant ACCT as 账务中心
   end
 
 错误:（参与者散列，无法看出谁属于哪个系统）
-  participant REPO as RefundLocalRepository
-  participant KPAY as KPay Cloud
-  participant DB as SQLite
-  participant POS as POS Device
+  participant REPO as RepaymentRepository
+  participant LOAN as 放款网关
+  participant DB as MySQL
+  participant ACCT as 账务中心
 ```
 
 ## 能力分解图要求
