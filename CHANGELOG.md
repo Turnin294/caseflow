@@ -4,6 +4,18 @@
 >
 > 版本号约定:`MAJOR.MINOR.PATCH`(SemVer)——`MINOR` 用于新 skill / 触发链路扩展 / 基础设施(hook、CI、sync 脚本),`PATCH` 用于规则微调与版本号同步。
 
+## [1.40.0] - 2026-06-18
+
+**新增 `zhuanzhuan-data-standards` skill（转转数据存储规范，MySQL/TiDB + Redis，数据领域独立 skill）。skill 计数 25 → 26。**
+
+### Added
+- `skills/zhuanzhuan-data-standards/SKILL.md`：转转数据存储规范，与编码层正交。覆盖 MySQL 基础（utf8mb4 / 禁存储过程触发器外键 / 禁存大文件明文密码）、库表设计（dbzz_/t_ 命名 / InnoDB / DECIMAL 金额 / 禁保留字 / 字段数与长度控制）、索引设计（idx_/uniq_ 命名 / 主键 AUTO_INCREMENT 禁联合主键禁 UUID / 单表≤6 索引·单索引≤4 字段 / 最左前缀 / 区分度 / 索引禁忌）、SQL 优化（拆大 SQL / 禁 SELECT* / OR 改 IN / UNION ALL / 隐式转换 / Limit 深分页优化）、DML 限制（禁无 where 更新删除 / 须带索引字段 / 影响≤2 万行）、Redis 缓存（冷热分离 / 业务隔离 / 必设 TTL / 大文本压缩 / 禁 KEYS 用 SCAN / MQ 用 zzmq 锁用 zzlock / 谨慎全量 HGETALL·SMEMBERS / 数据结构选型）。
+- 与 `backend-knowledge-graph-required` 正交（通用规范 vs 项目级表知识），与 `finance-coding-standards` SQL 条款互补（DBA 通用底 vs 部门叠加），均在冲突解决表与各 skill 内说明。
+
+### Changed
+- `finance-coding-standards` §8 SQL 节：补一句指向 `zhuanzhuan-data-standards`（通用库表/索引/SQL/DML 见数据 skill，本节只列金融叠加约束）。
+- CLAUDE.md / docs/skill-flow.md / README：触发表、分类导航③、核心调用顺序（新增第 12.6 步）、冲突解决表（新增 2 行）、Skill 索引、总览表（顺带补回上版漏加的 zhuanzhuan-coding-standards 总览行）；skill 计数 26。
+
 ## [1.39.0] - 2026-06-18
 
 **新增 `zhuanzhuan-coding-standards` skill（转转研发中心通用编码层，黄山版之上、金融层之下）；删除前东家 `cross-project-locator`（kpay POS 专用）并全面清洗 Flutter/Dart/POS 痕迹。skill 计数 24 → 25。**
