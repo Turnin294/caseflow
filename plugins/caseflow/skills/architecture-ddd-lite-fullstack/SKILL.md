@@ -373,7 +373,7 @@ service
 
 强制规则：
 
-1. 跨业务线 / 中台 RPC 调用统一封装到 `helper`，不散落在 service 主逻辑里。
+1. 跨业务线 / 中台 RPC 调用统一封装到 `helper`，不散落在 service 主逻辑里。`helper/` 是合法分层包，不受命名 taxonomy「禁 `XxxHelper` 类名」约束（见该节辨伪冲突）——但包内类须职责单一（一个外部封装或纯函数计算），一旦承载多分支业务编排即按 god class 拆到 `biz/`。
 2. `repository` 是数据库访问的唯一出口，service 不直接写 SQL。
 3. contract 只放契约对象（request / response / 对外枚举），禁止出现 MyBatis-Plus 注解（`@TableName` / `@TableField` 仅限 service 层 DO）。
 4. focused service 铁律在金融分层下依然成立：`service/` 下按业务能力拆分，不堆 god service。
@@ -456,6 +456,7 @@ Infrastructure(SQLAlchemy / Django ORM / httpx / aio-pika)
 - ❌ **同一项目混用 focused service 命名**:`RefundService` + `CancelUseCase` + `ReverseCheckoutHandler` 三种叫法并存,后续 AI / 新人不知道该建哪种 → 选定一种贯彻
 - ❌ **`XxxApplicationService` 容器化命名**:这个名字暗示"一个 aggregate 一个 service 含多方法"的传统 DDD 模式,与本 SKILL 的"每分支一 focused service"相反,**禁止新建**;若历史代码已有,按 god service 处置(对应分支抽到独立 focused service)
 - ❌ **`XxxManager` / `XxxHelper` / `XxxUtil`**:语义模糊,容易演化成 god class → 改用 `XxxService` / `XxxCalculator` / `XxxPolicy` 等表意命名
+  - ⚠️ **辨伪冲突——这条禁的是「类名」,不是「分层包名」**:金融聚合层标准结构里的 `helper/` 包(封装中台 / 其他业务线 RPC 调用,见上方「金融技术部聚合层分层结构」节)是**合法的职责明确分层**,不在此禁令内。禁的是把业务逻辑塞进一个叫 `XxxHelper` 的**模糊命名类**(如 1000 行的 `FinancingRatioHelper` 混了规则计算+配置读取+商户评级)。判定:`helper/` 包下的类应是"单一外部封装"(如 `MiddleOfficeRpcClient`)或纯函数计算,职责一句话说得清;一旦它开始承载多分支业务编排,就按 god class 拆到对应 `biz/` 用例。
 - ❌ **focused service 与 Domain 原子能力同名**:`RefundService`(application 编排)与 `RefundService`(domain 规则)冲突 → Domain 侧改 `RefundCalculator` / `RefundPolicy` 等
 
 ---

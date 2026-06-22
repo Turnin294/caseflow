@@ -4,6 +4,15 @@
 >
 > 版本号约定:`MAJOR.MINOR.PATCH`(SemVer)——`MINOR` 用于新 skill / 触发链路扩展 / 基础设施(hook、CI、sync 脚本),`PATCH` 用于规则微调与版本号同步。
 
+## [1.44.1] - 2026-06-18
+
+**`architecture-ddd-lite-fullstack` 补「helper 辨伪冲突」：命名 taxonomy 禁的是 `XxxHelper` 模糊类名，不是金融聚合层的 `helper/` 分层包。**
+
+### Changed
+- 服务命名 taxonomy 的「禁 XxxManager/XxxHelper/XxxUtil」条补辨析子项：禁令针对**类名**（业务逻辑塞进模糊命名类，如 1000 行 FinancingRatioHelper），不针对**分层包名**；金融聚合层标准结构的 `helper/` 包（封装中台/其他业务线 RPC）合法，但包内类须职责单一，承载多分支编排即按 god class 拆到 biz/。
+- 金融聚合层分层结构的 helper 规则行同步呼应。
+- 来源：供应链金融重构方案 review，该方案 helper 分层与命名禁令存在表面矛盾，明确辨析避免误判。
+
 ## [1.44.0] - 2026-06-18
 
 **新增第 7 道 PreToolUse hook `check-zzcli-guard`——调用 zz-harness 平台命令（zzcli）前的审查门禁，把「调 z-harness 要审查」从 skill 软提醒升级为机械拦截。**
