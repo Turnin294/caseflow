@@ -26,6 +26,7 @@
 | `bug-doc-required` | caseflow | 编写 bug 分析文档时；完成后必须继续调用 design-doc-required 写修复实施方案 |
 | `pre-implementation-code-orientation` | caseflow | 文档写完后、开始实施代码前（含「帮我修改代码」「改代码」等直接编码请求） |
 | `architecture-ddd-lite-fullstack` | caseflow | 编写或审查 Java / React / Vue 业务代码前；在实施前代码定位后，先判断 Feature、分层、单向依赖、原子能力与结构质量（清晰、易维护、低耦合、高内聚）；含 **函数级业务场景分流**（阶梯 1 私有方法 / 阶梯 2 升级 service，判定锚点是「业务定位」而非「代码相似度」） |
+| `zhuanzhuan-tech-stack-selection` | caseflow | 做技术方案设计/架构选型，或遇到异步解耦/分布式锁/配置/定时/限流/缓存/RPC/HTTP/JSON/文件存储等需求时；场景→转转自研组件选型决策 + 反模式（别造轮子）；组件 API 用法 delegate 到 mcp__arch-kb 知识库与运维 skill，不重复抄组件清单 |
 | `coding-standards-common` | caseflow | 编写/修改任何源码语言（Java / TS / JS / Python / Kotlin / Go 等）前；通用 7 条铁律 + 注释三档（+ 字段可选档）+ 注释放置原则（注释只落在类/字段/方法声明上，函数体内除 §5.3 六类核心块外不写，靠拆函数+命名表达）+ §7.6 复用项目公共能力优先（编码前查 coding-profile 的 common-capabilities.md，禁造轮子/禁原生替代公共封装）；先于具体语言 skill 触发 |
 | `java-coding-standards` | caseflow | 编写或修改任何 Java 代码时（自动应用，通用条款 delegate 到 coding-standards-common） |
 | `zhuanzhuan-coding-standards` | caseflow | 编写或修改转转任意 Java 后端代码时（SCF / WF / zzjava 工程，任意部门）；叠加在 coding-standards-common + java-coding-standards 之上、finance 之下；转转研发中心通用约定（ApiResult/ErrorCode/脱敏/zzarch-common/工程结构/日志） |

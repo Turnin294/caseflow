@@ -4,6 +4,16 @@
 >
 > 版本号约定:`MAJOR.MINOR.PATCH`(SemVer)——`MINOR` 用于新 skill / 触发链路扩展 / 基础设施(hook、CI、sync 脚本),`PATCH` 用于规则微调与版本号同步。
 
+## [1.41.0] - 2026-06-18
+
+**新增 `zhuanzhuan-tech-stack-selection` skill（转转技术栈选型决策，场景→自研组件决策表 + 反模式）。skill 计数 26 → 27。**
+
+### Added
+- `skills/zhuanzhuan-tech-stack-selection/SKILL.md`：编码/设计时「该用哪个自研组件、别造什么轮子」的选型决策层。场景→组件决策表（同步调用 SCF / 异步解耦 ZZMQ / 分布式锁 zzlock / 配置 Apollo / 定时 zzschedule / 限流熔断 Sentinel / 缓存 Redis·ZZ-KV / HTTP·JSON·脱敏·告警 zzarch-common / 分布式 ID ZZIdcClient / 文件 zzmedia / 对象转换 MapStruct）+ 反模式（Redis 造锁→zzlock / 硬编码→Apollo / 轮询 DB→ZZMQ / @Scheduled 写死→zzschedule / restTemplate 调内网→SCF）。**只管选型决策这一层**——组件 API 用法 delegate 到 `mcp__arch-kb` 知识库与运维 skill（/scf /zzmq /apollo /zzschedule /prometheus /k8s），不重复抄组件清单、不与外部全局 rules 漂移。
+
+### Changed
+- CLAUDE.md / docs/skill-flow.md / README：触发表、分类导航③、核心调用顺序（新增第 8.5 步，架构后编码前）、Skill 索引、总览表同步；skill 计数 27。
+
 ## [1.40.0] - 2026-06-18
 
 **新增 `zhuanzhuan-data-standards` skill（转转数据存储规范，MySQL/TiDB + Redis，数据领域独立 skill）。skill 计数 25 → 26。**

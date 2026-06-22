@@ -1,6 +1,6 @@
 # caseflow
 
-> **30 秒 TL;DR**:Claude Code 插件,把"AI 协作开发"从"凭运气"变成"按流程"——26 个 skill + 6 道 hook 强制执行从需求分析 → 设计文档 → 代码定位 → 架构门禁 → 编码规范 → 提交规范 → 知识沉淀的完整链路。让 AI 改代码前先想清楚,改完后留下可追溯的痕迹。
+> **30 秒 TL;DR**:Claude Code 插件,把"AI 协作开发"从"凭运气"变成"按流程"——27 个 skill + 6 道 hook 强制执行从需求分析 → 设计文档 → 代码定位 → 架构门禁 → 编码规范 → 提交规范 → 知识沉淀的完整链路。让 AI 改代码前先想清楚,改完后留下可追溯的痕迹。
 
 **它解决什么问题:**
 - AI 一上来就改代码,绕过设计 / 不查既有 / 不沉淀 → 强制 `design-doc-required` + `pre-implementation-code-orientation` 门禁
@@ -235,6 +235,7 @@ v1.26 起 **`check-design-doc.js` hook 默认启用**（[hooks/hooks.json](hooks
 
 ### ③ 架构与编码（实施时）
 - `architecture-ddd-lite-fullstack` — DDD-lite 分层 + Feature 模块 + 每分支一 focused service + **函数级业务场景分流（分支差异即拆分）** + 跨分支编排 + 横切关注点豁免 + 命名 taxonomy + 聚合边界（**Java / Python 后端 + Vue / React 前端一致适用**）
+- `zhuanzhuan-tech-stack-selection` — 转转技术栈选型决策（设计/编码时该用哪个自研组件、别造轮子）：场景→组件决策表（同步 SCF / 异步 ZZMQ / 锁 zzlock / 配置 Apollo / 定时 zzschedule / 限流 Sentinel / 工具 zzarch-common）+ 反模式。具体 API 查知识库，不重复抄组件清单
 - `coding-standards-common` — 跨语言通用 7 条铁律 + 注释三档（沟通语言一票否决）
 - `java-coding-standards` — Java 独占条款（Javadoc / Integer 比较 / SLF4J / HashMap 容量等）
 - `zhuanzhuan-coding-standards` — 转转研发中心通用约定（黄山版之上、金融层之下，适用转转任意 Java 后端）：ApiResult 包装 + ApiException / ErrorCode 五位错误码 / Contract 脱敏 / zzarch-common 工具优先 / Jackson 禁 FastJson / contract-service 双模块工程结构 / hessian2 序列化 / log4j2+slf4j。优先级链路：金融 → 转转研发中心通用 → caseflow 自有 → 黄山版
