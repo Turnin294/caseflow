@@ -4,6 +4,22 @@
 >
 > 版本号约定:`MAJOR.MINOR.PATCH`(SemVer)——`MINOR` 用于新 skill / 触发链路扩展 / 基础设施(hook、CI、sync 脚本),`PATCH` 用于规则微调与版本号同步。
 
+## [1.39.0] - 2026-06-18
+
+**新增 `zhuanzhuan-coding-standards` skill（转转研发中心通用编码层，黄山版之上、金融层之下）；删除前东家 `cross-project-locator`（kpay POS 专用）并全面清洗 Flutter/Dart/POS 痕迹。skill 计数 24 → 25。**
+
+### Added
+- `skills/zhuanzhuan-coding-standards/SKILL.md`：转转研发中心通用编码约定，适用转转任意 Java 后端（SCF/WF/zzjava）。覆盖 RPC 用 ApiResult 包装 + ApiException + 优先错误码、ErrorCode 五位错误码枚举、Contract 实体 toString + DesensitizeUtil 脱敏、zzarch-common 工具优先（禁造轮子）、JsonUtil 用 Jackson 禁 FastJson、序列化优选 hessian2、long 转前端用 string、contract/service 双模块工程结构 + maven 坐标规则、对象转换 MapStruct、日志 spring-boot-starter-log4j2 + slf4j 排冲突。四层编码链路定型：`coding-standards-common → java-coding-standards → zhuanzhuan-coding-standards → finance-coding-standards`（越靠后优先级越高）。
+
+### Removed
+- `skills/cross-project-locator/`：kpay POS 生态跨项目拓扑专用，转转不适用。
+- `skills/dart-coding-standards/`、`skills/arch-lint/`、`flutter_skill.md`（上一版已删，本版完成全仓痕迹清洗）。
+
+### Changed
+- 全仓清洗前东家痕迹：korepos/kpay POS 业务示例 → 中性通用示例（通用 skill）；Flutter/Dart → 删除；前端保留 React/Vue。术语口径分层：通用 skill 用中性词（订单/退款/支付），finance-coding-standards 用金融专属词。
+- `java-coding-standards` / `finance-coding-standards`：补四层链路叠加指引。
+- CLAUDE.md / docs/skill-flow.md / README：触发表、分类导航③、核心调用顺序（新增第 12.3 步）、冲突解决表、Skill 索引、FAQ 同步；skill 计数 25。
+
 ## [1.38.0] - 2026-06-18
 
 **新增 `finance-coding-standards` skill（金融技术部 Java 后端独占条款，部门优先）；移除 `dart-coding-standards` 与 `arch-lint`（Flutter 相关，本团队不涉及）。skill 计数 26 → 25。**

@@ -7,9 +7,9 @@ description: "金融技术部 Java 后端编码独占条款，叠加在 coding-s
 
 > **优先级链路（冲突时的覆盖顺序）：金融技术部规范（最高） → 转转研发中心通用规范 → caseflow 自有规则（最低）。**
 >
-> 通用 7 条铁律见 [[coding-standards-common]]；阿里黄山版 Java 独占条款见 [[java-coding-standards]]。三者叠加：先满足 common，再 java，最后本文件覆盖前两者的冲突项。
+> 通用 7 条铁律见 [[coding-standards-common]]；阿里黄山版 Java 独占条款见 [[java-coding-standards]]；转转研发中心通用约定见 [[zhuanzhuan-coding-standards]]。四者叠加：先满足 common，再 java，再 zhuanzhuan，最后本文件覆盖前三者的冲突项。
 >
-> 触发顺序：`coding-standards-common` → `java-coding-standards` → `finance-coding-standards`（本文件，金融场景优先）。
+> 触发顺序：`coding-standards-common` → `java-coding-standards` → `zhuanzhuan-coding-standards` → `finance-coding-standards`（本文件，金融场景优先）。
 
 ---
 

@@ -7,7 +7,7 @@ description: Use when writing, reviewing, or modifying any Java code. You MUST f
 
 > **本文件只写 Java 独占条款。** 命名表意、函数原子、层次分明、零魔法值、注释三档、异常不静默、删冗余 这 7 条通用铁律在 `coding-standards-common/SKILL.md` 中,Java 编码同时遵守通用 skill + 本文件。
 >
-> 触发顺序:`coding-standards-common`(通用 7 条) → `java-coding-standards`(本文件 Java 独占)。金融技术部 Java 后端代码再叠加 `finance-coding-standards`(部门独占条款,冲突时金融优先),先满足本文件再走金融。
+> 触发顺序:`coding-standards-common`(通用 7 条) → `java-coding-standards`(本文件 Java 独占) → `zhuanzhuan-coding-standards`(转转研发中心通用)。金融技术部 Java 后端代码再叠加 `finance-coding-standards`(部门独占条款,冲突时金融优先)。
 
 ---
 
