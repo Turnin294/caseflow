@@ -251,7 +251,7 @@ v1.26 起 **`check-design-doc.js` hook 默认启用**（[hooks/hooks.json](hooks
 
 ### ④ 提交与日志
 - `zhuanzhuan-code-review` — 转转金融代码交付前自检清单（提测/commit 前对照数据/架构/编码/SCF 通用性/重大漏洞/技术风险逐项过，增量代码不符合即修正）；规则引用现有 skill 不重写，团队人工流程不代办
-- `git-commit-standards` — 规范 commit（type 前缀 + 中文 body + diff 分析，hook 按改动大小放行）
+- `git-commit-standards` — 对齐转转官方 Git Commit 规范（type 用 `func` 非 feat / scope 必填 / 中文 subject / footer 放链接 / 无 Author 行；服务端 commit-msg+pre-receive 强制），hook 按改动大小放行
 - `daily-work-log` — 业务项目源码改动后按 Bug / 功能分类沉淀工作日志
 
 ### ⑤ 知识图谱（沉淀）

@@ -32,7 +32,9 @@ function makeRepo(opts = {}) {
   // 先建 baseline commit 让后续 staged diff 有参照
   fs.writeFileSync(path.join(dir, 'README.md'), 'init\n');
   execSync('git add README.md', { cwd: dir });
-  execSync('git commit -q -m init', { cwd: dir });
+  // --no-verify 跳过环境里可能存在的全局 commit-msg hook（如转转 ~/.git-hooks），
+  // 测试只验证 caseflow hook 逻辑，不应被宿主 git hook 干扰
+  execSync('git commit -q --no-verify -m init', { cwd: dir });
 
   // 制造 staged 变化
   if (opts.files === 'trivial') {

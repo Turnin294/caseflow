@@ -4,6 +4,33 @@
 >
 > 版本号约定:`MAJOR.MINOR.PATCH`(SemVer)——`MINOR` 用于新 skill / 触发链路扩展 / 基础设施(hook、CI、sync 脚本),`PATCH` 用于规则微调与版本号同步。
 
+## [1.45.0] - 2026-06-18
+
+**`git-commit-standards` 对齐转转官方 Git Commit 规范——type 体系大改（`feat`→`func`）、scope 改必填、去掉 Author 行。修正与服务端强制校验的真冲突。**
+
+### Changed（不兼容旧 commit 格式，但对齐服务端强制规范）
+- **Type 表全量替换为转转官方 15 个**：`func`（替代 feat，官方特意改名避免大粒度提交）/ fix / refactor / impr / perf / apm / chore / jvm / pom / conf / docs / style / test / typo / wip。删除原 caseflow 自创的 `feat` / `ci` / `revert`（服务端正则不识别）。
+- **scope 由「可选」改「必填」**：官方校验正则 `^(\w+)\(([\w+,.\-_*]+?)\): .+` 要求 scope 必填；支持多值逗号分隔、范围大用 `*`。
+- **去掉 Author 行**：官方格式无 Author 行，提交者身份由 git config 自动记录，不写进 message。footer 改放需求 wiki / TAPD 链接。
+- subject 明确为中文不加句号；补服务端校验正则、官方 type/scope 示例、通用 scope 列表（dto/core/service/dao/sql）。
+- 同步全部示例（feat→func、删 Author 行）、五步清单第一步（不再「读 Author」改「确认 git 身份已配置」）、zz-harness 衔接节、CLAUDE.md 索引行、README。
+
+### Motivation
+- 用户找到转转官方《Git Commit 规范》（何志贤 2025-06-16），其作为服务端 `commit-msg` + `pre-receive` hook **强制校验、不合法无法提交**。caseflow 原 type 体系（feat/ci/revert + scope 可选 + Author 行）与之**真冲突**——按原 caseflow 写的 commit 在转转服务端会被直接拒绝（feat 非法、scope 缺失非法）。故全量对齐官方。
+- caseflow 的两个 commit hook 不硬编码 type 列表（check-git-commit-skill 只判断改动大小），新 type 体系不受 hook 影响。
+
+### Fixed
+- hook 测试加 `--no-verify`：`check-git-commit-skill.test.js` / `check-backend-kg-readiness.test.js` 建临时 repo 的 `git commit -m init` 会被开发者机器上的全局 commit-msg hook（如转转 `~/.git-hooks`，core.hooksPath 全局生效）拦截导致测试失败；加 `--no-verify` 隔离宿主 git hook，测试只验证 caseflow hook 逻辑。修复后在装了转转 git hook 的机器上 `npm test` 也能跑通。
+
+## [1.44.2] - 2026-06-18
+
+**`git-commit-standards` 补 caseflow ↔ zz-harness `beetle/commit` 衔接：caseflow 定消息规范，zz-harness 跑提交流程。**
+
+### Changed
+- `git-commit-standards` 末尾加「配套 zz-harness 平台能力」节：commit message 按本 skill 格式写，业务项目的 stage/push/解冲突交 `beetle/commit`（zzcommon）执行；CI/CD 全流程走 `beetle`。衔接要点：beetle/commit 默认 message（`chore(branch): update`）应替换为本 skill 格式；caseflow 自动提交仅限插件源码仓；`check-commit-no-ai-signature` 对经 beetle/commit 的提交同样生效。
+- CLAUDE.md 协作映射表补 `git-commit-standards → beetle/commit / beetle` 行。
+- 来源：核对 caseflow git 规范与 zz-harness beetle/commit 发现两者是"消息规范 vs 提交执行"脑/手分工，无重叠不需抄，补衔接即可。
+
 ## [1.44.1] - 2026-06-18
 
 **`architecture-ddd-lite-fullstack` 补「helper 辨伪冲突」：命名 taxonomy 禁的是 `XxxHelper` 模糊类名，不是金融聚合层的 `helper/` 分层包。**

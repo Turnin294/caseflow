@@ -29,7 +29,9 @@ function makeRepo(opts = {}) {
   execSync('git config user.name test', { cwd: dir });
   fs.writeFileSync(path.join(dir, 'README.md'), 'init\n');
   execSync('git add README.md', { cwd: dir });
-  execSync('git commit -q -m init', { cwd: dir });
+  // --no-verify 跳过环境里可能存在的全局 commit-msg hook（如转转 ~/.git-hooks），
+  // 测试只验证 caseflow hook 逻辑，不应被宿主 git hook 干扰
+  execSync('git commit -q --no-verify -m init', { cwd: dir });
 
   if (opts.files === 'large') {
     // 制造 ≥2 文件 ≥20 行的未小改场景
