@@ -1,6 +1,6 @@
 # caseflow
 
-> **30 秒 TL;DR**:Claude Code 插件,把"AI 协作开发"从"凭运气"变成"按流程"——27 个 skill + 6 道 hook 强制执行从需求分析 → 设计文档 → 代码定位 → 架构门禁 → 编码规范 → 提交规范 → 知识沉淀的完整链路。让 AI 改代码前先想清楚,改完后留下可追溯的痕迹。
+> **30 秒 TL;DR**:Claude Code 插件,把"AI 协作开发"从"凭运气"变成"按流程"——28 个 skill + 6 道 hook 强制执行从需求分析 → 设计文档 → 代码定位 → 架构门禁 → 编码规范 → 提交规范 → 知识沉淀的完整链路。让 AI 改代码前先想清楚,改完后留下可追溯的痕迹。
 
 **它解决什么问题:**
 - AI 一上来就改代码,绕过设计 / 不查既有 / 不沉淀 → 强制 `design-doc-required` + `pre-implementation-code-orientation` 门禁
@@ -250,6 +250,7 @@ v1.26 起 **`check-design-doc.js` hook 默认启用**（[hooks/hooks.json](hooks
 > - **机械兜底阈值**（连续注释块行数等）改 `hooks/check-comment-density.js`；**存量批量清理流程**在 `comment-cleanup`（只引用 §5，不重定义）。
 
 ### ④ 提交与日志
+- `zhuanzhuan-code-review` — 转转金融代码交付前自检清单（提测/commit 前对照数据/架构/编码/SCF 通用性/重大漏洞/技术风险逐项过，增量代码不符合即修正）；规则引用现有 skill 不重写，团队人工流程不代办
 - `git-commit-standards` — 规范 commit（type 前缀 + 中文 body + diff 分析，hook 按改动大小放行）
 - `daily-work-log` — 业务项目源码改动后按 Bug / 功能分类沉淀工作日志
 

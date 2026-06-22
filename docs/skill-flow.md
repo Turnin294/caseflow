@@ -34,6 +34,7 @@
 | `zhuanzhuan-data-standards` | caseflow | 设计库表 / 写 DDL / 写 SQL / 设计索引 / 用 Redis 时；转转数据存储规范（MySQL 库表+索引+SQL 优化+DML 限制+Redis 缓存）；数据领域独立 skill，与编码层正交；与 backend-knowledge-graph-required 互补（通用规范 vs 项目知识），与 finance SQL 条款互补（DBA 通用底 vs 部门叠加） |
 
 | `llm-agent-coding-standards` | caseflow | 编写/修改接 LLM 或做 agent 的代码时（import langchain4j/spring-ai/openai/anthropic；定义 @Tool/AiService；拼 prompt；解析 LLM 输出）；在 coding-standards-common + 语言 skill 之上叠加 LLM 集成独占条款（确定性优先/输出当不可信/枚举输出/约定 SSOT/工具描述契约/循环兜底/上下文注入） |
+| `zhuanzhuan-code-review` | caseflow | 完成一段业务代码、准备提测或 git commit 前；交付前自检清单（数据/架构/编码/SCF 通用性/重大漏洞/技术风险 6 类逐项过），增量代码不符合即修正；规则引用现有 skill 不重写；团队人工流程（TAPD/审查人/40% 迁移）不代办 |
 | `git-commit-standards` | caseflow | 大改 git commit 之前（>2 文件 / >30 行 / 含新增/重命名/删除文件）；**v1.18.1 起 hook 按改动大小放行**：`hooks/check-git-commit-skill.js` 看 staged diff，≤2 文件 ∧ ≤30 行 ∧ 仅 `M` 修改时直接放行（让模型自行写 commit message），其它情况未调用本 skill 时直接 exit 2 阻断；阈值可用 `CASEFLOW_TRIVIAL_FILES` / `CASEFLOW_TRIVIAL_LINES` 调整；git push 不门禁；仅在当前仓库就是 caseflow 插件源码仓库且插件自身变更完成后自动 stage、commit、push |
 | `dev-log` | caseflow | 对 caseflow 做决策型变更后：新增/删除 Skill、触发时机或核心行为变化、规则方向反转、跨 Skill 链路变化、重大团队原则沉淀；普通小改只写 commit body |
 | `markdown-writing-standards` | caseflow | 生成或修改包含 Mermaid 图表的 Markdown 内容；完成 Markdown 文件的结构性写入/重组后做目录复核（自动应用，与 java-coding-standards 同级） |

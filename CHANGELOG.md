@@ -4,6 +4,16 @@
 >
 > 版本号约定:`MAJOR.MINOR.PATCH`(SemVer)——`MINOR` 用于新 skill / 触发链路扩展 / 基础设施(hook、CI、sync 脚本),`PATCH` 用于规则微调与版本号同步。
 
+## [1.42.0] - 2026-06-18
+
+**新增 `zhuanzhuan-code-review` skill（金融代码交付前自检清单，增量代码合规收口）。skill 计数 27 → 28。**
+
+### Added
+- `skills/zhuanzhuan-code-review/SKILL.md`：提测/commit 前的交付自检清单，**非新规则**——6 类审查项（数据库 SQL / 架构与基础服务交叉调用 / 编码与 SCF 通用性 / 重大漏洞 / 技术风险 / NPE 防护）的判定标准全部引用现有 skill，本 skill 只负责"提交前对照过一遍、揪出不符合项修掉"。明确 AI 承接边界：只做自检与合规判定，团队人工流程（提测前一天审查、指定审查人、TAPD 录工时≤6h、掷色子抽查、周会复盘）不代办；40% 迁移线提示但由人工判断。源出转转金融 RD 技术规范 4.6 代码审查节。
+
+### Changed
+- CLAUDE.md / docs/skill-flow.md / README：触发表、分类导航④、核心调用顺序（新增第 14.5 步，提测/commit 前）、Skill 索引、总览表同步；skill 计数 28。
+
 ## [1.41.0] - 2026-06-18
 
 **新增 `zhuanzhuan-tech-stack-selection` skill（转转技术栈选型决策，场景→自研组件决策表 + 反模式）。skill 计数 26 → 27。**
