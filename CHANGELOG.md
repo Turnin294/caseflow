@@ -4,6 +4,32 @@
 >
 > 版本号约定:`MAJOR.MINOR.PATCH`(SemVer)——`MINOR` 用于新 skill / 触发链路扩展 / 基础设施(hook、CI、sync 脚本),`PATCH` 用于规则微调与版本号同步。
 
+## [1.46.1] - 2026-06-18
+
+**CLAUDE.md 协作节补「z-harness 工具地图（按开发场景）」——解决"不知道有哪些平台工具能用"。**
+
+### Added
+- 「与 zz-harness 的协作」节新增按开发阶段（写代码/自测、排查/联调、CI/CD/提交）组织的 z-harness 工具速查表，覆盖 `scf`（直接打接口自测）/ `apollo` / `mysql` / `mysql-check` / `fix-sonar-issues` / `zzcr` / `log-query` / `zzmq` / `zzlock` / `prometheus` / `k8s` / `zzarthas` / `beetle` 等 ~25 个能力，并给出自测金融接口的典型链路示例。
+- 提示 `find-zz-skills` 作为"不知道有啥工具时"的统一入口。
+
+### Motivation
+- 用户反馈"跟 z-harness 关联没感知、不知道有啥工具能用、不知道怎么结合"。此前 caseflow 各 skill 末尾只零散列了配套能力，缺一张按场景的总览。补此地图后，开发/自测/排查各阶段该用哪个平台工具一眼可查（原映射表是"caseflow skill→z-harness"视角，本表是"开发场景→z-harness"视角，互补）。
+
+## [1.46.0] - 2026-06-18
+
+**移除 `check-zzcli-guard` hook（zzcli 调用审查门禁）——实测碍事，连含 `zzcli` 字样的普通 grep 都被拦。hook 计数 7 → 6。**
+
+### Removed
+- `hooks/check-zzcli-guard.js` 及其测试 `tests/check-zzcli-guard.test.js`：上版（1.44.0）新增的"调用 zz-harness 平台命令前审查"门禁，正则匹配命令文本里的 `zzcli` 字样，实际把正常的 z-harness 调用、甚至含该字样的普通命令（如 grep）全拦下，严重碍事。
+- hooks.json 移除注册（Bash 组回到 git-commit-skill + commit-no-ai-signature 两道）；`_comment` 改回六道。
+- CLAUDE.md 协作节「调用审查门禁」段 + 辅助资源表 hook 行；git-commit-standards 衔接节去掉「受 check-zzcli-guard 约束」；README hook 计数 7 → 6。
+
+### 保留
+- caseflow↔zz-harness 的协作引导与映射表（脑/手分工）原样保留——删的只是审查拦截，不影响"该用哪个 z-harness 能力"的引导。
+
+### Motivation
+- 用户反馈门禁导致 z-harness 命令执行不了。审查门禁初衷是"调用前人工确认"，但 Claude Code hook 只能靠命令文本静态正则匹配，无法精确区分"真要调平台"还是"命令恰好含 zzcli 字样"，误伤面过大。移除后 z-harness 调用恢复顺畅；真要确认仍有宿主命令授权机制兜底。
+
 ## [1.45.0] - 2026-06-18
 
 **`git-commit-standards` 对齐转转官方 Git Commit 规范——type 体系大改（`feat`→`func`）、scope 改必填、去掉 Author 行。修正与服务端强制校验的真冲突。**

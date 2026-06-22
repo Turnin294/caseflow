@@ -1,6 +1,6 @@
 {
   "name": "caseflow",
-  "version": "1.45.0",
+  "version": "1.46.1",
   "description": "Team development standards plugin with Java coding rules, design-doc requirements, and workflow guidance.",
   "author": {
     "name": "turnin",

@@ -9,7 +9,7 @@
     {
       "name": "caseflow",
       "description": "Claude Code 团队开发规范插件：Java 编码规范（阿里黄山版）+ 功能设计文档强制约束 + Git 提交规范",
-      "version": "1.45.0",
+      "version": "1.46.1",
       "source": "./plugins/caseflow",
       "author": {
         "name": "turnin",

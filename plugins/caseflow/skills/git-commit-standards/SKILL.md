@@ -293,5 +293,5 @@ git config user.email   # 例：turnin@example.com
 
 衔接要点：
 - 让 `beetle/commit` 执行时，commit message **套用本 skill 的格式**（`<type>(<scope>): 中文 subject` + 中文 body + footer），不要用它默认的 `chore(branch): update`。
-- 本 skill 的「caseflow 特例自动提交」只作用于 **caseflow 插件源码仓库**；业务项目提交走 `beetle/commit`，且仍受 `check-zzcli-guard` / 宿主授权约束。
+- 本 skill 的「caseflow 特例自动提交」只作用于 **caseflow 插件源码仓库**；业务项目提交走 `beetle/commit`，且仍受宿主命令授权约束。
 - `check-commit-no-ai-signature` hook 对任何路径的 `git commit` 都生效——经 `beetle/commit` 提交也会被扫 AI 署名。
