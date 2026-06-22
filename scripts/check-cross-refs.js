@@ -68,11 +68,13 @@ function scanFile(file, allSkills, headingsBySkill) {
     if (knownNonSkills.has(ref)) continue;
     // 非 skill 但常见的 `xxx-yyy` token 白名单(目录名、产品名、技术词等)
     const NON_SKILL_TOKENS = new Set([
-      'work-log', 'kpay-caseflow', 'kpay-pos-topology',
-      'kpay-pos-business-app-bff', 'kpay-pos-order-manage',
-      'kpay-pos-report', 'kpay-possystem-commodity',
-      'pos-store-operation-manage', 'price-calc-sdk', 'pos-config-ts',
-      'lib-features', 'json-serializable',
+      'work-log', 'lib-features', 'json-serializable',
+      // zz-harness 外部插件(zzcommon/zzrd)的 skill — caseflow 引用其平台能力,非本仓 skill
+      'find-zz-skills', 'find-api-docs', 'fix-sonar-issues',
+      'fix-deploy-failure', 'fix-error-log', 'error-fix-pipeline',
+      'mysql-check', 'zzcli-config-generator', 'zzjava-init',
+      'service-slimming', 'traceid-parser', 'create-story',
+      'clearup-aicodegather',
     ]);
     if (NON_SKILL_TOKENS.has(ref)) continue;
     // 看起来像 skill 名(全小写+连字符)但实际不存在 → 报错

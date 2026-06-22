@@ -4,6 +4,39 @@
 >
 > 版本号约定:`MAJOR.MINOR.PATCH`(SemVer)——`MINOR` 用于新 skill / 触发链路扩展 / 基础设施(hook、CI、sync 脚本),`PATCH` 用于规则微调与版本号同步。
 
+## [1.44.0] - 2026-06-18
+
+**新增第 7 道 PreToolUse hook `check-zzcli-guard`——调用 zz-harness 平台命令（zzcli）前的审查门禁，把「调 z-harness 要审查」从 skill 软提醒升级为机械拦截。**
+
+### Added
+- `hooks/check-zzcli-guard.js`：PreToolUse(Bash)。Bash 命令含 `zzcli`（调 apollo/zzlock/zzmq/scf/mysql-check/部署/Beetle 等平台能力）即 exit 2 阻断，stderr 提示 AI 先向用户说明命令影响（查询/修改/部署/上报、哪个环境）、待用户确认后重试。默认开启，`CASEFLOW_ZZCLI_GUARD=off` 本会话关闭（团队插件，同事可自关）。
+- `hooks/tests/check-zzcli-guard.test.js`：7 个用例（拦截查询/写操作、放行普通命令/非词边界/env=off/非 Bash/非 JSON）。
+- `hooks/hooks.json`：注册到 Bash 组（现 Bash 3 道：git-commit-skill + commit-no-ai-signature + zzcli-guard）。
+
+### Changed
+- CLAUDE.md「与 zz-harness 的协作」节补「调用审查门禁」说明；辅助资源表补 `check-zzcli-guard` 与此前漏登的 `check-commit-no-ai-signature` 两行 hook。
+- `scripts/check-cross-refs.js`：NON_SKILL_TOKENS 白名单清掉前东家 kpay 残留，加入 zz-harness 外部插件 skill（find-zz-skills/mysql-check/fix-sonar-issues 等），避免 caseflow 引用外部 skill 时被误判为未知内部 skill。
+- README hook 计数 6 → 7。
+
+### Motivation
+- 用户要求「调用 z-harness 一定要先审查」。skill 文档只能软提醒、无强制力；真正能卡住动作的是 hook。z-harness 平台操作最终都落到 `zzcli` Bash 命令，故在 PreToolUse(Bash) 层拦截 zzcli、回灌提示让 AI 停下来请示用户，实现机械门禁。
+
+## [1.43.0] - 2026-06-18
+
+**caseflow 与转转官方 `zz-harness` marketplace 建立「脑/手分工」协作：caseflow 管规范决策，zz-harness 做平台动作，互相引用不重复。**
+
+### Added
+- CLAUDE.md 新增「与 zz-harness 的协作」节：明确 caseflow（脑·规范方法论）与 zz-harness（手·平台动作，zzcommon/zzrd 等插件）并存职责互补，给出 5 个 caseflow skill ↔ zz-harness 能力的衔接映射表，并说明 data-standards/code-review 与 mysql-check/zzcr 的重叠是"规范知识 vs 平台执行"两视角、前后衔接不冲突。
+- 5 个 caseflow skill 末尾新增「配套 zz-harness 平台能力」节：
+  - `zhuanzhuan-tech-stack-selection` → apollo / zzlock / zzmq / zzschedule / scf / zzjava-init
+  - `zhuanzhuan-data-standards` → mysql-check / mysql
+  - `zhuanzhuan-code-review` → zzcr / fix-sonar-issues / mysql-check / fix-error-log
+  - `backend-knowledge-graph-required` → mysql / scf / find-api-docs / zapi / zgateway
+  - `zhuanzhuan-coding-standards` → zzjava-init / zzcli-config-generator / find-zz-skills
+
+### Motivation
+- zz-harness 是转转官方按角色分的多插件 marketplace（zzcommon/zzrd/zzfe/zzqa/zzapp），其 zzrd/zzcommon 提供 apollo/zzlock/scf/mysql-check/zzcr/fix-sonar-issues 等**平台操作**能力；caseflow 提供编码/架构/数据/审查**规范**。两者天然脑/手互补——caseflow 决策"该用什么"，zz-harness 执行"真去做"。本版建立引用衔接，避免各做各的或重复实现。
+
 ## [1.42.0] - 2026-06-18
 
 **新增 `zhuanzhuan-code-review` skill（金融代码交付前自检清单，增量代码合规收口）。skill 计数 27 → 28。**

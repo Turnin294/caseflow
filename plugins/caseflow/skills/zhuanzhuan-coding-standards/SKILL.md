@@ -141,3 +141,15 @@ demopro
 | contract 模块加 `@Service` 注解 | contract 只放接口 + DTO，无 Spring 注解 |
 | pom 同时引 logback + log4j2 | 排除冲突，统一 log4j2 |
 
+---
+
+## 配套 zz-harness 平台能力
+
+> 本 skill 是转转通用编码约定。涉及工程初始化等真操作时，用 zz-harness 的 skill。
+
+| 场景 | 用 zz-harness skill | 能做什么 |
+|------|---------------------|---------|
+| 新建 zzjava 标准工程 | `zzjava-init`（zzrd） | 初始化 blank/web/scf 脚手架，自带标准目录 |
+| curl 转 zzcli 配置 / 导接口 | `zzcli-config-generator`（zzrd） | cURL → zzcli 命令配置 |
+| 找已有内部 skill | `find-zz-skills`（zzcommon） | 按功能描述检索/推荐内部 skill |
+
